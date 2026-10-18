@@ -1,0 +1,214 @@
+{
+  "version": 1,
+  "name": "LED stage scenes",
+  "width": 1920,
+  "height": 1080,
+  "brightness": 1,
+  "surfaces": [
+    {
+      "id": "4ea39396-40eb-4e2b-b52f-7a9d461bd734",
+      "name": "LED stage wings",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.012,
+          "y": 0.012
+        },
+        {
+          "x": 0.3213333333333333,
+          "y": 0.012
+        },
+        {
+          "x": 0.3213333333333333,
+          "y": 0.488
+        },
+        {
+          "x": 0.012,
+          "y": 0.488
+        }
+      ],
+      "effectId": "led-stage",
+      "color": "#ed73da",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "7eb0c56d-5621-4b5c-8556-f5e2c30d76ef",
+      "name": "LED cylinder hall",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.3453333333333333,
+          "y": 0.012
+        },
+        {
+          "x": 0.6546666666666666,
+          "y": 0.012
+        },
+        {
+          "x": 0.6546666666666666,
+          "y": 0.488
+        },
+        {
+          "x": 0.3453333333333333,
+          "y": 0.488
+        }
+      ],
+      "effectId": "led-cylinder-hall",
+      "color": "#a880ff",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "1b24bbbe-672c-4a84-a853-e20f3b143c2e",
+      "name": "LED proscenium",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.6786666666666666,
+          "y": 0.012
+        },
+        {
+          "x": 0.988,
+          "y": 0.012
+        },
+        {
+          "x": 0.988,
+          "y": 0.488
+        },
+        {
+          "x": 0.6786666666666666,
+          "y": 0.488
+        }
+      ],
+      "effectId": "led-proscenium",
+      "color": "#f290d1",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "8d684c72-2f11-46e9-bffd-0120dde2c606",
+      "name": "Ribbon light stage",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.012,
+          "y": 0.512
+        },
+        {
+          "x": 0.3213333333333333,
+          "y": 0.512
+        },
+        {
+          "x": 0.3213333333333333,
+          "y": 0.988
+        },
+        {
+          "x": 0.012,
+          "y": 0.988
+        }
+      ],
+      "effectId": "ribbon-light-stage",
+      "color": "#4ee8cc",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "70420cfd-f659-421a-9479-89fb42d87d03",
+      "name": "Canopy of lights",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.3453333333333333,
+          "y": 0.512
+        },
+        {
+          "x": 0.6546666666666666,
+          "y": 0.512
+        },
+        {
+          "x": 0.6546666666666666,
+          "y": 0.988
+        },
+        {
+          "x": 0.3453333333333333,
+          "y": 0.988
+        }
+      ],
+      "effectId": "light-canopy",
+      "color": "#a291ff",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "4e6216f5-ef5d-4582-969a-946310a0c7ea",
+      "name": "LED orb chamber",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.6786666666666666,
+          "y": 0.512
+        },
+        {
+          "x": 0.988,
+          "y": 0.512
+        },
+        {
+          "x": 0.988,
+          "y": 0.988
+        },
+        {
+          "x": 0.6786666666666666,
+          "y": 0.988
+        }
+      ],
+      "effectId": "led-orb-chamber",
+      "color": "#59cce9",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    }
+  ],
+  "stacks": []
+}

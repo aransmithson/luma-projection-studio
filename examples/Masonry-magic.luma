@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "name": "Masonry magic",
+  "width": 1920,
+  "height": 1080,
+  "brightness": 1,
+  "surfaces": [
+    {
+      "id": "3dd46bd8-9466-4263-b886-ce97958654de",
+      "name": "Flying brick builders",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.015,
+          "y": 0.02
+        },
+        {
+          "x": 0.485,
+          "y": 0.02
+        },
+        {
+          "x": 0.485,
+          "y": 0.98
+        },
+        {
+          "x": 0.015,
+          "y": 0.98
+        }
+      ],
+      "effectId": "flying-bricks",
+      "color": "#d79068",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "01367bd5-aeae-4e0d-b7fa-7e647143db20",
+      "name": "Tumbling brick wall",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.515,
+          "y": 0.02
+        },
+        {
+          "x": 0.985,
+          "y": 0.02
+        },
+        {
+          "x": 0.985,
+          "y": 0.98
+        },
+        {
+          "x": 0.515,
+          "y": 0.98
+        }
+      ],
+      "effectId": "tumbling-wall",
+      "color": "#c2a181",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 43
+    }
+  ],
+  "stacks": []
+}

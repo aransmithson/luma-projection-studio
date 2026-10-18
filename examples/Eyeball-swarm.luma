@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "name": "A crowd of curious eyes",
+  "width": 1920,
+  "height": 1080,
+  "brightness": 1,
+  "surfaces": [
+    {
+      "id": "c5fd2650-ff5d-4b90-b823-c90a57da7629",
+      "name": "Eyeball swarm",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.025,
+          "y": 0.025
+        },
+        {
+          "x": 0.975,
+          "y": 0.025
+        },
+        {
+          "x": 0.975,
+          "y": 0.975
+        },
+        {
+          "x": 0.025,
+          "y": 0.975
+        }
+      ],
+      "effectId": "eyeball-swarm",
+      "color": "#69d6c0",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    }
+  ],
+  "stacks": []
+}

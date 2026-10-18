@@ -1,0 +1,297 @@
+{
+  "version": 1,
+  "name": "Facade with creature windows",
+  "width": 1920,
+  "height": 1080,
+  "brightness": 1,
+  "surfaces": [
+    {
+      "id": "fox-window",
+      "name": "Fox behind left window",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.17,
+          "y": 0.3
+        },
+        {
+          "x": 0.39,
+          "y": 0.3
+        },
+        {
+          "x": 0.39,
+          "y": 0.5800000000000001
+        },
+        {
+          "x": 0.17,
+          "y": 0.5800000000000001
+        }
+      ],
+      "effectId": "corner-fox",
+      "color": "#eea35c",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "bunny-window",
+      "name": "Bunny behind right window",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.61,
+          "y": 0.3
+        },
+        {
+          "x": 0.83,
+          "y": 0.3
+        },
+        {
+          "x": 0.83,
+          "y": 0.5800000000000001
+        },
+        {
+          "x": 0.61,
+          "y": 0.5800000000000001
+        }
+      ],
+      "effectId": "corner-bunny",
+      "color": "#e6c2c7",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "effectSide": "right"
+    },
+    {
+      "id": "wood-door",
+      "name": "Timber behind doorway",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.43,
+          "y": 0.33
+        },
+        {
+          "x": 0.5700000000000001,
+          "y": 0.33
+        },
+        {
+          "x": 0.5700000000000001,
+          "y": 0.9199999999999999
+        },
+        {
+          "x": 0.43,
+          "y": 0.9199999999999999
+        }
+      ],
+      "effectId": "timber",
+      "color": "#ad8a63",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "brick-facade",
+      "name": "Brick facade",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.1,
+          "y": 0.18
+        },
+        {
+          "x": 0.9,
+          "y": 0.18
+        },
+        {
+          "x": 0.9,
+          "y": 0.9199999999999999
+        },
+        {
+          "x": 0.1,
+          "y": 0.9199999999999999
+        }
+      ],
+      "effectId": "red-brick",
+      "color": "#ad6246",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "slate-roof",
+      "name": "Slate roof",
+      "kind": "triangle",
+      "points": [
+        {
+          "x": 0.07,
+          "y": 0.18
+        },
+        {
+          "x": 0.5,
+          "y": 0.025
+        },
+        {
+          "x": 0.93,
+          "y": 0.18
+        }
+      ],
+      "effectId": "slate",
+      "color": "#727f96",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "left-cutout",
+      "name": "Left window cutout",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.17,
+          "y": 0.3
+        },
+        {
+          "x": 0.39,
+          "y": 0.3
+        },
+        {
+          "x": 0.39,
+          "y": 0.5800000000000001
+        },
+        {
+          "x": 0.17,
+          "y": 0.5800000000000001
+        }
+      ],
+      "effectId": "concrete",
+      "color": "#adafac",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "cutoutOf": "brick-facade"
+    },
+    {
+      "id": "right-cutout",
+      "name": "Right window cutout",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.61,
+          "y": 0.3
+        },
+        {
+          "x": 0.83,
+          "y": 0.3
+        },
+        {
+          "x": 0.83,
+          "y": 0.5800000000000001
+        },
+        {
+          "x": 0.61,
+          "y": 0.5800000000000001
+        }
+      ],
+      "effectId": "concrete",
+      "color": "#adafac",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "cutoutOf": "brick-facade"
+    },
+    {
+      "id": "door-cutout",
+      "name": "Arched doorway cutout",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.43,
+          "y": 0.48
+        },
+        {
+          "x": 0.5700000000000001,
+          "y": 0.48
+        },
+        {
+          "x": 0.5700000000000001,
+          "y": 0.9199999999999999
+        },
+        {
+          "x": 0.43,
+          "y": 0.9199999999999999
+        }
+      ],
+      "effectId": "concrete",
+      "color": "#adafac",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "cutoutOf": "brick-facade",
+      "curves": [
+        {
+          "control1": {
+            "x": 0.43,
+            "y": 0.3
+          },
+          "control2": {
+            "x": 0.57,
+            "y": 0.3
+          }
+        },
+        null,
+        null,
+        null
+      ]
+    }
+  ],
+  "stacks": []
+}

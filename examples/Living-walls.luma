@@ -1,0 +1,486 @@
+{
+  "version": 1,
+  "name": "Living walls",
+  "width": 1920,
+  "height": 1080,
+  "brightness": 1,
+  "surfaces": [
+    {
+      "id": "clockwork-wall",
+      "name": "Clockwork wall",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.03,
+          "y": 0.05
+        },
+        {
+          "x": 0.25,
+          "y": 0.05
+        },
+        {
+          "x": 0.25,
+          "y": 0.25
+        },
+        {
+          "x": 0.03,
+          "y": 0.25
+        }
+      ],
+      "effectId": "clockwork-wall",
+      "color": "#c79b62",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "frost-bloom",
+      "name": "Frost bloom",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.265,
+          "y": 0.05
+        },
+        {
+          "x": 0.485,
+          "y": 0.05
+        },
+        {
+          "x": 0.485,
+          "y": 0.25
+        },
+        {
+          "x": 0.265,
+          "y": 0.25
+        }
+      ],
+      "effectId": "frost-bloom",
+      "color": "#99d9ed",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "creeping-garden",
+      "name": "Creeping garden",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.5,
+          "y": 0.05
+        },
+        {
+          "x": 0.72,
+          "y": 0.05
+        },
+        {
+          "x": 0.72,
+          "y": 0.25
+        },
+        {
+          "x": 0.5,
+          "y": 0.25
+        }
+      ],
+      "effectId": "creeping-garden",
+      "color": "#e9a5c9",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "enchanted-bookshelf",
+      "name": "Enchanted bookshelf",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.735,
+          "y": 0.05
+        },
+        {
+          "x": 0.955,
+          "y": 0.05
+        },
+        {
+          "x": 0.955,
+          "y": 0.25
+        },
+        {
+          "x": 0.735,
+          "y": 0.25
+        }
+      ],
+      "effectId": "enchanted-bookshelf",
+      "color": "#bba0ec",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "stained-sunlight",
+      "name": "Stained-glass sunlight",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.03,
+          "y": 0.275
+        },
+        {
+          "x": 0.25,
+          "y": 0.275
+        },
+        {
+          "x": 0.25,
+          "y": 0.475
+        },
+        {
+          "x": 0.03,
+          "y": 0.475
+        }
+      ],
+      "effectId": "stained-sunlight",
+      "color": "#e5a06c",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "marble-run",
+      "name": "Marble run",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.265,
+          "y": 0.275
+        },
+        {
+          "x": 0.485,
+          "y": 0.275
+        },
+        {
+          "x": 0.485,
+          "y": 0.475
+        },
+        {
+          "x": 0.265,
+          "y": 0.475
+        }
+      ],
+      "effectId": "marble-run",
+      "color": "#e2a765",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "origami-garden",
+      "name": "Origami garden",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.5,
+          "y": 0.275
+        },
+        {
+          "x": 0.72,
+          "y": 0.275
+        },
+        {
+          "x": 0.72,
+          "y": 0.475
+        },
+        {
+          "x": 0.5,
+          "y": 0.475
+        }
+      ],
+      "effectId": "origami-garden",
+      "color": "#cba7ec",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "living-honeycomb",
+      "name": "Living honeycomb",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.735,
+          "y": 0.275
+        },
+        {
+          "x": 0.955,
+          "y": 0.275
+        },
+        {
+          "x": 0.955,
+          "y": 0.475
+        },
+        {
+          "x": 0.735,
+          "y": 0.475
+        }
+      ],
+      "effectId": "living-honeycomb",
+      "color": "#edb653",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "moonlit-mushrooms",
+      "name": "Moonlit mushrooms",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.03,
+          "y": 0.5
+        },
+        {
+          "x": 0.25,
+          "y": 0.5
+        },
+        {
+          "x": 0.25,
+          "y": 0.7
+        },
+        {
+          "x": 0.03,
+          "y": 0.7
+        }
+      ],
+      "effectId": "moonlit-mushrooms",
+      "color": "#80d7ca",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "peeling-paint",
+      "name": "Peeling paint",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.265,
+          "y": 0.5
+        },
+        {
+          "x": 0.485,
+          "y": 0.5
+        },
+        {
+          "x": 0.485,
+          "y": 0.7
+        },
+        {
+          "x": 0.265,
+          "y": 0.7
+        }
+      ],
+      "effectId": "peeling-paint",
+      "color": "#8bb9b4",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "sand-sculptor",
+      "name": "Sand sculptor",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.5,
+          "y": 0.5
+        },
+        {
+          "x": 0.72,
+          "y": 0.5
+        },
+        {
+          "x": 0.72,
+          "y": 0.7
+        },
+        {
+          "x": 0.5,
+          "y": 0.7
+        }
+      ],
+      "effectId": "sand-sculptor",
+      "color": "#d6b47c",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "laser-blueprints",
+      "name": "Laser blueprints",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.735,
+          "y": 0.5
+        },
+        {
+          "x": 0.955,
+          "y": 0.5
+        },
+        {
+          "x": 0.955,
+          "y": 0.7
+        },
+        {
+          "x": 0.735,
+          "y": 0.7
+        }
+      ],
+      "effectId": "laser-blueprints",
+      "color": "#71d8f2",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "toy-train",
+      "name": "Toy train circuit",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.03,
+          "y": 0.7250000000000001
+        },
+        {
+          "x": 0.25,
+          "y": 0.7250000000000001
+        },
+        {
+          "x": 0.25,
+          "y": 0.925
+        },
+        {
+          "x": 0.03,
+          "y": 0.925
+        }
+      ],
+      "effectId": "toy-train",
+      "color": "#e49765",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "haunted-portraits",
+      "name": "Haunted portraits",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.265,
+          "y": 0.7250000000000001
+        },
+        {
+          "x": 0.485,
+          "y": 0.7250000000000001
+        },
+        {
+          "x": 0.485,
+          "y": 0.925
+        },
+        {
+          "x": 0.265,
+          "y": 0.925
+        }
+      ],
+      "effectId": "haunted-portraits",
+      "color": "#ccb293",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    }
+  ],
+  "stacks": []
+}

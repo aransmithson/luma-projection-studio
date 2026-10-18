@@ -1,0 +1,282 @@
+{
+  "version": 1,
+  "name": "Stage light and silk",
+  "width": 1920,
+  "height": 1080,
+  "brightness": 1,
+  "surfaces": [
+    {
+      "id": "4176ead2-d4ca-489c-bd45-f04df17308f8",
+      "name": "Marquee light wall",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.012,
+          "y": 0.012
+        },
+        {
+          "x": 0.238,
+          "y": 0.012
+        },
+        {
+          "x": 0.238,
+          "y": 0.488
+        },
+        {
+          "x": 0.012,
+          "y": 0.488
+        }
+      ],
+      "effectId": "marquee-wall",
+      "color": "#ffce8b",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "5d257599-15d5-4855-bdc1-c352e25eb58d",
+      "name": "Prism LED flares",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.262,
+          "y": 0.012
+        },
+        {
+          "x": 0.488,
+          "y": 0.012
+        },
+        {
+          "x": 0.488,
+          "y": 0.488
+        },
+        {
+          "x": 0.262,
+          "y": 0.488
+        }
+      ],
+      "effectId": "led-prism",
+      "color": "#9a79ff",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "a8536148-34c4-41d2-923a-7bb975927dc1",
+      "name": "Stardust cascade",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.512,
+          "y": 0.012
+        },
+        {
+          "x": 0.738,
+          "y": 0.012
+        },
+        {
+          "x": 0.738,
+          "y": 0.488
+        },
+        {
+          "x": 0.512,
+          "y": 0.488
+        }
+      ],
+      "effectId": "stardust-cascade",
+      "color": "#b08cff",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "d11e355d-49aa-42b8-945a-60a3d18f1dcd",
+      "name": "Photon runway",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.762,
+          "y": 0.012
+        },
+        {
+          "x": 0.988,
+          "y": 0.012
+        },
+        {
+          "x": 0.988,
+          "y": 0.488
+        },
+        {
+          "x": 0.762,
+          "y": 0.488
+        }
+      ],
+      "effectId": "photon-runway",
+      "color": "#ab78ff",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "7856b81a-2ead-4383-825a-9b2961d1c7dc",
+      "name": "Spectrum dot matrix",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.012,
+          "y": 0.512
+        },
+        {
+          "x": 0.238,
+          "y": 0.512
+        },
+        {
+          "x": 0.238,
+          "y": 0.988
+        },
+        {
+          "x": 0.012,
+          "y": 0.988
+        }
+      ],
+      "effectId": "spectrum-dots",
+      "color": "#3de0ce",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "2a9489d9-580f-4beb-bebd-a42c6566eb58",
+      "name": "Pearl silk",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.262,
+          "y": 0.512
+        },
+        {
+          "x": 0.488,
+          "y": 0.512
+        },
+        {
+          "x": 0.488,
+          "y": 0.988
+        },
+        {
+          "x": 0.262,
+          "y": 0.988
+        }
+      ],
+      "effectId": "pearl-silk",
+      "color": "#d5e5f0",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "4ee660b8-b228-48ce-8301-a5463f8d8a82",
+      "name": "Marquee alphabet",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.512,
+          "y": 0.512
+        },
+        {
+          "x": 0.738,
+          "y": 0.512
+        },
+        {
+          "x": 0.738,
+          "y": 0.988
+        },
+        {
+          "x": 0.512,
+          "y": 0.988
+        }
+      ],
+      "effectId": "marquee-alphabet",
+      "color": "#ffd28c",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "5fc6d7c7-006a-42e0-8ad8-0ec8d111ac7f",
+      "name": "Crimson silk",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.762,
+          "y": 0.512
+        },
+        {
+          "x": 0.988,
+          "y": 0.512
+        },
+        {
+          "x": 0.988,
+          "y": 0.988
+        },
+        {
+          "x": 0.762,
+          "y": 0.988
+        }
+      ],
+      "effectId": "crimson-silk",
+      "color": "#db254e",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    }
+  ],
+  "stacks": []
+}

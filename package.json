@@ -1,0 +1,96 @@
+{
+  "name": "luma-projection-studio",
+  "version": "1.15.2",
+  "private": true,
+  "description": "Bring surfaces to life. Desktop projection mapping with flexible shapes, linked stories and music-reactive effects.",
+  "author": "Aran Smithson",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aransmithson/luma-projection-studio.git"
+  },
+  "bugs": {
+    "url": "https://github.com/aransmithson/luma-projection-studio/issues"
+  },
+  "homepage": "https://github.com/aransmithson/luma-projection-studio#readme",
+  "license": "UNLICENSED",
+  "type": "module",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "postinstall": "node node_modules/electron/install.js",
+    "dev": "node scripts/dev.mjs",
+    "dev:web": "vite --host 127.0.0.1",
+    "build": "tsc -b && vite build",
+    "start": "node scripts/launch.mjs",
+    "test": "vitest run",
+    "test:desktop": "node scripts/smoke.mjs && node scripts/improvements.mjs",
+    "test:creative": "node scripts/creative-workflow.mjs",
+    "test:effects": "node scripts/effects-check.mjs",
+    "test:architecture": "node scripts/architectural-workflow.mjs",
+    "test:edges": "node scripts/edge-check.mjs",
+    "test:placement": "node scripts/placement-workflow.mjs",
+    "test:cutouts": "node scripts/cutouts-workflow.mjs",
+    "test:peeks-blocks": "node scripts/peeks-blocks-workflow.mjs",
+    "test:package": "node scripts/verify-package.mjs",
+    "test:portable": "node scripts/verify-portable.mjs",
+    "test:startup": "node scripts/verify-startup.mjs",
+    "test:startup-recovery": "node scripts/startup-recovery.mjs",
+    "package": "npm run build && node scripts/icon.mjs && electron-builder --win portable",
+    "test:storybook": "node scripts/storybook-workflow.mjs",
+    "test:cosmic": "node scripts/cosmic-workflow.mjs",
+    "test:compositing": "node scripts/compositing-check.mjs",
+    "test:depth": "node scripts/depth-workflow.mjs",
+    "test:eyeballs": "node scripts/eyeballs-workflow.mjs",
+    "test:stage": "node scripts/stage-workflow.mjs",
+    "test:chases": "node scripts/chase-workflow.mjs",
+    "test:layers": "node scripts/layers-workflow.mjs",
+    "test:clipboard": "node scripts/clipboard-workflow.mjs",
+    "test:linked": "node scripts/linked-workflow.mjs",
+    "test:content-portal": "node scripts/content-portal-check.mjs",
+    "test:portals": "node scripts/portal-workflow.mjs",
+    "test:audio": "node scripts/audio-workflow.mjs",
+    "test:audio-render": "node scripts/audio-render-check.mjs"
+  },
+  "dependencies": {
+    "earcut": "^3.0.2",
+    "lucide-react": "^1.59.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/earcut": "^3.0.0",
+    "@types/node": "^24.10.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "latest",
+    "electron": "^44.9.0",
+    "electron-builder": "26.15.3",
+    "pngjs": "7.0.0",
+    "typescript": "^5.9.3",
+    "vite": "^8.3.4",
+    "vitest": "^4.0.18"
+  },
+  "build": {
+    "appId": "studio.luma.projection",
+    "productName": "Luma Projection Studio",
+    "asar": false,
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json",
+      "!node_modules/**/*"
+    ],
+    "win": {
+      "target": "portable",
+      "icon": "build/icon.ico",
+      "signAndEditExecutable": false
+    },
+    "portable": {
+      "artifactName": "Luma-Projection-Studio-${version}.exe"
+    }
+  }
+}

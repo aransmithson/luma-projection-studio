@@ -1,0 +1,126 @@
+{
+  "version": 1,
+  "name": "Icy water cascade",
+  "width": 1920,
+  "height": 1080,
+  "brightness": 1,
+  "surfaces": [
+    {
+      "id": "ice-0",
+      "name": "Ice · Upper",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.35,
+          "y": 0.065
+        },
+        {
+          "x": 0.6499999999999999,
+          "y": 0.065
+        },
+        {
+          "x": 0.6499999999999999,
+          "y": 0.3
+        },
+        {
+          "x": 0.35,
+          "y": 0.3
+        }
+      ],
+      "effectId": "stacked-liquid",
+      "color": "#97dfff",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 230
+    },
+    {
+      "id": "ice-1",
+      "name": "Ice · Middle",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.35,
+          "y": 0.38
+        },
+        {
+          "x": 0.6499999999999999,
+          "y": 0.38
+        },
+        {
+          "x": 0.6499999999999999,
+          "y": 0.615
+        },
+        {
+          "x": 0.35,
+          "y": 0.615
+        }
+      ],
+      "effectId": "stacked-liquid",
+      "color": "#97dfff",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 247
+    },
+    {
+      "id": "ice-2",
+      "name": "Ice · Lower",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.35,
+          "y": 0.6950000000000001
+        },
+        {
+          "x": 0.6499999999999999,
+          "y": 0.6950000000000001
+        },
+        {
+          "x": 0.6499999999999999,
+          "y": 0.93
+        },
+        {
+          "x": 0.35,
+          "y": 0.93
+        }
+      ],
+      "effectId": "stacked-liquid",
+      "color": "#97dfff",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 264
+    }
+  ],
+  "stacks": [
+    {
+      "id": "ice-cascade",
+      "name": "Icy water cascade",
+      "surfaceIds": [
+        "ice-0",
+        "ice-1",
+        "ice-2"
+      ],
+      "duration": 18,
+      "color": "#97dfff",
+      "links": true,
+      "style": "ice"
+    }
+  ]
+}

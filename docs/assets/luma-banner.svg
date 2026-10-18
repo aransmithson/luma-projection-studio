@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="340" viewBox="0 0 1200 340" role="img" aria-labelledby="title desc">
+  <title id="title">Luma — Bring surfaces to life.</title>
+  <desc id="desc">A faceted light symbol and three illuminated surfaces on a dark projection grid.</desc>
+  <defs>
+    <linearGradient id="background" x2="1" y2="1">
+      <stop stop-color="#131822"/>
+      <stop offset="1" stop-color="#211c30"/>
+    </linearGradient>
+    <linearGradient id="cyan" x2="1" y2="1">
+      <stop stop-color="#70e8ee" stop-opacity=".9"/>
+      <stop offset="1" stop-color="#70e8ee" stop-opacity=".12"/>
+    </linearGradient>
+    <linearGradient id="violet" x2="1" y2="1">
+      <stop stop-color="#b69af1" stop-opacity=".8"/>
+      <stop offset="1" stop-color="#b69af1" stop-opacity=".1"/>
+    </linearGradient>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#8b84aa" stroke-opacity=".1"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="340" rx="20" fill="url(#background)"/>
+  <rect x="700" width="500" height="340" fill="url(#grid)"/>
+  <g transform="translate(48 59) scale(.38)">
+    <polygon points="42,82 128,32 214,82 128,132" fill="#70e8ee"/>
+    <polygon points="42,100 116,143 116,224 42,181" fill="#9b80ee"/>
+    <polygon points="140,143 214,100 214,181 140,224" fill="#d8a4f4"/>
+  </g>
+  <text x="162" y="142" fill="#f5f1ff" font-family="Segoe UI,Arial,sans-serif" font-size="96" font-weight="650" letter-spacing="-5">luma<tspan fill="#70e8ee">.</tspan></text>
+  <text x="65" y="205" fill="#e3d9f2" font-family="Segoe UI,Arial,sans-serif" font-size="28">Bring surfaces to life.</text>
+  <text x="65" y="263" fill="#a69bb6" font-family="Segoe UI,Arial,sans-serif" font-size="15" letter-spacing="2">DESKTOP PROJECTION MAPPING</text>
+  <g stroke-width="1.5" stroke-linejoin="round">
+    <path d="m855 65 218 38-66 76-207-30Z" fill="url(#cyan)" stroke="#70e8ee"/>
+    <path d="m800 173 207 29v96l-207-23Z" fill="url(#violet)" stroke="#b69af1"/>
+    <path d="m1030 202 66-76v96l-66 76Z" fill="#d8a4f4" fill-opacity=".25" stroke="#d8a4f4"/>
+    <path d="m855 65 152 114m-207-30 273-46m-273 70 207 125m-207-23 207-73" fill="none" stroke="#f2ecff" stroke-opacity=".22"/>
+  </g>
+  <g fill="#f0eaff"><circle cx="855" cy="65" r="4"/><circle cx="1073" cy="103" r="4"/><circle cx="800" cy="173" r="4"/><circle cx="1007" cy="298" r="4"/></g>
+</svg>

@@ -1,0 +1,214 @@
+{
+  "version": 1,
+  "name": "Shadow puppet theatres",
+  "width": 1920,
+  "height": 1080,
+  "brightness": 1,
+  "surfaces": [
+    {
+      "id": "puppet-woodland",
+      "name": "Woodland fables",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.03,
+          "y": 0.05
+        },
+        {
+          "x": 0.32833333333333325,
+          "y": 0.05
+        },
+        {
+          "x": 0.32833333333333325,
+          "y": 0.475
+        },
+        {
+          "x": 0.03,
+          "y": 0.475
+        }
+      ],
+      "effectId": "puppet-woodland",
+      "color": "#f4c987",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "puppet-dragon",
+      "name": "Dragon castle",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.34333333333333327,
+          "y": 0.05
+        },
+        {
+          "x": 0.6416666666666665,
+          "y": 0.05
+        },
+        {
+          "x": 0.6416666666666665,
+          "y": 0.475
+        },
+        {
+          "x": 0.34333333333333327,
+          "y": 0.475
+        }
+      ],
+      "effectId": "puppet-dragon",
+      "color": "#e9b29f",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "puppet-ocean",
+      "name": "Ocean tales",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.6566666666666666,
+          "y": 0.05
+        },
+        {
+          "x": 0.955,
+          "y": 0.05
+        },
+        {
+          "x": 0.955,
+          "y": 0.475
+        },
+        {
+          "x": 0.6566666666666666,
+          "y": 0.475
+        }
+      ],
+      "effectId": "puppet-ocean",
+      "color": "#95d6cd",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "puppet-ballet",
+      "name": "Moonlight ballet",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.03,
+          "y": 0.5
+        },
+        {
+          "x": 0.32833333333333325,
+          "y": 0.5
+        },
+        {
+          "x": 0.32833333333333325,
+          "y": 0.9249999999999999
+        },
+        {
+          "x": 0.03,
+          "y": 0.9249999999999999
+        }
+      ],
+      "effectId": "puppet-ballet",
+      "color": "#c8b4ec",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "puppet-spooky",
+      "name": "Spooky parade",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.34333333333333327,
+          "y": 0.5
+        },
+        {
+          "x": 0.6416666666666665,
+          "y": 0.5
+        },
+        {
+          "x": 0.6416666666666665,
+          "y": 0.9249999999999999
+        },
+        {
+          "x": 0.34333333333333327,
+          "y": 0.9249999999999999
+        }
+      ],
+      "effectId": "puppet-spooky",
+      "color": "#ecc382",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "puppet-winter",
+      "name": "Winter sleigh",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.6566666666666666,
+          "y": 0.5
+        },
+        {
+          "x": 0.955,
+          "y": 0.5
+        },
+        {
+          "x": 0.955,
+          "y": 0.9249999999999999
+        },
+        {
+          "x": 0.6566666666666666,
+          "y": 0.9249999999999999
+        }
+      ],
+      "effectId": "puppet-winter",
+      "color": "#bfd5eb",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    }
+  ],
+  "stacks": []
+}

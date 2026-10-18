@@ -1,0 +1,350 @@
+{
+  "stacks": [],
+  "version": 1,
+  "name": "Cosmic voyage",
+  "width": 1920,
+  "height": 1080,
+  "brightness": 1,
+  "surfaces": [
+    {
+      "id": "283ba1d1-006c-4367-bd6b-156e88aba7bc",
+      "name": "Warp speed",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.03,
+          "y": 0.04
+        },
+        {
+          "x": 0.247,
+          "y": 0.04
+        },
+        {
+          "x": 0.247,
+          "y": 0.3166666666666667
+        },
+        {
+          "x": 0.03,
+          "y": 0.3166666666666667
+        }
+      ],
+      "effectId": "warp-speed",
+      "color": "#84cfff",
+      "opacity": 1,
+      "speed": 1,
+      "colorCycle": false,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42
+    },
+    {
+      "id": "97abd7ff-7a55-4262-86b2-f8c5562ea849",
+      "name": "The Moon",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.265,
+          "y": 0.04
+        },
+        {
+          "x": 0.482,
+          "y": 0.04
+        },
+        {
+          "x": 0.482,
+          "y": 0.3166666666666667
+        },
+        {
+          "x": 0.265,
+          "y": 0.3166666666666667
+        }
+      ],
+      "effectId": "lunar-orbit",
+      "color": "#c9d5ea",
+      "opacity": 1,
+      "speed": 1,
+      "colorCycle": false,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 51
+    },
+    {
+      "id": "f796d649-e423-49f1-8010-de0897695ba1",
+      "name": "Saturn & rings",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.5,
+          "y": 0.04
+        },
+        {
+          "x": 0.717,
+          "y": 0.04
+        },
+        {
+          "x": 0.717,
+          "y": 0.3166666666666667
+        },
+        {
+          "x": 0.5,
+          "y": 0.3166666666666667
+        }
+      ],
+      "effectId": "saturn-rings",
+      "color": "#eed6a0",
+      "opacity": 1,
+      "speed": 1,
+      "colorCycle": false,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 60
+    },
+    {
+      "id": "4c83d5dc-b125-4b8b-877c-09aea7b037c2",
+      "name": "Jupiter",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.735,
+          "y": 0.04
+        },
+        {
+          "x": 0.952,
+          "y": 0.04
+        },
+        {
+          "x": 0.952,
+          "y": 0.3166666666666667
+        },
+        {
+          "x": 0.735,
+          "y": 0.3166666666666667
+        }
+      ],
+      "effectId": "jupiter-storms",
+      "color": "#e9bb91",
+      "opacity": 1,
+      "speed": 1,
+      "colorCycle": false,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 69
+    },
+    {
+      "id": "e3ea3189-e2e1-4a68-9602-0c1298d99b60",
+      "name": "ISS: Earth orbit",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.03,
+          "y": 0.3466666666666667
+        },
+        {
+          "x": 0.247,
+          "y": 0.3466666666666667
+        },
+        {
+          "x": 0.247,
+          "y": 0.6233333333333334
+        },
+        {
+          "x": 0.03,
+          "y": 0.6233333333333334
+        }
+      ],
+      "effectId": "iss-orbit",
+      "color": "#80cfff",
+      "opacity": 1,
+      "speed": 1,
+      "colorCycle": false,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 78
+    },
+    {
+      "id": "41563536-e705-4e0a-a54f-86b5cd2b20dd",
+      "name": "Spiral galaxy",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.265,
+          "y": 0.3466666666666667
+        },
+        {
+          "x": 0.482,
+          "y": 0.3466666666666667
+        },
+        {
+          "x": 0.482,
+          "y": 0.6233333333333334
+        },
+        {
+          "x": 0.265,
+          "y": 0.6233333333333334
+        }
+      ],
+      "effectId": "spiral-galaxy",
+      "color": "#b794ff",
+      "opacity": 1,
+      "speed": 1,
+      "colorCycle": false,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 87
+    },
+    {
+      "id": "a666672d-991b-4fa6-84ab-39ba43cbf766",
+      "name": "Stellar nebula",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.5,
+          "y": 0.3466666666666667
+        },
+        {
+          "x": 0.717,
+          "y": 0.3466666666666667
+        },
+        {
+          "x": 0.717,
+          "y": 0.6233333333333334
+        },
+        {
+          "x": 0.5,
+          "y": 0.6233333333333334
+        }
+      ],
+      "effectId": "stellar-nebula",
+      "color": "#dd86da",
+      "opacity": 1,
+      "speed": 1,
+      "colorCycle": false,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 96
+    },
+    {
+      "id": "180b7b39-3bd1-41be-95f4-26fd545ca1f8",
+      "name": "Solar prominences",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.735,
+          "y": 0.3466666666666667
+        },
+        {
+          "x": 0.952,
+          "y": 0.3466666666666667
+        },
+        {
+          "x": 0.952,
+          "y": 0.6233333333333334
+        },
+        {
+          "x": 0.735,
+          "y": 0.6233333333333334
+        }
+      ],
+      "effectId": "solar-prominences",
+      "color": "#ffb14a",
+      "opacity": 1,
+      "speed": 1,
+      "colorCycle": false,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 105
+    },
+    {
+      "id": "6b05f8b5-7270-411d-a9ac-8b0a2bc43722",
+      "name": "Comet flyby",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.03,
+          "y": 0.6533333333333334
+        },
+        {
+          "x": 0.247,
+          "y": 0.6533333333333334
+        },
+        {
+          "x": 0.247,
+          "y": 0.9300000000000002
+        },
+        {
+          "x": 0.03,
+          "y": 0.9300000000000002
+        }
+      ],
+      "effectId": "comet-flyby",
+      "color": "#88dbff",
+      "opacity": 1,
+      "speed": 1,
+      "colorCycle": false,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 114
+    },
+    {
+      "id": "4d3fe8df-61c8-470c-a59d-a6fe53efd337",
+      "name": "Asteroid belt",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.265,
+          "y": 0.6533333333333334
+        },
+        {
+          "x": 0.482,
+          "y": 0.6533333333333334
+        },
+        {
+          "x": 0.482,
+          "y": 0.9300000000000002
+        },
+        {
+          "x": 0.265,
+          "y": 0.9300000000000002
+        }
+      ],
+      "effectId": "asteroid-belt",
+      "color": "#c7ac8b",
+      "opacity": 1,
+      "speed": 1,
+      "colorCycle": false,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 123
+    }
+  ]
+}

@@ -1,0 +1,362 @@
+{
+  "version": 1,
+  "name": "Colour overlay lab",
+  "width": 1920,
+  "height": 1080,
+  "brightness": 1,
+  "surfaces": [
+    {
+      "id": "4044c65e-d449-482b-ac94-847c6a7f4215",
+      "name": "Full colour wash",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.015,
+          "y": 0.02
+        },
+        {
+          "x": 0.235,
+          "y": 0.02
+        },
+        {
+          "x": 0.235,
+          "y": 0.48000000000000004
+        },
+        {
+          "x": 0.015,
+          "y": 0.48000000000000004
+        }
+      ],
+      "effectId": "brushed-aluminium",
+      "color": "#b4c4cf",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "colorOverlay": {
+        "enabled": true,
+        "style": "wash",
+        "palette": "spectrum",
+        "blend": "soft-light",
+        "intensity": 0.85,
+        "speed": 1,
+        "scale": 1,
+        "reverse": false
+      }
+    },
+    {
+      "id": "1d5ab477-cb38-443f-94f5-8cdd7565ec9a",
+      "name": "Travelling bands",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.265,
+          "y": 0.02
+        },
+        {
+          "x": 0.485,
+          "y": 0.02
+        },
+        {
+          "x": 0.485,
+          "y": 0.48000000000000004
+        },
+        {
+          "x": 0.265,
+          "y": 0.48000000000000004
+        }
+      ],
+      "effectId": "brushed-aluminium",
+      "color": "#b4c4cf",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 43,
+      "colorOverlay": {
+        "enabled": true,
+        "style": "bands",
+        "palette": "neon",
+        "blend": "soft-light",
+        "intensity": 0.85,
+        "speed": 1,
+        "scale": 1,
+        "reverse": false
+      }
+    },
+    {
+      "id": "200c4fe1-a723-43d8-a8f8-c8e3c064798d",
+      "name": "Radial ripples",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.515,
+          "y": 0.02
+        },
+        {
+          "x": 0.735,
+          "y": 0.02
+        },
+        {
+          "x": 0.735,
+          "y": 0.48000000000000004
+        },
+        {
+          "x": 0.515,
+          "y": 0.48000000000000004
+        }
+      ],
+      "effectId": "brushed-aluminium",
+      "color": "#b4c4cf",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 44,
+      "colorOverlay": {
+        "enabled": true,
+        "style": "ripples",
+        "palette": "sunset",
+        "blend": "soft-light",
+        "intensity": 0.85,
+        "speed": 1,
+        "scale": 1,
+        "reverse": false
+      }
+    },
+    {
+      "id": "2bc5dcc5-a7fd-4d56-8552-25dee0a97dae",
+      "name": "Rotating sweep",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.765,
+          "y": 0.02
+        },
+        {
+          "x": 0.985,
+          "y": 0.02
+        },
+        {
+          "x": 0.985,
+          "y": 0.48000000000000004
+        },
+        {
+          "x": 0.765,
+          "y": 0.48000000000000004
+        }
+      ],
+      "effectId": "brushed-aluminium",
+      "color": "#b4c4cf",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 45,
+      "colorOverlay": {
+        "enabled": true,
+        "style": "sweep",
+        "palette": "ocean",
+        "blend": "soft-light",
+        "intensity": 0.85,
+        "speed": 1,
+        "scale": 1,
+        "reverse": false
+      }
+    },
+    {
+      "id": "deeb1bce-445f-4fc1-be28-7eb122c25b4f",
+      "name": "Aurora ribbons",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.015,
+          "y": 0.52
+        },
+        {
+          "x": 0.235,
+          "y": 0.52
+        },
+        {
+          "x": 0.235,
+          "y": 0.98
+        },
+        {
+          "x": 0.015,
+          "y": 0.98
+        }
+      ],
+      "effectId": "brushed-aluminium",
+      "color": "#b4c4cf",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 46,
+      "colorOverlay": {
+        "enabled": true,
+        "style": "aurora",
+        "palette": "ember",
+        "blend": "soft-light",
+        "intensity": 0.85,
+        "speed": 1,
+        "scale": 1,
+        "reverse": false
+      }
+    },
+    {
+      "id": "6bdd5fff-4f82-4b11-a14c-6294bcc38a53",
+      "name": "Checker pulse",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.265,
+          "y": 0.52
+        },
+        {
+          "x": 0.485,
+          "y": 0.52
+        },
+        {
+          "x": 0.485,
+          "y": 0.98
+        },
+        {
+          "x": 0.265,
+          "y": 0.98
+        }
+      ],
+      "effectId": "brushed-aluminium",
+      "color": "#b4c4cf",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 47,
+      "colorOverlay": {
+        "enabled": true,
+        "style": "checker",
+        "palette": "pastel",
+        "blend": "soft-light",
+        "intensity": 0.85,
+        "speed": 1,
+        "scale": 1,
+        "reverse": false
+      }
+    },
+    {
+      "id": "267a4aa6-eed9-4e89-8a8b-f9b01983df09",
+      "name": "Prismatic facets",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.515,
+          "y": 0.52
+        },
+        {
+          "x": 0.735,
+          "y": 0.52
+        },
+        {
+          "x": 0.735,
+          "y": 0.98
+        },
+        {
+          "x": 0.515,
+          "y": 0.98
+        }
+      ],
+      "effectId": "brushed-aluminium",
+      "color": "#b4c4cf",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 48,
+      "colorOverlay": {
+        "enabled": true,
+        "style": "facets",
+        "palette": "halloween",
+        "blend": "soft-light",
+        "intensity": 0.85,
+        "speed": 1,
+        "scale": 1,
+        "reverse": false
+      }
+    },
+    {
+      "id": "2f6c35ac-8267-40e6-889a-8c39aabbb484",
+      "name": "Orbiting spotlight",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.765,
+          "y": 0.52
+        },
+        {
+          "x": 0.985,
+          "y": 0.52
+        },
+        {
+          "x": 0.985,
+          "y": 0.98
+        },
+        {
+          "x": 0.765,
+          "y": 0.98
+        }
+      ],
+      "effectId": "brushed-aluminium",
+      "color": "#b4c4cf",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 49,
+      "colorOverlay": {
+        "enabled": true,
+        "style": "spotlight",
+        "palette": "christmas",
+        "blend": "soft-light",
+        "intensity": 0.85,
+        "speed": 1,
+        "scale": 1,
+        "reverse": false
+      }
+    }
+  ],
+  "stacks": []
+}

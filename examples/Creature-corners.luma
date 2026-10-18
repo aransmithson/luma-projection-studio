@@ -1,0 +1,150 @@
+{
+  "version": 1,
+  "name": "Creature corners",
+  "width": 1920,
+  "height": 1080,
+  "brightness": 1,
+  "surfaces": [
+    {
+      "id": "fox",
+      "name": "Fox around the corner",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.04,
+          "y": 0.06
+        },
+        {
+          "x": 0.48,
+          "y": 0.06
+        },
+        {
+          "x": 0.48,
+          "y": 0.46
+        },
+        {
+          "x": 0.04,
+          "y": 0.46
+        }
+      ],
+      "effectId": "corner-fox",
+      "color": "#eea35c",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "effectSide": "left"
+    },
+    {
+      "id": "bunny",
+      "name": "Shy little bunny",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.52,
+          "y": 0.06
+        },
+        {
+          "x": 0.96,
+          "y": 0.06
+        },
+        {
+          "x": 0.96,
+          "y": 0.46
+        },
+        {
+          "x": 0.52,
+          "y": 0.46
+        }
+      ],
+      "effectId": "corner-bunny",
+      "color": "#e6c2c7",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "effectSide": "right"
+    },
+    {
+      "id": "raccoon",
+      "name": "Curious raccoon",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.04,
+          "y": 0.52
+        },
+        {
+          "x": 0.48,
+          "y": 0.52
+        },
+        {
+          "x": 0.48,
+          "y": 0.92
+        },
+        {
+          "x": 0.04,
+          "y": 0.92
+        }
+      ],
+      "effectId": "corner-raccoon",
+      "color": "#b8c4d4",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "effectSide": "left"
+    },
+    {
+      "id": "dragon",
+      "name": "Pocket dragon",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.52,
+          "y": 0.52
+        },
+        {
+          "x": 0.96,
+          "y": 0.52
+        },
+        {
+          "x": 0.96,
+          "y": 0.92
+        },
+        {
+          "x": 0.52,
+          "y": 0.92
+        }
+      ],
+      "effectId": "corner-dragon",
+      "color": "#9fbaed",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "effectSide": "right"
+    }
+  ],
+  "stacks": []
+}
