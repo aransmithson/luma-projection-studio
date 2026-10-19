@@ -2191,6 +2191,9 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
 .effect-apply:disabled {
   opacity: 1;
 }
+.transparent-effect-preview {
+  background: repeating-conic-gradient(#182230 0% 25%, #253243 0% 50%) 0 / 16px 16px;
+}
 .effect-thumbnail {
   height: 100px;
   position: relative;

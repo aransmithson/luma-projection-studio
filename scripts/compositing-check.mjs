@@ -217,6 +217,68 @@ try {
       });
     }
     const s = { ...top, colorOverlay: defaultColorOverlay };
+    const crackReports = [];
+    for (const effectId of ["cracks-glass", "cracks-stone", "cracks-frost"]) {
+      const crack = { ...top, effectId, color: "#d1efff", blend: "normal" };
+      const backdrop = render([base], 7.75);
+      for (const mode of blendModes) {
+        const result = render([base, { ...crack, blend: mode.id }], 7.75);
+        let untouched = 0;
+        for (let k = 0; k < result.length; k += 4)
+          if (
+            result
+              .slice(k, k + 3)
+              .every((v, ch) => Math.abs(v - backdrop[k + ch]) <= 1)
+          )
+            untouched++;
+        if (untouched / (320 * 240) < 0.65)
+          throw Error(`${effectId}/${mode.id} covers transparent pixels`);
+      }
+      const active = render([base, crack], 7.75);
+      if (meanDiff(active, backdrop) < 0.08)
+        throw Error(`${effectId} has no visible cracks`);
+      if (meanDiff(render([base, crack], 0), render([base], 0)) !== 0)
+        throw Error(`${effectId} restart leaves stale pixels`);
+      if (meanDiff(render([base, crack], 16), render([base], 16)) !== 0)
+        throw Error(`${effectId} loop seam is opaque`);
+      // Use a static base so its own animation duration cannot hide a loop mismatch.
+      const stillBase = { ...base, effectId: "brushed-aluminium" };
+      if (
+        meanDiff(
+          render([stillBase, crack], 7.75),
+          render([stillBase, crack], 23.75),
+        ) !== 0
+      )
+        throw Error(`${effectId} deterministic overlay loop failed`);
+      const masked = render([base, crack, hole], 7.75),
+        center = (120 * 320 + 160) * 4;
+      if (
+        masked
+          .slice(center, center + 3)
+          .some((v, ch) => Math.abs(v - backdrop[center + ch]) > 1)
+      )
+        throw Error(`${effectId} ignores shape holes`);
+      // Same surface ID changes alpha mode twice: cached textures cannot retain a black pane.
+      render([base, top], 7.75);
+      if (meanDiff(active, render([base, crack], 7.75)) !== 0)
+        throw Error(`${effectId} opaque-to-alpha reassignment failed`);
+      const meshA = render([crack], 7.75, { placementMesh: true }),
+        meshB = render([top], 7.75, { placementMesh: true });
+      if (meanDiff(meshA, meshB) !== 0)
+        throw Error(`${effectId} transparency affects placement mesh`);
+      const coloured = { ...crack, colorOverlay: defaultColorOverlay };
+      if (meanDiff(render([base, coloured], 0), render([base], 0)) !== 0)
+        throw Error(`${effectId} colour overlay fills transparent pixels`);
+      crackReports.push({
+        effectId,
+        allBlendModes: true,
+        holes: true,
+        restart: true,
+        reassignment: true,
+        mesh: true,
+        colourOverlay: true,
+      });
+    }
     const meshes = [
       render([s], 1, { placementMesh: true }),
       render([top], 1, { placementMesh: true }),
@@ -260,6 +322,7 @@ try {
     if (meanDiff(liquidA, liquidB) < 0.5)
       throw Error("Overlay did not work on stack members");
     const result = {
+      crackReports,
       blendReports,
       overlayReports,
       cutouts: true,
@@ -284,7 +347,7 @@ try {
     JSON.stringify(report, null, 2),
   );
   console.log(
-    "PASS: ten GPU blend modes match CPU compositing at full/partial opacity; cutouts, feather, brightness, eight animated overlays, pause/loop, still texture caching, stacks and mesh/calibration bypass.",
+    "PASS: ten GPU blend modes match CPU compositing at full/partial opacity; three transparent crack effects preserve lower layers, holes, restart, alpha switching and mesh; feather, brightness, eight colour overlays, still caching and stacks.",
   );
 } finally {
   if (app) await app.close();

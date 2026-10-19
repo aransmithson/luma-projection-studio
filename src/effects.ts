@@ -70,8 +70,11 @@ export function drawEffect(
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.globalAlpha = 1;
   ctx.globalCompositeOperation = "source-over";
-  ctx.fillStyle = "#03050b";
-  ctx.fillRect(0, 0, w, h);
+  if (effectById[id].transparent) ctx.clearRect(0, 0, w, h);
+  else {
+    ctx.fillStyle = "#03050b";
+    ctx.fillRect(0, 0, w, h);
+  }
   ctx.save();
   if (
     ["Creatures", "Chase scenes"].includes(effectById[id].category) &&
@@ -94,8 +97,10 @@ export function drawEffect(
   ctx.scale(patternScale, patternScale);
   ctx.translate(-w / 2, -h / 2);
   // The oversized fill keeps the surface opaque even when the pattern is zoomed out.
-  ctx.fillStyle = id === "candy" ? "#f3e6d3" : "#03050b";
-  ctx.fillRect(-w * 4, -h * 4, w * 9, h * 9);
+  if (!effectById[id].transparent) {
+    ctx.fillStyle = id === "candy" ? "#f3e6d3" : "#03050b";
+    ctx.fillRect(-w * 4, -h * 4, w * 9, h * 9);
+  }
 
   const extended = extendedPainters[id];
   if (id === "edge-runner")

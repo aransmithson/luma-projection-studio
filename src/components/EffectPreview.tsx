@@ -16,7 +16,7 @@ export function EffectPreview({
   const ref = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     const canvas = ref.current!,
-      ctx = canvas.getContext("2d", { alpha: false })!;
+      ctx = canvas.getContext("2d")!;
     drawEffect(
       ctx,
       effect.id,
@@ -60,5 +60,13 @@ export function EffectPreview({
       observer.disconnect();
     };
   }, [effect, active, scale, direction]);
-  return <canvas ref={ref} width={280} height={160} aria-hidden="true" />;
+  return (
+    <canvas
+      ref={ref}
+      width={280}
+      height={160}
+      className={effect.transparent ? "transparent-effect-preview" : undefined}
+      aria-hidden="true"
+    />
+  );
 }

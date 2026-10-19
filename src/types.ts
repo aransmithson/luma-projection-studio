@@ -10,6 +10,8 @@ export type StickEffectId =
   | "stick-box-buddies";
 export type EffectCategory =
   | "Imported"
+  | "Hypnotic"
+  | "Overlays"
   | "Imagination"
   | "Music"
   | "Linked stories"
@@ -32,6 +34,7 @@ export type EffectCategory =
 export type EffectId =
   | StickEffectId
   | ImaginationEffectId
+  | DreamEffectId
   | "imported-media"
   | "eq-bars"
   | "eq-mirror"
@@ -311,6 +314,22 @@ export type Layer = {
   visible: boolean;
   locked: boolean;
 };
+export type DreamEffectId =
+  | "endless-cathedral"
+  | "neon-transit"
+  | "overgrown-arcade"
+  | "prismatic-hall"
+  | "hypno-spiral"
+  | "hypno-ribbons"
+  | "hypno-checker"
+  | "hypno-rosette"
+  | "hypno-marble"
+  | "sprouting-daisies"
+  | "sunflower-bloom"
+  | "moonflower-bloom"
+  | "cracks-glass"
+  | "cracks-stone"
+  | "cracks-frost";
 export type ChaseEffectId = Extract<EffectId, `chase-${string}`>;
 export type LiquidStyle = "water" | "lava" | "potion" | "ice";
 type StackBase = {

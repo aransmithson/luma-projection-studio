@@ -1,0 +1,220 @@
+{
+  "version": 1,
+  "name": "Transparent crack overlays",
+  "width": 1920,
+  "height": 1080,
+  "brightness": 1,
+  "surfaces": [
+    {
+      "id": "crack-base-0",
+      "name": "Rainbow beneath glass",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.025,
+          "y": 0.12
+        },
+        {
+          "x": 0.325,
+          "y": 0.12
+        },
+        {
+          "x": 0.325,
+          "y": 0.87
+        },
+        {
+          "x": 0.025,
+          "y": 0.87
+        }
+      ],
+      "effectId": "hypno-ribbons",
+      "color": "#ff84ca",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "effectSide": "left"
+    },
+    {
+      "id": "crack-base-1",
+      "name": "Brick beneath fissures",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.35000000000000003,
+          "y": 0.12
+        },
+        {
+          "x": 0.65,
+          "y": 0.12
+        },
+        {
+          "x": 0.65,
+          "y": 0.87
+        },
+        {
+          "x": 0.35000000000000003,
+          "y": 0.87
+        }
+      ],
+      "effectId": "red-brick",
+      "color": "#ad6246",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "effectSide": "left"
+    },
+    {
+      "id": "crack-base-2",
+      "name": "Metal beneath frost",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.675,
+          "y": 0.12
+        },
+        {
+          "x": 0.9750000000000001,
+          "y": 0.12
+        },
+        {
+          "x": 0.9750000000000001,
+          "y": 0.87
+        },
+        {
+          "x": 0.675,
+          "y": 0.87
+        }
+      ],
+      "effectId": "brushed-aluminium",
+      "color": "#9fc7d7",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "effectSide": "left"
+    },
+    {
+      "id": "crack-overlay-0",
+      "name": "Spreading glass cracks",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.025,
+          "y": 0.12
+        },
+        {
+          "x": 0.325,
+          "y": 0.12
+        },
+        {
+          "x": 0.325,
+          "y": 0.87
+        },
+        {
+          "x": 0.025,
+          "y": 0.87
+        }
+      ],
+      "effectId": "cracks-glass",
+      "color": "#d1efff",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "effectSide": "left"
+    },
+    {
+      "id": "crack-overlay-1",
+      "name": "Creeping stone fissures",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.35000000000000003,
+          "y": 0.12
+        },
+        {
+          "x": 0.65,
+          "y": 0.12
+        },
+        {
+          "x": 0.65,
+          "y": 0.87
+        },
+        {
+          "x": 0.35000000000000003,
+          "y": 0.87
+        }
+      ],
+      "effectId": "cracks-stone",
+      "color": "#ffc991",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "effectSide": "left"
+    },
+    {
+      "id": "crack-overlay-2",
+      "name": "Crystal frost cracks",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.675,
+          "y": 0.12
+        },
+        {
+          "x": 0.9750000000000001,
+          "y": 0.12
+        },
+        {
+          "x": 0.9750000000000001,
+          "y": 0.87
+        },
+        {
+          "x": 0.675,
+          "y": 0.87
+        }
+      ],
+      "effectId": "cracks-frost",
+      "color": "#a3e8ff",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "effectSide": "left"
+    }
+  ],
+  "stacks": []
+}

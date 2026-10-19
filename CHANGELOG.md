@@ -2,6 +2,15 @@
 
 Nox Projection Studio keeps the existing Luma project format and application identity.
 
+## 1.22.0
+
+- Added four endless depth scenes: **Endless cathedral**, **Neon transit tunnel**, **Overgrown arcade** and **Prismatic mirror hall**, with receding frames, column details, floor lines and lighting.
+- Added a **Hypnotic** collection: **Velvet spiral**, **Chromatic whirlpool**, **Checker vortex**, **Moire rosette** and **Liquid agate**. Their curved bands, counter-rotating lines and marbled contours use repeating 24-second motion.
+- Added **Daisy daydream**, **Sunflower parade** and **Luminous moonflowers** to **Nature**, with growing stems, unfolding leaves, layered flower heads and detailed pollen/seed centres.
+- Added **Spreading glass cracks**, **Creeping stone fissures** and **Crystal frost cracks** in **Overlays**. These 16-second animations preserve source transparency through the compositor, reveal the lower layer under Normal blend, and clear on Restart. Browser thumbnails show a checkerboard guide. Existing opaque effects and imported GIF transparency retain their behaviour.
+- Added a [fifteen-effect gallery](./examples/Dreamscape-collection.luma), [layered crack examples](./examples/Transparent-cracks.luma), timing/alpha tests and a native editor/projector workflow. Search **dreamscape** in **All effects** to see all fifteen. The library now contains **191 effects and materials: 179 animations and 12 still textures**.
+- Distributed the verified Windows ZIP with checksums. The unpacked editor passes native startup; the single-file portable launcher was blocked by Windows Code Integrity on the test PC and is not published for this version.
+
 ## 1.21.0
 
 - Added all ten Imagination concepts. The new **Imagination** collection contains **Living comic book**, **Claymation chaos**, **The yarn factory**, **Bubble-wrap creatures**, **Porcelain dreams**, **Living mosaic faces** and **Impossible rubber room**, with original procedural artwork and repeating 12-second routines.

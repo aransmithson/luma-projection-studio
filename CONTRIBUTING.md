@@ -31,6 +31,7 @@ Choose native workflows that exercise the change. Run them sequentially with the
 | Scene Animator | `npm run test:scene` and `npm run test:scene -- --packaged`, plus the media workflows |
 | Effect rendering | `npm run test:effects` and the relevant collection workflow |
 | Boxed stick figures | `npm run test:sticks` and `npm run test:sticks -- --packaged` |
+| Corridors, hypnotic patterns, flowers or transparent cracks | `npm run test:dreamscape` and `npm run test:dreamscape -- --packaged`; `npm run test:compositing` and media workflows after source-alpha changes |
 | Imagination styles | `npm run test:imagination`, `npm run test:stories` and their `-- --packaged` variants |
 
 Audio checks use generated input and a brief quiet loopback test tone. Clipboard tests restore the original clipboard unless the user has copied something new. Never point a test at the real profile or close an app the test did not launch.
@@ -41,8 +42,8 @@ Stop development servers and desktop tests before packaging. Build each version 
 
 ```powershell
 $env:ELECTRON_BUILDER_COMPRESSION_LEVEL='1'
-npm run package -- --config.directories.output=release/1.21.0
-$env:LUMA_RELEASE_DIR='release/1.21.0'
+npm run package -- --config.directories.output=release/1.22.0
+$env:LUMA_RELEASE_DIR='release/1.22.0'
 node scripts/improvements.mjs --packaged
 npm run test:startup -- unpacked --hidden --copy-saved-profile
 npm run test:startup -- portable
@@ -51,7 +52,7 @@ npm run test:startup-recovery -- --packaged
 
 Keep `build.asar: false` and `build.win.signAndEditExecutable: false`. Compare the unpacked executable's SHA-256 hash with `node_modules/electron/dist/electron.exe`: they must match. These settings avoid executable rewriting that Windows Code Integrity has blocked on the development machine. Keep `!node_modules/**/*` excluded from the package; frontend dependencies are bundled by Vite.
 
-Distribute the complete unpacked folder as a ZIP, or the portable executable. Do not commit either binary, dependencies, build output or test profiles to Git. Attach builds to GitHub Releases and include checksums. See the [startup instructions](.github/instructions/desktop-startup.instructions.md).
+Distribute only formats that pass their native startup checks: the complete unpacked folder as a ZIP, or the portable executable. Version 1.22.0 publishes the verified ZIP only because Windows Code Integrity blocked its separate portable launcher on the test PC. Do not commit either binary, dependencies, build output or test profiles to Git. Attach verified builds to GitHub Releases and include checksums. See the [startup instructions](.github/instructions/desktop-startup.instructions.md).
 
 ## Source map
 

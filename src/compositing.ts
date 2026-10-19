@@ -6,7 +6,7 @@ export const blendModes: { id: BlendMode; name: string; hint: string }[] = [
   {
     id: "normal",
     name: "Normal",
-    hint: "Covers layers underneath; opacity reveals them.",
+    hint: "Uses source transparency; opacity fades the whole shape.",
   },
   {
     id: "add",

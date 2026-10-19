@@ -2,7 +2,7 @@
 
 ![Nox - Bring surfaces to life](docs/assets/nox-banner.svg)
 
-**Bring surfaces to life.** A Windows desktop app for mapping animated light onto buildings, props and scenery with one projector. Draw and warp shapes, build linked stories, and react to music with **176 built-in effects and materials**.
+**Bring surfaces to life.** A Windows desktop app for mapping animated light onto buildings, props and scenery with one projector. Draw and warp shapes, build linked stories, and react to music with **191 built-in effects and materials**.
 
 Mapping, effects and imported playback run locally with no account. Optional **Scene Animator** generation connects your scene photo and prompt to Runway; it needs internet access and your own paid Runway API account. Built with Electron, React, TypeScript, Canvas 2D and WebGL.
 
@@ -12,9 +12,10 @@ Previously called **Luma**. Your existing `.luma` projects, imported library, pr
 
 Get the Windows build from [GitHub Releases](https://github.com/aransmithson/nox-projection-studio/releases/latest). The repository and downloads are public.
 
-- **Recommended:** download `Nox-Projection-Studio-1.21.0-win-x64.zip`, extract the whole folder, and open `Nox Projection Studio.exe`. Keep the executable beside its resources.
-- **Portable:** download `Nox-Projection-Studio-1.21.0.exe`. It extracts before opening; allow that first launch to finish.
+- **Recommended:** download `Nox-Projection-Studio-1.22.0-win-x64.zip`, extract the whole folder, and open `Nox Projection Studio.exe`. Keep the executable beside its resources.
 - Close an older running copy before opening a new version. Nox restores the existing instance when opened again.
+
+Version 1.22.0 is distributed as a ZIP. Its extracted editor passed native Windows startup checks. The single-file portable launcher was blocked by Windows Code Integrity on the test PC and is not included in this release.
 
 Release builds are not code-signed. The Windows executable keeps Electron's original resources to preserve compatibility with Windows Code Integrity; Nox's own icon appears in the app window and interface.
 
@@ -26,7 +27,7 @@ Release builds are not code-signed. The Windows executable keeps Electron's orig
 | Placement | Projected wireframe/mesh, visible placement cursor, snapping, pixel nudging, calibration and solo view |
 | Workspace | Independently hide or restore Effects and Properties panels; your layout is remembered on this device |
 | Compositing | Layers, copy/paste, ten blend modes, feathering, colour overlays and independent content rotation/offset |
-| Effects | 164 animations and 12 still materials, including boxed stick figures, Halloween, Christmas, space, creatures, shadow puppets, architectural illusions and stage lighting |
+| Effects | 179 animations and 12 still materials, including boxed stick figures, Halloween, Christmas, space, creatures, shadow puppets, architectural illusions and stage lighting |
 | Imported animations | MP4/H.264 videos and animated GIFs, thumbnails, looping, trim, time offset, speed and fill/fit/stretch |
 | Scene Animator | JPG/PNG reference alignment, optional Runway generation, independent preview and one shared clip across selected props |
 | Linked stories | Nine travelling stories with local reactions, plus synchronized liquid stacks, character chases and portal journeys across two to eight shapes |
@@ -38,7 +39,19 @@ Projects support **32 surfaces**, **64 vertices per polygon**, and **eight anima
 
 ![Nox mapping workspace with the effects library and surface inspector](docs/assets/workspace.png)
 
-## Ten new animation styles
+## Endless corridors, hypnotic swirls, flowers and cracks
+
+Fifteen new **Dreamscape** effects add four endless corridors in **3D illusions**, five swirling patterns in **Hypnotic**, three sprouting flower scenes in **Nature** and three transparent cracks in **Overlays**. Choose **All effects** and search **dreamscape** to see the collection together.
+
+![Fifteen Dreamscape effects](docs/assets/dreamscape-collection.png)
+
+The corridors travel through a pointed cathedral, neon transit tunnel, overgrown arcade and prismatic mirror hall. The hypnotic set includes a velvet spiral, rainbow whirlpool, checker vortex, moire rosette and liquid agate. Daisies, sunflowers and luminous moonflowers sprout, open and retreat on repeating loops.
+
+**Glass**, **stone** and **frost** cracks grow across a transparent background, hold, then disappear. Duplicate an existing shape, apply a crack effect to the upper copy and leave its blend mode on **Normal**. The original animation remains visible beneath the cracks. The checkerboard in the effect thumbnail indicates transparency; it is never projected. Use opacity, colour, pattern scale and content transforms to adjust the overlay.
+
+Open [Dreamscape collection](examples/Dreamscape-collection.luma) for all fifteen, or [Transparent cracks](examples/Transparent-cracks.luma) for three ready-layered examples. These effects follow shared Play, Pause and Restart, run locally and add no objects when applied.
+
+## Imagination animation styles
 
 The **Imagination** collection adds **Living comic book**, **Claymation chaos**, **The yarn factory**, **Bubble-wrap creatures**, **Porcelain dreams**, **Living mosaic faces** and **Impossible rubber room**. Each has its own artwork, materials and repeating action.
 

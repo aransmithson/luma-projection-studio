@@ -226,9 +226,11 @@ export class ProjectionRenderer {
   private resource(surface: Surface, placementMesh = false) {
     const gl = this.gl;
     let resource = this.resources.get(surface.id);
-    const sourceAlpha = surface.effectId === "imported-media";
+    const sourceAlpha =
+      surface.effectId === "imported-media" ||
+      !!effectById[surface.effectId].transparent;
     // Preserve the opaque black canvas used by procedural glow painters.
-    // Imported media alone needs transparent source pixels.
+    // Only imported media and explicitly transparent overlays need source alpha.
     if (resource && resource.sourceAlpha !== sourceAlpha) {
       gl.deleteTexture(resource.texture);
       gl.deleteBuffer(resource.buffer);
@@ -701,10 +703,7 @@ export class ProjectionRenderer {
       contentMatrix(surface.contentTransform, contentAspect),
     );
     gl.uniform1f(this.uniforms.opacity, surface.opacity);
-    gl.uniform1f(
-      this.uniforms.mediaAlpha,
-      surface.effectId === "imported-media" ? 1 : 0,
-    );
+    gl.uniform1f(this.uniforms.mediaAlpha, r.sourceAlpha ? 1 : 0);
     gl.uniform1f(this.uniforms.feather, surface.feather);
     gl.uniform2fv(this.uniforms.points, r.edges);
     gl.uniform1i(this.uniforms.count, r.edgeCount);

@@ -30,6 +30,18 @@ try {
     const architecturalIds = Object.keys(architecturalPainters);
     const reports = [],
       groups = {
+        dreamscape: effects.filter((e) =>
+          e.searchTerms?.includes("dreamscape"),
+        ),
+        "dreamscape-motion": effects
+          .filter((e) => e.searchTerms?.includes("dreamscape"))
+          .flatMap((effect) =>
+            [1, 4, 8, 14].map((previewTime) => ({
+              ...effect,
+              previewTime,
+              name: `${effect.name} · ${previewTime}s`,
+            })),
+          ),
         imagination: effects.filter((e) =>
           e.searchTerms?.includes("imagination"),
         ),
@@ -261,7 +273,23 @@ try {
           (value, i) => Math.abs(value - repeat[i]) > 6,
         );
       }
+      const transparentFraction = effect.transparent
+        ? Array.from(next).filter((v, i) => i % 4 === 3 && v === 0).length /
+          57600
+        : null;
+      if (effect.transparent) {
+        drawEffect(ctx, effect.id, 0, effect.color, 42);
+        if (
+          ctx
+            .getImageData(0, 0, 320, 180)
+            .data.some((v, i) => i % 4 === 3 && v !== 0)
+        )
+          throw Error(
+            `${effect.id} must clear every pixel when its loop restarts`,
+          );
+      }
       reports.push({
+        transparentFraction,
         id: effect.id,
         still: !!effect.still,
         lit: lit / 57600,
@@ -307,6 +335,17 @@ try {
         );
         const x = (i % columns) * 336 + 8,
           y = Math.floor(i / columns) * 224 + 8;
+        if (effect.transparent)
+          for (let cy = 0; cy < 180; cy += 12)
+            for (let cx = 0; cx < 320; cx += 12) {
+              sc.fillStyle = (cx / 12 + cy / 12) % 2 ? "#253243" : "#182230";
+              sc.fillRect(
+                x + cx,
+                y + cy,
+                Math.min(12, 320 - cx),
+                Math.min(12, 180 - cy),
+              );
+            }
         sc.drawImage(tile, x, y);
         sc.fillStyle = "#e4d8f2";
         sc.font = "14px Segoe UI";
@@ -317,6 +356,11 @@ try {
     return { reports, sheets };
   });
   for (const r of results.reports) {
+    if (r.transparentFraction !== null)
+      expect(
+        r.transparentFraction,
+        `${r.id} leaves most of the underlying image untouched`,
+      ).toBeGreaterThan(0.65);
     if (r.variesWithSeed !== null)
       expect(r.variesWithSeed, `${r.id} responds to Shuffle variation`).toBe(
         true,

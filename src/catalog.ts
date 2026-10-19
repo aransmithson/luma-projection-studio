@@ -8,6 +8,7 @@ import { musicEffects } from "./musicCatalog";
 import { storyEffects } from "./storyCatalog";
 import { stickEffects } from "./stickCatalog";
 import { imaginationEffects } from "./imaginationCatalog";
+import { dreamEffects } from "./dreamCatalog";
 
 export type Effect = {
   id: EffectId;
@@ -23,8 +24,11 @@ export type Effect = {
   loopSeconds?: number;
   previewTime?: number;
   audioReactive?: boolean;
+  transparent?: boolean;
 };
 export const effectCategories: EffectCategory[] = [
+  "Hypnotic",
+  "Overlays",
   "Imagination",
   "Music",
   "Linked stories",
@@ -46,6 +50,7 @@ export const effectCategories: EffectCategory[] = [
   "Christmas",
 ];
 export const effects: Effect[] = [
+  ...dreamEffects,
   ...imaginationEffects,
   ...stickEffects,
   ...musicEffects,

@@ -144,17 +144,19 @@ Projects support up to eight stacks within the 32-surface total. A surface belon
 
 ## Effects library
 
-All 176 effects and materials are generated locally: 164 animations and twelve still textures. Animation previews play on hover, or continuously when **Previews** is enabled. Still textures remain fixed unless an independent colour overlay is enabled. They do not require stock footage or external downloads.
+All 191 effects and materials are generated locally: 179 animations and twelve still textures. Animation previews play on hover, or continuously when **Previews** is enabled. Still textures remain fixed unless an independent colour overlay is enabled. They do not require stock footage or external downloads.
 
 | Collection | Effects |
 | --- | --- |
+| Hypnotic | Velvet spiral, Chromatic whirlpool, Checker vortex, Moire rosette, Liquid agate |
+| Overlays | Spreading glass cracks, Creeping stone fissures, Crystal frost cracks |
 | Imagination | Living comic book, Claymation chaos, The yarn factory, Bubble-wrap creatures, Porcelain dreams, Living mosaic faces, Impossible rubber room |
 | Music | Spectrum towers, Mirror pulse, Spectrum halo, Neon waveform, Bass reactor, Spectrum skyline |
 | Linked stories | Cosmic courier, Ghost train, Dragon lantern run, Reef pearl relay, Clockwork marble, Firefly garden, Underground ant city, Pneumatic parcel network, Living treasure maps, Portal gun journey (robot, alien and space cat explorers) |
 | Chase scenes | Cat & mouse chase, Fox & rabbit chase, Ghost & pumpkin chase, Robot & alien chase, Snowman & penguin chase |
 | Stick figures | Glass-box mime, Wall pusher, Ceiling bonk, Corner climber, Gravity tumble, Box buddies |
 | Stage & light | Marquee light wall, Prism LED flares, Stardust cascade, Hex relief wave, Photon runway, LED stage wings, Spectrum dot matrix, Pearl silk, Marquee alphabet, Crimson silk, LED cylinder hall, LED proscenium, Ribbon light stage, Canopy of lights, LED orb chamber, Recessed diamond lattice, Cubic tide, Turning tile wall, Triangular prism skin, Concentric relief rings, Sliding relief maze |
-| 3D illusions | Flying brick builders, Tumbling brick wall, Clockwork iris, Crystal geode, Origami facade, Chrome piston ocean, Celestial gyroscope, Infinite arcade, Floating citadel, Ribbon vortex, Tectonic rift, Gravity staircase |
+| 3D illusions | Flying brick builders, Tumbling brick wall, Clockwork iris, Crystal geode, Origami facade, Chrome piston ocean, Celestial gyroscope, Infinite arcade, Floating citadel, Ribbon vortex, Tectonic rift, Gravity staircase, Endless cathedral, Neon transit tunnel, Overgrown arcade, Prismatic mirror hall |
 | Ambient | Aurora drift, Deep currents, Liquid spectrum, Into the cosmos, Lava lounge, Neon arcade, Electric currents, Soft bokeh, Liquid flow stack, Enchanted bookshelf, Sand sculptor, Magnetic ferrofluid |
 | Architecture | Prismatic relief, Shatter & rebuild, Liquid drapery, Chromatic brickwork, Masonry lightwave, Clockwork wall, Stained-glass sunlight, Peeling paint, Laser blueprints, Temple awakening |
 | Creatures | Fox around the corner, Shy little bunny, Curious raccoon, Pocket dragon, Skeleton peek, Witch peek |
@@ -162,7 +164,7 @@ All 176 effects and materials are generated locally: 164 animations and twelve s
 | Colour blocks | Spectrum blocks, Colour mosaic, Ripple blocks, Flip tiles, Rising tiles |
 | Textures | Weathered red brick, Pale limestone, Castle stonework, Weathered timber, Slate roof tiles, Cast concrete, Brushed aluminium, Riveted steel, Weathered copper, Desert sandstone, Layered sandstone, Glyph-carved pillars |
 | Geometric | Neon echoes, Digital grid, Prism bands, Prism kaleidoscope, Chromatic orbits, Infinity cubes, Spectrum lattice, Prism gateway, Chrome recursion, Edge runner, Marble run, Origami garden |
-| Nature | Living flames, Underwater garden, Moonlit waves, Autumn drift, Rain on glass, Bubble ballet, Cloud nine, Liquid ripples, Petal drift, Sunrise horizon, Stormfront, Frost bloom, Creeping garden, Living honeycomb, Moonlit mushrooms |
+| Nature | Living flames, Underwater garden, Moonlit waves, Autumn drift, Rain on glass, Bubble ballet, Cloud nine, Liquid ripples, Petal drift, Sunrise horizon, Stormfront, Frost bloom, Creeping garden, Living honeycomb, Moonlit mushrooms, Daisy daydream, Sunflower parade, Luminous moonflowers |
 | Space | Orbital window, Drifting starfield, Warp speed, The Moon, Saturn & rings, Jupiter, ISS: Earth orbit, Spiral galaxy, Stellar nebula, Solar prominences, Comet flyby, Asteroid belt |
 | Celebration | Confetti parade, Midnight fireworks, Toy train circuit |
 | Halloween | Single eyeball, Eyeball swarm, Witchfire, Haunted mist, Eyes in the dark, Midnight flight, Little boo crew, The lingering ghost, Skeleton shuffle, Pumpkin party, Behind the curtain, Haunted portraits |
@@ -171,6 +173,21 @@ All 176 effects and materials are generated locally: 164 animations and twelve s
 The ten additional generic effects are Rain on glass, Bubble ballet, Cloud nine, Liquid ripples, Petal drift, Sunrise horizon, Confetti parade, Midnight fireworks, Electric currents and Soft bokeh. **Prism kaleidoscope**, **Chromatic orbits** and **Infinity cubes** start with colour cycling enabled; switch it off in the Effect tab for a fixed palette.
 
 Straight rectangles stretch their effect with a projective transform. Curved shapes and other polygons clip a bounding-box texture to their outline. Edge runner paints the actual perimeter directly for every shape. Toy train circuit follows an inset track along the actual outer contour. Ellipses use a 48-vertex outline and resize handles. A polygon or curved boundary cannot intersect itself. Draw polygons with clicks, finish using **Finish polygon**, Enter or the first corner, remove the last point with Backspace, and cancel with Escape. Add and remove corners after drawing using the inspector or midpoint handles. Inserting a corner on a Bézier edge preserves its curve; removing a corner straightens the merged edge. Rectangles retain four corners and triangles retain three until Make outline editable converts them to polygons. Surface labels and control handles appear only in the editor; output alignment guides are controlled separately.
+
+### Corridors, hypnotic swirls and sprouting flowers
+
+Choose **All effects** and search **dreamscape** for all fifteen new animations, or use **3D illusions**, **Hypnotic**, **Nature** and **Overlays**. The four corridors and five hypnotic patterns loop every 24 seconds at normal speed. Flowers and cracks loop every 16 seconds. **Speed**, **Pattern scale**, **Accent colour**, optional colour cycling, colour overlays and **Shuffle variation** use the existing Effect controls. Playback is shared by the editor and projector.
+
+The corridors retain one vanishing point through their receding frames, columns, lighting and floor lines. The flower heads grow from stems, unfold layered petals and withdraw before sprouting again. The three flower styles have distinct petal palettes and centres. Try the [Dreamscape gallery](../examples/Dreamscape-collection.luma).
+
+### Layer transparent cracks over an animation
+
+1. Select the shape containing your background animation or texture and choose **Duplicate**.
+2. Apply **Spreading glass cracks**, **Creeping stone fissures** or **Crystal frost cracks** to the duplicate from **Overlays**. Keep the duplicate above the original in the object/layer order and align their corners if needed.
+3. Leave **Blend mode** on **Normal**. Only the cracks cover the lower layer; their background is transparent. Adjust **Opacity**, **Accent colour**, **Pattern scale** and content rotation/offset as needed. Other blend modes and colour overlays also preserve the clear background.
+4. Press **Play**. The fractures spread, hold and fade; **Restart** clears them immediately. **Pause** freezes their current state. Shape holes and placement mesh work as usual.
+
+The thumbnail checkerboard is a transparency guide and does not appear on the projector. These effects create drawn cracks, not new geometry or cutout holes. Open [Transparent cracks](../examples/Transparent-cracks.luma) for examples over animated ribbons, brick and metal.
 
 ### Imagination styles
 

@@ -22,7 +22,15 @@ import { musicPainters } from "./music";
 import { storyPainters } from "./linkedStories";
 import { stickPainters } from "./stickBoxes";
 import { imaginationPainters } from "./imaginationScenes";
+import { corridorPainters } from "./dreamCorridors";
+import { hypnoticPainters } from "./dreamPatterns";
+import { flowerPainters } from "./dreamFlowers";
+import { crackPainters } from "./dreamCracks";
 export const extendedPainters: Partial<Record<EffectId, Painter>> = {
+  ...corridorPainters,
+  ...hypnoticPainters,
+  ...flowerPainters,
+  ...crackPainters,
   ...imaginationPainters,
   ...stickPainters,
   ...storyPainters,
