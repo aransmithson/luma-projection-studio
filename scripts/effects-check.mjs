@@ -30,6 +30,16 @@ try {
     const architecturalIds = Object.keys(architecturalPainters);
     const reports = [],
       groups = {
+        "stick-figures": effects.filter((e) => e.category === "Stick figures"),
+        "stick-motion": effects
+          .filter((e) => e.category === "Stick figures")
+          .flatMap((effect) =>
+            [0, 3, 6, 9].map((previewTime) => ({
+              ...effect,
+              previewTime,
+              name: `${effect.name} · ${previewTime}s`,
+            })),
+          ),
         music: effects.filter((e) => e.category === "Music"),
         chase: effects
           .filter((e) => e.category === "Chase scenes")

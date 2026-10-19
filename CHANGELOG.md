@@ -2,6 +2,13 @@
 
 Nox Projection Studio keeps the existing Luma project format and application identity.
 
+## 1.20.0
+
+- Added a **Stick figures** collection with six original animations: **Glass-box mime**, **Wall pusher**, **Ceiling bonk**, **Corner climber**, **Gravity tumble** and **Box buddies**. Stick figures tap the glass, push walls, bump the ceiling, climb, tumble and help each other attempt an escape inside recessed boxes.
+- Added articulated limbs, expressive faces, handprints, impact stars, soft shadows and coloured box frames. Each routine loops every 12 seconds at normal speed and follows shared Play, Pause and Restart in the editor and projector.
+- **Figure size** adjusts characters from 45% to 155% while preserving the box frame. Speed, accent colour, colour cycling, overlays and Shuffle variation work with all six effects. Applying one uses the selected shape without creating extra objects.
+- Added the [Boxed stick figures example](./examples/Boxed-stick-figures.luma), motion/loop checks and a native workflow covering selection, sizing, colour, mesh, playback, Undo and save/reopen. The library now has **166 effects and materials: 154 animations and 12 still textures**.
+
 ## 1.19.2
 
 - Liquid style presets now select a style without adding objects. Choose two to eight existing shapes, arrange their flow order and **Apply to selected shapes**. **Add 3 demo shapes** remains an explicit optional action. Opening Liquid flow stack from the effects library opens the liquid selector directly.

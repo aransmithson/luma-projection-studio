@@ -141,13 +141,14 @@ Projects support up to eight stacks within the 32-surface total. A surface belon
 
 ## Effects library
 
-All 160 effects and materials are generated locally: 148 animations and twelve still textures. Animation previews play on hover, or continuously when **Previews** is enabled. Still textures remain fixed unless an independent colour overlay is enabled. They do not require stock footage or external downloads.
+All 166 effects and materials are generated locally: 154 animations and twelve still textures. Animation previews play on hover, or continuously when **Previews** is enabled. Still textures remain fixed unless an independent colour overlay is enabled. They do not require stock footage or external downloads.
 
 | Collection | Effects |
 | --- | --- |
 | Music | Spectrum towers, Mirror pulse, Spectrum halo, Neon waveform, Bass reactor, Spectrum skyline |
 | Linked stories | Cosmic courier, Ghost train, Dragon lantern run, Reef pearl relay, Clockwork marble, Firefly garden, Portal gun journey (robot, alien and space cat explorers) |
 | Chase scenes | Cat & mouse chase, Fox & rabbit chase, Ghost & pumpkin chase, Robot & alien chase, Snowman & penguin chase |
+| Stick figures | Glass-box mime, Wall pusher, Ceiling bonk, Corner climber, Gravity tumble, Box buddies |
 | Stage & light | Marquee light wall, Prism LED flares, Stardust cascade, Hex relief wave, Photon runway, LED stage wings, Spectrum dot matrix, Pearl silk, Marquee alphabet, Crimson silk, LED cylinder hall, LED proscenium, Ribbon light stage, Canopy of lights, LED orb chamber, Recessed diamond lattice, Cubic tide, Turning tile wall, Triangular prism skin, Concentric relief rings, Sliding relief maze |
 | 3D illusions | Flying brick builders, Tumbling brick wall, Clockwork iris, Crystal geode, Origami facade, Chrome piston ocean, Celestial gyroscope, Infinite arcade, Floating citadel, Ribbon vortex, Tectonic rift, Gravity staircase |
 | Ambient | Aurora drift, Deep currents, Liquid spectrum, Into the cosmos, Lava lounge, Neon arcade, Electric currents, Soft bokeh, Liquid flow stack, Enchanted bookshelf, Sand sculptor, Magnetic ferrofluid |
@@ -166,6 +167,14 @@ All 160 effects and materials are generated locally: 148 animations and twelve s
 The ten additional generic effects are Rain on glass, Bubble ballet, Cloud nine, Liquid ripples, Petal drift, Sunrise horizon, Confetti parade, Midnight fireworks, Electric currents and Soft bokeh. **Prism kaleidoscope**, **Chromatic orbits** and **Infinity cubes** start with colour cycling enabled; switch it off in the Effect tab for a fixed palette.
 
 Straight rectangles stretch their effect with a projective transform. Curved shapes and other polygons clip a bounding-box texture to their outline. Edge runner paints the actual perimeter directly for every shape. Toy train circuit follows an inset track along the actual outer contour. Ellipses use a 48-vertex outline and resize handles. A polygon or curved boundary cannot intersect itself. Draw polygons with clicks, finish using **Finish polygon**, Enter or the first corner, remove the last point with Backspace, and cancel with Escape. Add and remove corners after drawing using the inspector or midpoint handles. Inserting a corner on a Bézier edge preserves its curve; removing a corner straightens the merged edge. Rectangles retain four corners and triangles retain three until Make outline editable converts them to polygons. Surface labels and control handles appear only in the editor; output alignment guides are controlled separately.
+
+### Stick figures in boxes
+
+Select an existing shape, choose **Stick figures** in the effects browser and click a card to apply it. The six routines include a mime feeling the glass, a figure pushing the wall, a jump into the ceiling, a failed corner climb, rotating gravity, and two friends attempting a boost. The box is drawn inside the mapped shape; rectangular surfaces give the strongest depth illusion.
+
+Use **Effect → Figure size** to scale the characters from 45% to 155% without moving the box frame. **Speed** changes the pace; a full routine takes 12 seconds at 1×. **Accent colour**, colour cycling and overlays recolour the scene. **Shuffle variation** changes the starting phase. All six follow the shared Play, Pause and Restart controls, including on the projector. They work independently on existing shapes and do not create extra surfaces.
+
+Open the [Boxed stick figures example](../examples/Boxed-stick-figures.luma) for six ready-to-place tiles. The routines use the same clock, but each has its own escape sequence; they do not travel between tiles.
 
 ## Projects and recovery
 

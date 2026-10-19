@@ -516,9 +516,12 @@ export function Inspector({
       !s.cutoutOf && layerIdFor(project, s) === layerIdFor(project, surface),
   );
   const index = peers.findIndex((s) => s.id === surface.id);
-  const effectScale = ["Creatures", "Chase scenes", "Linked stories"].includes(
-    effect.category,
-  )
+  const effectScale = [
+    "Creatures",
+    "Chase scenes",
+    "Linked stories",
+    "Stick figures",
+  ].includes(effect.category)
     ? clamp(surface.scale, 0.45, 1.55)
     : surface.effectId === "toy-train"
       ? clamp(surface.scale, 0.5, 1.7)
@@ -1157,21 +1160,23 @@ export function Inspector({
                     <>
                       <RangeControl
                         label={
-                          surface.effectId === "single-eyeball"
-                            ? "Eye size"
-                            : surface.effectId === "edge-runner"
-                              ? "Light width"
-                              : surface.effectId === "toy-train"
-                                ? "Train size"
-                                : ["Chase scenes", "Linked stories"].includes(
-                                      effect.category,
-                                    )
-                                  ? "Character size"
-                                  : effect.category === "Creatures"
-                                    ? "Creature size"
-                                    : effect.category === "Colour blocks"
-                                      ? "Block size"
-                                      : "Pattern scale"
+                          effect.category === "Stick figures"
+                            ? "Figure size"
+                            : surface.effectId === "single-eyeball"
+                              ? "Eye size"
+                              : surface.effectId === "edge-runner"
+                                ? "Light width"
+                                : surface.effectId === "toy-train"
+                                  ? "Train size"
+                                  : ["Chase scenes", "Linked stories"].includes(
+                                        effect.category,
+                                      )
+                                    ? "Character size"
+                                    : effect.category === "Creatures"
+                                      ? "Creature size"
+                                      : effect.category === "Colour blocks"
+                                        ? "Block size"
+                                        : "Pattern scale"
                         }
                         value={effectScale}
                         min={
@@ -1179,6 +1184,7 @@ export function Inspector({
                             "Creatures",
                             "Chase scenes",
                             "Linked stories",
+                            "Stick figures",
                           ].includes(effect.category)
                             ? 0.45
                             : surface.effectId === "toy-train"
@@ -1190,6 +1196,7 @@ export function Inspector({
                             "Creatures",
                             "Chase scenes",
                             "Linked stories",
+                            "Stick figures",
                           ].includes(effect.category)
                             ? 1.55
                             : surface.effectId === "toy-train"

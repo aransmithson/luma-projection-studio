@@ -1,11 +1,19 @@
 export type Point = { x: number; y: number };
 export type BezierEdge = { control1: Point; control2: Point };
 export type ShapeKind = "quad" | "triangle" | "ellipse" | "polygon";
+export type StickEffectId =
+  | "stick-glass-box"
+  | "stick-wall-pusher"
+  | "stick-ceiling-bonk"
+  | "stick-corner-climber"
+  | "stick-gravity-tumble"
+  | "stick-box-buddies";
 export type EffectCategory =
   | "Imported"
   | "Music"
   | "Linked stories"
   | "Chase scenes"
+  | "Stick figures"
   | "Stage & light"
   | "3D illusions"
   | "Ambient"
@@ -21,6 +29,7 @@ export type EffectCategory =
   | "Space"
   | "Celebration";
 export type EffectId =
+  | StickEffectId
   | "imported-media"
   | "eq-bars"
   | "eq-mirror"

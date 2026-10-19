@@ -37,7 +37,7 @@ try {
   await page
     .getByRole("button", { name: "Pause animation", exact: true })
     .click();
-  await expect(page.locator(".effect-card")).toHaveCount(160);
+  await expect(page.locator(".effect-card")).toHaveCount(166);
   await page.getByRole("button", { name: "Architecture", exact: true }).click();
   await expect(page.locator(".effect-card")).toHaveCount(10);
   await page.getByRole("button", { name: "All effects", exact: true }).click();

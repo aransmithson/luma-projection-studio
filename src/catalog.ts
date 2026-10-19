@@ -6,6 +6,7 @@ import { stageEffects } from "./stageCatalog";
 import { chaseEffects } from "./chaseCatalog";
 import { musicEffects } from "./musicCatalog";
 import { storyEffects } from "./storyCatalog";
+import { stickEffects } from "./stickCatalog";
 
 export type Effect = {
   id: EffectId;
@@ -26,6 +27,7 @@ export const effectCategories: EffectCategory[] = [
   "Music",
   "Linked stories",
   "Chase scenes",
+  "Stick figures",
   "Stage & light",
   "3D illusions",
   "Shadow puppets",
@@ -42,6 +44,7 @@ export const effectCategories: EffectCategory[] = [
   "Christmas",
 ];
 export const effects: Effect[] = [
+  ...stickEffects,
   ...musicEffects,
   ...storyEffects,
   {

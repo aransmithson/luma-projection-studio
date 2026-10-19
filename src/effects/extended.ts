@@ -20,7 +20,9 @@ import { chasePainters } from "./chaseScenes";
 import { portalPainter } from "./portalScene";
 import { musicPainters } from "./music";
 import { storyPainters } from "./linkedStories";
+import { stickPainters } from "./stickBoxes";
 export const extendedPainters: Partial<Record<EffectId, Painter>> = {
+  ...stickPainters,
   ...storyPainters,
   ...musicPainters,
   "portal-hopper": portalPainter,

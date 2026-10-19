@@ -55,7 +55,7 @@ try {
     page.getByRole("heading", { name: "Map your space." }),
   ).toBeVisible({ timeout: 15000 });
   await expect(page.locator(".surface-outline")).toHaveCount(6);
-  await expect(page.locator(".effect-card")).toHaveCount(160);
+  await expect(page.locator(".effect-card")).toHaveCount(166);
   await expect(page.locator(".render-error")).toHaveCount(0);
   await page
     .getByRole("button", { name: "Placement mesh", exact: true })

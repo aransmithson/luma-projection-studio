@@ -2,7 +2,7 @@
 
 ## Product and scope
 
-This is **Nox Projection Studio**, a Windows desktop projection-mapping app for one projector. The public repository is `aransmithson/nox-projection-studio`. There are 160 built-in effects/materials plus desktop MP4/H.264 and animated GIF imports. Scene Animator adds local JPG/PNG reference photos, shared clip mapping and optional Runway generation using an explicit user action and session-only key. WebM, MOV and still-image effects are not supported. The owner explicitly made the repository public; its licence remains `UNLICENSED`.
+This is **Nox Projection Studio**, a Windows desktop projection-mapping app for one projector. The public repository is `aransmithson/nox-projection-studio`. There are 166 built-in effects/materials plus desktop MP4/H.264 and animated GIF imports. Scene Animator adds local JPG/PNG reference photos, shared clip mapping and optional Runway generation using an explicit user action and session-only key. WebM, MOV and still-image effects are not supported. The owner explicitly made the repository public; its licence remains `UNLICENSED`.
 
 ## Compatibility
 

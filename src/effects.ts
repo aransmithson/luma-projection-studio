@@ -85,6 +85,7 @@ export function drawEffect(
     id === "edge-runner" ||
     id === "toy-train" ||
     effectById[id].category === "Linked stories" ||
+    effectById[id].category === "Stick figures" ||
     effectById[id].audioReactive ||
     effectById[id].category === "Chase scenes" ||
     effectById[id].category === "Creatures"
