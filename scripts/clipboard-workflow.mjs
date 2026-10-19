@@ -53,7 +53,7 @@ const app = await electron.launch({
     ? {
         executablePath: path.resolve(
           process.env.LUMA_RELEASE_DIR || "release",
-          "win-unpacked/Luma Projection Studio.exe",
+          "win-unpacked/Nox Projection Studio.exe",
         ),
       }
     : {}),
@@ -128,7 +128,7 @@ try {
     expect(bridgeHasShape).toBe(false);
     await click("Paste");
     await expect(page.locator(".toast")).toContainText(
-      "Copy a Luma shape before pasting",
+      "Copy a Nox shape before pasting",
     );
     await expect(page.locator(".layer-row")).toHaveCount(2);
     console.log(

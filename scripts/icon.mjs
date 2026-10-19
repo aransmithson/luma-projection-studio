@@ -37,47 +37,59 @@ const distance = (x, y, [ax, ay, bx, by]) => {
   );
   return Math.hypot(x - ax - t * dx, y - ay - t * dy);
 };
-const size = 256,
-  png = new PNG({ width: size, height: size });
-for (let y = 0; y < size; y++)
-  for (let x = 0; x < size; x++) {
-    const channels = [0, 0, 0, 0];
-    for (const ox of [0.25, 0.75])
-      for (const oy of [0.25, 0.75]) {
-        const px = x + ox,
-          py = y + oy;
-        if (
-          Math.hypot(
-            Math.max(0, Math.abs(px - 128) - 78),
-            Math.max(0, Math.abs(py - 128) - 78),
-          ) > 48
-        )
-          continue;
-        let color = backgroundColor;
-        for (const facet of facets)
-          if (contains(px, py, facet.points)) color = facet.color;
-        if (
-          segments.some(
-            (segment) => distance(px, py, segment) < Number(edge[3]) / 2,
+function renderIcon(size) {
+  const png = new PNG({ width: size, height: size });
+  const samples = [0.125, 0.375, 0.625, 0.875];
+  for (let y = 0; y < size; y++)
+    for (let x = 0; x < size; x++) {
+      const channels = [0, 0, 0, 0];
+      for (const ox of samples)
+        for (const oy of samples) {
+          const px = (x + ox) * 256 / size,
+            py = (y + oy) * 256 / size;
+          if (
+            Math.hypot(
+              Math.max(0, Math.abs(px - 128) - 78),
+              Math.max(0, Math.abs(py - 128) - 78),
+            ) > 48
           )
-        )
-          color = edgeColor;
-        for (let i = 0; i < 3; i++) channels[i] += color[i] / 4;
-        channels[3] += 255 / 4;
-      }
-    channels.forEach((value, i) => {
-      png.data[(y * size + x) * 4 + i] = Math.round(value);
-    });
-  }
-const bytes = PNG.sync.write(png);
-const header = Buffer.alloc(22);
+            continue;
+          let color = backgroundColor;
+          for (const facet of facets)
+            if (contains(px, py, facet.points)) color = facet.color;
+          if (
+            segments.some(
+              (segment) => distance(px, py, segment) < Number(edge[3]) / 2,
+            )
+          )
+            color = edgeColor;
+          for (let i = 0; i < 3; i++) channels[i] += color[i];
+          channels[3]++;
+        }
+      channels.forEach((value, i) => {
+        png.data[(y * size + x) * 4 + i] = Math.round(
+          i === 3 ? value * 255 / 16 : channels[3] ? value / channels[3] : 0,
+        );
+      });
+    }
+  return PNG.sync.write(png);
+}
+const sizes = [16, 24, 32, 48, 64, 128, 256];
+const images = sizes.map(renderIcon);
+const header = Buffer.alloc(6 + sizes.length * 16);
 header.writeUInt16LE(1, 2);
-header.writeUInt16LE(1, 4);
-header.writeUInt16LE(1, 10);
-header.writeUInt16LE(32, 12);
-header.writeUInt32LE(bytes.length, 14);
-header.writeUInt32LE(22, 18);
+header.writeUInt16LE(sizes.length, 4);
+let offset = header.length;
+for (let i = 0; i < sizes.length; i++) {
+  const entry = 6 + i * 16;
+  header[entry] = header[entry + 1] = sizes[i] === 256 ? 0 : sizes[i];
+  header.writeUInt16LE(1, entry + 4);
+  header.writeUInt16LE(32, entry + 6);
+  header.writeUInt32LE(images[i].length, entry + 8);
+  header.writeUInt32LE(offset, entry + 12);
+  offset += images[i].length;
+}
 await mkdir("build", { recursive: true });
-await writeFile("electron/icon.png", bytes);
-await writeFile("build/icon.ico", Buffer.concat([header, bytes]));
-console.log("Created Luma application icons from the shared vector mark.");
+await writeFile("electron/icon.png", images.at(-1));
+await writeFile("build/icon.ico", Buffer.concat([header, ...images]));
+console.log("Created Nox application icons from the shared vector mark.");

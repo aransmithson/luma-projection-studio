@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="340" viewBox="0 0 1200 340" role="img" aria-labelledby="title desc">
-  <title id="title">Luma — Bring surfaces to life.</title>
-  <desc id="desc">A faceted light symbol and three illuminated surfaces on a dark projection grid.</desc>
+  <title id="title">Nox — Bring surfaces to life.</title>
+  <desc id="desc">A neon N built from three beams of light, with illuminated mapping surfaces on a midnight grid.</desc>
   <defs>
     <linearGradient id="background" x2="1" y2="1">
-      <stop stop-color="#131822"/>
-      <stop offset="1" stop-color="#211c30"/>
+      <stop stop-color="#10121e"/>
+      <stop offset="1" stop-color="#211938"/>
     </linearGradient>
     <linearGradient id="cyan" x2="1" y2="1">
       <stop stop-color="#70e8ee" stop-opacity=".9"/>
@@ -20,12 +20,13 @@
   </defs>
   <rect width="1200" height="340" rx="20" fill="url(#background)"/>
   <rect x="700" width="500" height="340" fill="url(#grid)"/>
-  <g transform="translate(48 59) scale(.38)">
-    <polygon points="42,82 128,32 214,82 128,132" fill="#70e8ee"/>
-    <polygon points="42,100 116,143 116,224 42,181" fill="#9b80ee"/>
-    <polygon points="140,143 214,100 214,181 140,224" fill="#d8a4f4"/>
+  <g transform="translate(48 54) scale(.45)">
+    <polygon points="48,64 84,48 84,208 48,192" fill="#66f0e6"/>
+    <polygon points="84,48 172,150 172,208 84,106" fill="#8c72ff"/>
+    <polygon points="172,48 208,64 208,192 172,208" fill="#e19bff"/>
+    <polyline points="48,64 84,48 172,150 172,48 208,64" fill="none" stroke="#e5ffff" stroke-width="3" stroke-linejoin="round"/>
   </g>
-  <text x="162" y="142" fill="#f5f1ff" font-family="Segoe UI,Arial,sans-serif" font-size="96" font-weight="650" letter-spacing="-5">luma<tspan fill="#70e8ee">.</tspan></text>
+  <text x="169" y="142" fill="#f5f1ff" font-family="Segoe UI,Arial,sans-serif" font-size="100" font-weight="650" letter-spacing="-5">nox<tspan fill="#66f0e6">.</tspan></text>
   <text x="65" y="205" fill="#e3d9f2" font-family="Segoe UI,Arial,sans-serif" font-size="28">Bring surfaces to life.</text>
   <text x="65" y="263" fill="#a69bb6" font-family="Segoe UI,Arial,sans-serif" font-size="15" letter-spacing="2">DESKTOP PROJECTION MAPPING</text>
   <g stroke-width="1.5" stroke-linejoin="round">

@@ -371,7 +371,7 @@ export function parseProject(data: string): Project {
   const result = projectSchema.safeParse(json);
   if (!result.success)
     throw new Error(
-      "This is not a valid Luma project. Check the file format and surface geometry.",
+      "This is not a valid Nox project. Check the file format and surface geometry.",
     );
   return result.data as Project;
 }

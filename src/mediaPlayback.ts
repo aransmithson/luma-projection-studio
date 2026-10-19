@@ -75,7 +75,7 @@ async function readGif(
   signal?: AbortSignal,
 ) {
   if (typeof ImageDecoder === "undefined")
-    throw new Error("GIF decoding requires the desktop version of Luma.");
+    throw new Error("GIF decoding requires the desktop version of Nox.");
   const response = await fetch(mediaUrl(asset), {
     signal: AbortSignal.any([
       signal || new AbortController().signal,

@@ -36,7 +36,7 @@ const findEditor = async () => {
   const text = await powershell(`
     $lumaTestProfile = ${psQuote(profile)}
     Get-CimInstance Win32_Process | Where-Object {
-      $_.Name -in @('electron.exe', 'Luma Projection Studio.exe') -and
+      $_.Name -in @('electron.exe', 'Nox Projection Studio.exe') -and
       $_.CommandLine -and $_.CommandLine.Contains($lumaTestProfile) -and
       $_.CommandLine -notmatch '--type='
     } | ForEach-Object {
@@ -57,7 +57,7 @@ if (mode !== "local") {
       .digest("hex");
   runtimeMatches =
     (await sha(
-      path.join(releaseRoot, "win-unpacked/Luma Projection Studio.exe"),
+      path.join(releaseRoot, "win-unpacked/Nox Projection Studio.exe"),
     )) === (await sha("node_modules/electron/dist/electron.exe"));
   if (!runtimeMatches)
     throw new Error(
@@ -79,8 +79,8 @@ const executable =
   mode === "local"
     ? "powershell.exe"
     : mode === "unpacked"
-      ? path.join(releaseRoot, "win-unpacked/Luma Projection Studio.exe")
-      : path.join(releaseRoot, `Luma-Projection-Studio-${version}.exe`);
+      ? path.join(releaseRoot, "win-unpacked/Nox Projection Studio.exe")
+      : path.join(releaseRoot, `Nox-Projection-Studio-${version}.exe`);
 const args =
   mode === "local"
     ? [
@@ -88,7 +88,7 @@ const args =
         "-NoProfile",
         "-NonInteractive",
         "-Command",
-        `& ${psQuote(path.join(root, "Start Luma.cmd"))} ${psQuote(`--user-data-dir=${profile}`)}`,
+        `& ${psQuote(path.join(root, "Start Nox.cmd"))} ${psQuote(`--user-data-dir=${profile}`)}`,
       ]
     : [`--user-data-dir=${profile}`];
 const startedAt = Date.now();
@@ -124,7 +124,7 @@ try {
   }
   if (!editor)
     throw new Error(
-      `No Luma ${version} editor window appeared during normal ${mode} startup. ${stderr}`,
+      `No Nox ${version} editor window appeared during normal ${mode} startup. ${stderr}`,
     );
   const startupMs = Date.now() - startedAt;
   await new Promise((resolve) => setTimeout(resolve, 2000));

@@ -34,12 +34,12 @@ export function pastedShapes(
   offset = 0.02,
 ): Surface[] {
   if (!data.startsWith(PREFIX))
-    throw new Error("Copy a Luma shape before pasting.");
+    throw new Error("Copy a Nox shape before pasting.");
   let snapshot: Project;
   try {
     snapshot = parseProject(data.slice(PREFIX.length));
   } catch {
-    throw new Error("The clipboard does not contain valid Luma shapes.");
+    throw new Error("The clipboard does not contain valid Nox shapes.");
   }
   const [root, ...holes] = snapshot.surfaces;
   if (

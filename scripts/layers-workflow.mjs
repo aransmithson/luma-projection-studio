@@ -98,7 +98,7 @@ const app = await electron.launch({
     ? {
         executablePath: path.resolve(
           process.env.LUMA_RELEASE_DIR || "release",
-          "win-unpacked/Luma Projection Studio.exe",
+          "win-unpacked/Nox Projection Studio.exe",
         ),
       }
     : {}),
@@ -275,7 +275,7 @@ try {
     clipboard.writeText("LUMA_SHAPES_V1\nnot json"),
   );
   await shortcut("Control+v");
-  await expect(page.locator(".toast")).toContainText("valid Luma shapes");
+  await expect(page.locator(".toast")).toContainText("valid Nox shapes");
   expect(await project()).toEqual(beforeInput);
   console.log(
     "PASS clipboard, fresh IDs, holes, curves, overlays, in-place and repeated offsets, undo/redo and invalid data",

@@ -3,7 +3,7 @@
 function configureAudio(session, getEditor) {
   let source = null;
   const debug = (...args) => {
-    if (process.env.LUMA_AUDIO_DEBUG) console.log("[Luma audio]", ...args);
+    if (process.env.LUMA_AUDIO_DEBUG) console.log("[Nox audio]", ...args);
   };
   const owned = (contents) => {
     const editor = getEditor();

@@ -11,7 +11,7 @@ delete env.ELECTRON_RUN_AS_NODE;
 delete env.VITE_DEV_SERVER_URL;
 const app = await electron.launch({
   executablePath: path.resolve(
-    "release/win-unpacked/Luma Projection Studio.exe",
+    "release/win-unpacked/Nox Projection Studio.exe",
   ),
   args: [`--user-data-dir=${profile}`],
   env,

@@ -1,5 +1,5 @@
 ---
-description: Preserve Windows desktop visibility and verify real Luma startup and packaging.
+description: Preserve Windows desktop visibility and verify real Nox startup and packaging.
 applyTo: 'electron/**,scripts/**,package.json'
 ---
 

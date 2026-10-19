@@ -94,7 +94,7 @@ try {
   await expect(page.locator('.surface-outline')).toHaveCount(8);
   await writeFile(projectFile, '{"version":999}', 'utf8');
   await page.getByRole('button', { name: 'Open project', exact: true }).click();
-  await expect(page.getByRole('alert')).toContainText('not a valid Luma project');
+  await expect(page.getByRole('alert')).toContainText('not a valid Nox project');
   await expect(page.locator('.surface-outline')).toHaveCount(8);
   await writeFile(projectFile, JSON.stringify(saved, null, 2), 'utf8');
   console.log('PASS: native save/open flow, round-trip and invalid-project rejection');

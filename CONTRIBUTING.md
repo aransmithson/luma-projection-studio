@@ -1,4 +1,4 @@
-# Developing Luma
+# Developing Nox
 
 Use Windows, Node.js 24 and npm. The repository is public and retains its `UNLICENSED` status; visibility is not an open-source licence.
 
@@ -38,8 +38,8 @@ Stop development servers and desktop tests before packaging. Build each version 
 
 ```powershell
 $env:ELECTRON_BUILDER_COMPRESSION_LEVEL='1'
-npm run package -- --config.directories.output=release/1.16.0
-$env:LUMA_RELEASE_DIR='release/1.16.0'
+npm run package -- --config.directories.output=release/1.17.0
+$env:LUMA_RELEASE_DIR='release/1.17.0'
 npm run test:startup -- unpacked --hidden --copy-saved-profile
 npm run test:startup -- portable
 npm run test:startup-recovery -- --packaged
@@ -64,7 +64,9 @@ Distribute the complete unpacked folder as a ZIP, or the portable executable. Do
 
 ## Brand assets
 
-[The vector mark](src/assets/brand-mark.svg) supplies the interface and browser favicon. `node scripts/icon.mjs` reads its polygons to generate the PNG window icon and ICO packaging asset. Keep the simple three-facet geometry supported by that script, and inspect the resulting icon after changing it.
+[The vector mark](src/assets/brand-mark.svg) supplies the interface and browser favicon. `node scripts/icon.mjs` reads its three polygons to generate the 256-pixel PNG window icon and a Windows ICO with 16, 24, 32, 48, 64, 128 and 256-pixel entries. Keep the simple three-facet geometry supported by that script, and inspect the resulting icon at small and large sizes after changing it.
+
+Nox is the display brand. Keep `package.json`'s top-level `name` as `luma-projection-studio`, and do not add a top-level `productName` or call `app.setName`: Electron uses the application name to locate the existing profile. Only `build.productName` and release filenames use the new brand. Keep the app ID, `.luma` extension, IPC, media protocol, clipboard and storage identifiers stable.
 
 ## Contributions
 

@@ -11,7 +11,7 @@ const packaged = process.argv.includes("--packaged");
 const executable = packaged
   ? path.resolve(
       process.env.LUMA_RELEASE_DIR || "release",
-      "win-unpacked/Luma Projection Studio.exe",
+      "win-unpacked/Nox Projection Studio.exe",
     )
   : electronPath;
 const args = [
@@ -72,7 +72,7 @@ try {
       ),
     ).toEqual([originalId]);
     console.log(
-      `PASS: reopening Luma restores the ${state === "hide" ? "hidden" : "minimized"} editor and exits the duplicate process.`,
+      `PASS: reopening Nox restores the ${state === "hide" ? "hidden" : "minimized"} editor and exits the duplicate process.`,
     );
   }
   await page

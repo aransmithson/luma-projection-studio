@@ -93,7 +93,7 @@ const app = await electron.launch({
     ? {
         executablePath: path.resolve(
           process.env.LUMA_RELEASE_DIR || "release",
-          "win-unpacked/Luma Projection Studio.exe",
+          "win-unpacked/Nox Projection Studio.exe",
         ),
       }
     : {}),

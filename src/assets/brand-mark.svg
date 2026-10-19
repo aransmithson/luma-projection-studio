@@ -1,7 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none">
-  <rect x="2" y="2" width="252" height="252" rx="48" fill="#151822"/>
-  <polygon points="42,82 128,32 214,82 128,132" fill="#70e8ee"/>
-  <polygon points="42,100 116,143 116,224 42,181" fill="#9b80ee"/>
-  <polygon points="140,143 214,100 214,181 140,224" fill="#d8a4f4"/>
-  <polyline points="42,82 128,132 214,82" stroke="#d9ffff" stroke-width="3" stroke-linejoin="round"/>
+  <title>Nox</title>
+  <rect x="2" y="2" width="252" height="252" rx="48" fill="#10121e"/>
+  <polygon points="48,64 84,48 84,208 48,192" fill="#66f0e6"/>
+  <polygon points="84,48 172,150 172,208 84,106" fill="#8c72ff"/>
+  <polygon points="172,48 208,64 208,192 172,208" fill="#e19bff"/>
+  <polyline points="48,64 84,48 172,150 172,48 208,64" stroke="#e5ffff" stroke-width="3" stroke-linejoin="round"/>
 </svg>

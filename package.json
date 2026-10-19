@@ -1,17 +1,17 @@
 {
   "name": "luma-projection-studio",
-  "version": "1.16.0",
+  "version": "1.17.0",
   "private": true,
-  "description": "Bring surfaces to life. Desktop projection mapping with flexible shapes, linked stories and music-reactive effects.",
+  "description": "Nox Projection Studio. Bring surfaces to life with flexible mapping, linked stories and music-reactive effects.",
   "author": "Aran Smithson",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aransmithson/luma-projection-studio.git"
+    "url": "git+https://github.com/aransmithson/nox-projection-studio.git"
   },
   "bugs": {
-    "url": "https://github.com/aransmithson/luma-projection-studio/issues"
+    "url": "https://github.com/aransmithson/nox-projection-studio/issues"
   },
-  "homepage": "https://github.com/aransmithson/luma-projection-studio#readme",
+  "homepage": "https://github.com/aransmithson/nox-projection-studio#readme",
   "license": "UNLICENSED",
   "type": "module",
   "main": "electron/main.cjs",
@@ -74,7 +74,7 @@
   },
   "build": {
     "appId": "studio.luma.projection",
-    "productName": "Luma Projection Studio",
+    "productName": "Nox Projection Studio",
     "asar": false,
     "directories": {
       "output": "release"
@@ -91,7 +91,7 @@
       "signAndEditExecutable": false
     },
     "portable": {
-      "artifactName": "Luma-Projection-Studio-${version}.exe"
+      "artifactName": "Nox-Projection-Studio-${version}.exe"
     }
   }
 }

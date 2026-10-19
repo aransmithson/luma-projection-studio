@@ -1,20 +1,22 @@
-# Luma Projection Studio
+# Nox Projection Studio
 
-![Luma - Bring surfaces to life](docs/assets/luma-banner.svg)
+![Nox - Bring surfaces to life](docs/assets/nox-banner.svg)
 
 **Bring surfaces to life.** A Windows desktop app for mapping animated light onto buildings, props and scenery with one projector. Draw and warp shapes, build linked stories, and react to music with **154 built-in effects and materials**.
 
-Luma runs locally with no account or network connection. Built with Electron, React, TypeScript, Canvas 2D and WebGL.
+Nox runs locally with no account or network connection. Built with Electron, React, TypeScript, Canvas 2D and WebGL.
+
+Previously called **Luma**. Your existing `.luma` projects, imported library, preferences and recovery data continue to work. The new name does not require a profile or project migration.
 
 ## Download and run
 
-Get the Windows build from [GitHub Releases](https://github.com/aransmithson/luma-projection-studio/releases/latest). The repository and downloads are public.
+Get the Windows build from [GitHub Releases](https://github.com/aransmithson/nox-projection-studio/releases/latest). The repository and downloads are public.
 
-- **Recommended:** download `Luma-Projection-Studio-1.16.0-win-x64.zip`, extract the whole folder, and open `Luma Projection Studio.exe`. Keep the executable beside its resources.
-- **Portable:** download `Luma-Projection-Studio-1.16.0.exe`. It extracts before opening; allow that first launch to finish.
-- Close an older running copy before opening a new version. Luma restores the existing instance when opened again.
+- **Recommended:** download `Nox-Projection-Studio-1.17.0-win-x64.zip`, extract the whole folder, and open `Nox Projection Studio.exe`. Keep the executable beside its resources.
+- **Portable:** download `Nox-Projection-Studio-1.17.0.exe`. It extracts before opening; allow that first launch to finish.
+- Close an older running copy before opening a new version. Nox restores the existing instance when opened again.
 
-Release builds are not code-signed. The Windows executable keeps Electron's original resources to preserve compatibility with Windows Code Integrity; Luma's own icon appears in the app window and interface.
+Release builds are not code-signed. The Windows executable keeps Electron's original resources to preserve compatibility with Windows Code Integrity; Nox's own icon appears in the app window and interface.
 
 ## What it does
 
@@ -32,7 +34,7 @@ Release builds are not code-signed. The Windows executable keeps Electron's orig
 
 Projects support **32 surfaces**, **64 vertices per polygon**, and **eight animation stacks**. The stacked editor keeps settings and Save visible in a wide three-column layout.
 
-![Luma mapping workspace with the effects library and surface inspector](docs/assets/workspace.png)
+![Nox mapping workspace with the effects library and surface inspector](docs/assets/workspace.png)
 
 ## Your first projection
 
@@ -52,15 +54,15 @@ Select a shape, click **Import animation** in the effects library, then choose a
 
 **Recommended:** 1080p H.264 MP4 at 24 or 30 fps for full scenes; small GIFs for transparent characters or short loops. Video sound is muted. All clips follow the shared Play, Pause and Restart controls.
 
-Luma copies imports into its local library. Saving a project copies the assets it uses into a companion folder, for example `House.luma.media` beside `House.luma`. **Move or share both together.** If an animation is missing, use **Effect → Locate original**. See the [media guide](docs/USER_GUIDE.md#import-animations) for limits and playback details.
+Nox copies imports into its local library. Saving a project copies the assets it uses into a companion folder, for example `House.luma.media` beside `House.luma`. **Move or share both together.** If an animation is missing, use **Effect → Locate original**. See the [media guide](docs/USER_GUIDE.md#import-animations) for limits and playback details.
 
 ## Run from source
 
 Use Windows and **Node.js 24**. Installing dependencies needs internet access to download Electron; running the built app does not.
 
 ```powershell
-git clone https://github.com/aransmithson/luma-projection-studio.git
-cd luma-projection-studio
+git clone https://github.com/aransmithson/nox-projection-studio.git
+cd nox-projection-studio
 npm ci
 npm run dev
 ```
@@ -72,11 +74,11 @@ npm run build
 npm start
 ```
 
-After building, [Start Luma.cmd](Start%20Luma.cmd) is also a double-click launcher. `npm run dev:web` provides a browser preview; native display selection, file dialogs and desktop audio behaviour require Electron.
+After building, [Start Nox.cmd](Start%20Nox.cmd) is also a double-click launcher. `npm run dev:web` provides a browser preview; native display selection, file dialogs and desktop audio behaviour require Electron.
 
 ## Current scope
 
-Luma supports one projector. The desktop app imports MP4 video and GIF animations. WebM, MOV, standalone images and After Effects projects are not supported. Project Open accepts `.luma` and compatible project JSON files; use **Import animation** for media. Browser preview cannot import or access the desktop media library.
+Nox supports one projector. The desktop app imports MP4 video and GIF animations. WebM, MOV, standalone images and After Effects projects are not supported. Project Open accepts `.luma` and compatible project JSON files; use **Import animation** for media. Browser preview cannot import or access the desktop media library.
 
 Timelines, BPM/timecode sync, multi-projector edge blending and automatic camera calibration are also outside the current release.
 

@@ -401,7 +401,7 @@ export class ProjectionRenderer {
       ctx.textAlign = "center";
       ctx.fillStyle = "#ffffff";
       ctx.fillText(
-        `LUMA  ·  ${state.project.width} × ${state.project.height}  ·  ALIGNMENT`,
+        `NOX   ·  ${state.project.width} × ${state.project.height}  ·  ALIGNMENT`,
         tw / 2,
         th * 0.9,
       );

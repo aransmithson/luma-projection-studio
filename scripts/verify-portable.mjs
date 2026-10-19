@@ -15,7 +15,7 @@ delete env.VITE_DEV_SERVER_URL;
 const child = spawn(
   path.resolve(
     process.env.LUMA_RELEASE_DIR || "release",
-    `Luma-Projection-Studio-${version}.exe`,
+    `Nox-Projection-Studio-${version}.exe`,
   ),
   [`--user-data-dir=${profile}`, "--remote-debugging-port=0"],
   { env, windowsHide: true, stdio: "ignore" },

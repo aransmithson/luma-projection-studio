@@ -32,7 +32,7 @@ describe("architectural animation timing", () => {
     expect(lightningStrength(7.5)).toBeLessThan(0.001);
     expect(lightningStrength(0)).toBeLessThan(0.001);
   });
-  it("makes each supplied reference discoverable under its original Luma effect name", () => {
+  it("makes each supplied reference discoverable under its original Nox effect name", () => {
     const references = [
       "Smart Reflection",
       "Falling Walls",

@@ -1,5 +1,5 @@
 ---
-description: Keep imported animations local, portable and synchronized with Luma playback.
+description: Keep imported animations local, portable and synchronized with Nox playback.
 applyTo: 'electron/media.cjs,electron/main.cjs,electron/preload.cjs,src/media*.ts,src/components/MediaControls.tsx,scripts/media-*.mjs'
 ---
 

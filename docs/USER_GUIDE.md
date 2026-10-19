@@ -1,4 +1,4 @@
-# Luma user guide
+# Nox user guide
 
 [Installation and source setup](../README.md) | [Release history](../CHANGELOG.md)
 
@@ -14,7 +14,7 @@ On a computer with only one display, output starts in a separate preview window 
 
 ## Import animations
 
-In the desktop app, select an editable surface, then choose **Import animation** in the effects library. Pick an **MP4 video** or **animated GIF**. Luma checks decoding, creates a thumbnail, copies the file into its local library and applies it to the selected surface. If no editable surface is selected, the clip is still available in **Imported**. Click its card to use it on another shape. Search includes imported filenames; imported thumbnails are still previews.
+In the desktop app, select an editable surface, then choose **Import animation** in the effects library. Pick an **MP4 video** or **animated GIF**. Nox checks decoding, creates a thumbnail, copies the file into its local library and applies it to the selected surface. If no editable surface is selected, the clip is still available in **Imported**. Click its card to use it on another shape. Search includes imported filenames; imported thumbnails are still previews.
 
 Use **MP4 encoded with H.264/AVC**, ideally 1920 × 1080 at 24 or 30 fps, for detailed scenes. Use GIF for short transparent characters or graphics. MP4 sound is always muted; the separate Music input remains opt-in. WebM, MOV, standalone images, After Effects projects and executable effect plugins are not supported.
 
@@ -35,7 +35,7 @@ Play, Pause and Restart use the same timeline in the editor and projector. Ident
 
 Imports remain available when the original file is moved. Save creates a companion folder beside the project, for example **House.luma** and **House.luma.media**. Copy both together when moving computers or sharing. Only animations referenced by the saved project are copied; the built-in effects need no media files. Existing unused files in a companion folder are retained, so review that folder before distributing it.
 
-If media is missing, the shape remains editable and renders without its animation. Open **Effect → Locate original** and choose the exact original file; Luma verifies its content hash and keeps all mapping and timing settings. A different file should be imported and applied as a replacement. Opening a project restores available companion files into the local library. The library survives app restarts and project changes; removing a shape does not delete its source animation.
+If media is missing, the shape remains editable and renders without its animation. Open **Effect → Locate original** and choose the exact original file; Nox verifies its content hash and keeps all mapping and timing settings. A different file should be imported and applied as a replacement. Opening a project restores available companion files into the local library. The library survives app restarts and project changes; removing a shape does not delete its source animation.
 
 ## Create a linked liquid loop
 

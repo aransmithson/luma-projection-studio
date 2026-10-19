@@ -1,6 +1,13 @@
 # Changelog
 
-Luma Projection Studio keeps its existing project format and application identity.
+Nox Projection Studio keeps the existing Luma project format and application identity.
+
+## 1.17.0
+
+- Rebranded the app as **Nox Projection Studio**, with a faceted neon N icon, refreshed banner, window titles, project dialogs and calibration label.
+- Renamed the public repository to `aransmithson/nox-projection-studio`, retaining its history and previous releases.
+- Added Windows icon sizes from 16 to 256 pixels and updated the source launcher and release filenames.
+- Preserved `.luma` projects, imported media, autosave, preferences, clipboard and application identifiers. Existing projects need no conversion. The 154 built-in effects and MP4/GIF import support are unchanged.
 
 ## 1.16.0
 

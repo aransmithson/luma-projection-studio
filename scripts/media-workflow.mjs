@@ -33,12 +33,12 @@ const launch = async () => {
   console.log(
     `Starting ${packaged ? "packaged" : "development"} media workflow in an isolated profile.`,
   );
-  const release = process.env.LUMA_RELEASE_DIR || "release/1.16.0";
+  const release = process.env.LUMA_RELEASE_DIR || "release/1.17.0";
   const options = packaged
     ? {
         executablePath: path.resolve(
           release,
-          "win-unpacked/Luma Projection Studio.exe",
+          "win-unpacked/Nox Projection Studio.exe",
         ),
         args: [`--user-data-dir=${profile}`],
       }

@@ -975,7 +975,7 @@ export default function App() {
         );
         const link = document.createElement("a");
         link.href = url;
-        link.download = `${current.current.name.replace(/[^a-z0-9 _-]/gi, "") || "Luma project"}.luma`;
+        link.download = `${current.current.name.replace(/[^a-z0-9 _-]/gi, "") || "Nox project"}.luma`;
         link.click();
         setTimeout(() => URL.revokeObjectURL(url), 1000);
         notify("Project downloaded.", "success");
@@ -1263,12 +1263,12 @@ export default function App() {
       <header className="app-header">
         <div
           className="brand"
-          aria-label="Luma projection studio"
-          title="Luma — Bring surfaces to life."
+          aria-label="Nox projection studio"
+          title="Nox — Bring surfaces to life."
         >
           <Logo />
           <span>
-            luma<span className="brand-period">.</span>
+            nox<span className="brand-period">.</span>
           </span>
           <small>PROJECTION STUDIO</small>
         </div>
@@ -2334,7 +2334,7 @@ export default function App() {
             <Sun size={17} />
             <p>
               For the sharpest results, turn off the projector’s automatic
-              keystone correction and fit each surface in Luma. Black areas
+              keystone correction and fit each surface in Nox. Black areas
               project no added light; your projector’s own black level still
               applies.
             </p>

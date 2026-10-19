@@ -39,7 +39,7 @@ function projectAssets(data) {
     !Array.isArray(project.surfaces) ||
     project.surfaces.length > 32
   )
-    throw new Error("This is not a valid Luma project.");
+    throw new Error("This is not a valid Nox project.");
   return [
     ...new Map(
       project.surfaces

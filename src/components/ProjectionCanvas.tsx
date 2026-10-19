@@ -44,7 +44,7 @@ export function ProjectionCanvas({
       e.preventDefault();
       stopped = true;
       setError(
-        "Graphics context lost. Save your project, then restart Luma to reconnect the renderer.",
+        "Graphics context lost. Save your project, then restart Nox to reconnect the renderer.",
       );
     };
     canvas.addEventListener("webglcontextlost", lost);

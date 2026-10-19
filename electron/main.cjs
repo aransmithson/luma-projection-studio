@@ -14,6 +14,8 @@ let audioFrame = null;
 let outputDisplayId = null;
 let powerBlocker = null;
 const devUrl = process.env.VITE_DEV_SERVER_URL;
+// Keep Electron's package-derived name and profile as luma-projection-studio.
+// Nox is the display brand; changing app.setName would strand saved libraries.
 const ownsInstance = app.requestSingleInstanceLock();
 if (!ownsInstance) app.quit();
 
@@ -83,7 +85,7 @@ if (ownsInstance) app.whenReady().then(async () => {
     return data.length <= 2_000_000 && data.startsWith('LUMA_SHAPES_V1\n') ? data : '';
   });
   app.setAppUserModelId('studio.luma.projection');
-  editor = new BrowserWindow({ width: 1560, height: 1000, minWidth: 1120, minHeight: 760, title: `Luma · Projection Studio ${app.getVersion()}`, icon: path.join(__dirname, 'icon.png'), backgroundColor: '#101114', autoHideMenuBar: true, webPreferences: preferences() });
+  editor = new BrowserWindow({ width: 1560, height: 1000, minWidth: 1120, minHeight: 760, title: `Nox · Projection Studio ${app.getVersion()}`, icon: path.join(__dirname, 'icon.png'), backgroundColor: '#101114', autoHideMenuBar: true, webPreferences: preferences() });
   secureWindow(editor);
   const setAudioCapture = configureAudio(editor.webContents.session, () => editor);
   const publishAudio = frame => {
@@ -120,7 +122,7 @@ if (ownsInstance) app.whenReady().then(async () => {
       output.setFullScreen(!isPrimary);
       output.webContents.send('luma:output-state', renderState); output.show(); notifyStatus(); return status();
     }
-    output = new BrowserWindow({ ...(isPrimary ? { x: display.bounds.x + 80, y: display.bounds.y + 80, width: Math.min(1080, display.workArea.width - 160), height: Math.min(680, display.workArea.height - 160) } : display.bounds), title: 'Luma · Projector output · F: fullscreen · Esc: close', show: false, backgroundColor: '#000000', autoHideMenuBar: true, fullscreen: !isPrimary, webPreferences: preferences() });
+    output = new BrowserWindow({ ...(isPrimary ? { x: display.bounds.x + 80, y: display.bounds.y + 80, width: Math.min(1080, display.workArea.width - 160), height: Math.min(680, display.workArea.height - 160) } : display.bounds), title: 'Nox · Projector output · F: fullscreen · Esc: close', show: false, backgroundColor: '#000000', autoHideMenuBar: true, fullscreen: !isPrimary, webPreferences: preferences() });
     secureWindow(output);
     output.webContents.on('before-input-event', (inputEvent, input) => {
       if (input.type !== 'keyDown') return;
@@ -154,8 +156,8 @@ if (ownsInstance) app.whenReady().then(async () => {
   ipcMain.handle('luma:save-project', async (event, data, suggestedName) => {
     requireEditor(event);
     if (typeof data !== 'string' || data.length > 2_000_000) return { canceled: false, error: 'Invalid project data.' };
-    const safeName = String(suggestedName || 'Luma project').replace(/[<>:"/\\|?*\x00-\x1F]/g, '_').slice(0, 100);
-    const result = await dialog.showSaveDialog(editor, { title: 'Save Luma project', defaultPath: `${safeName}.luma`, filters: [{ name: 'Luma project', extensions: ['luma'] }] });
+    const safeName = String(suggestedName || 'Nox project').replace(/[<>:"/\\|?*\x00-\x1F]/g, '_').slice(0, 100);
+    const result = await dialog.showSaveDialog(editor, { title: 'Save Nox project', defaultPath: `${safeName}.luma`, filters: [{ name: 'Nox project', extensions: ['luma'] }] });
     if (result.canceled || !result.filePath) return { canceled: true };
     try {
       const missing = await media.exportProject(data, result.filePath);
@@ -166,7 +168,7 @@ if (ownsInstance) app.whenReady().then(async () => {
   });
   ipcMain.handle('luma:open-project', async event => {
     requireEditor(event);
-    const result = await dialog.showOpenDialog(editor, { title: 'Open Luma project', properties: ['openFile'], filters: [{ name: 'Luma project', extensions: ['luma', 'json'] }] });
+    const result = await dialog.showOpenDialog(editor, { title: 'Open Nox project', properties: ['openFile'], filters: [{ name: 'Nox project', extensions: ['luma', 'json'] }] });
     if (result.canceled || !result.filePaths[0]) return { canceled: true };
     try {
       const filePath = result.filePaths[0]; const stat = await fs.stat(filePath);
@@ -181,8 +183,8 @@ if (ownsInstance) app.whenReady().then(async () => {
   await loadWindow(editor);
   showEditor();
 }).catch(error => {
-  console.error('Luma startup failed:', error);
-  dialog.showErrorBox('Luma could not start', `The editor could not be opened.\n\n${error.message || error}\n\nKeep the application and its resources together, then try opening Luma again.`);
+  console.error('Nox startup failed:', error);
+  dialog.showErrorBox('Nox could not start', `The editor could not be opened.\n\n${error.message || error}\n\nKeep the application and its resources together, then try opening Nox again.`);
   app.quit();
 });
 app.on('window-all-closed', () => app.quit());

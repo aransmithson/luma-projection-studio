@@ -17,7 +17,7 @@ goto failed
 echo The app has not been built. Run npm run build in this folder first.
 goto failed
 :launchFailed
-echo Windows could not start Luma. Run npm start in this folder to see the error.
+echo Windows could not start Nox. Run npm start in this folder to see the error.
 :failed
 pause
 popd
