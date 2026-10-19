@@ -192,6 +192,30 @@ export type MediaAsset = {
   duration: number;
 };
 export type LibraryMedia = MediaAsset & { thumbnail?: string };
+export type ScenePhoto = {
+  id: string;
+  name: string;
+  format: "png";
+  bytes: number;
+  width: number;
+  height: number;
+};
+export type SceneReference = {
+  photo: ScenePhoto;
+  points: Point[];
+  opacity: number;
+  visible: boolean;
+  prompt: string;
+};
+export type SceneJob = {
+  id: string;
+  photoId: string;
+  prompt: string;
+  duration: number;
+  created: number;
+  status: "PENDING" | "RUNNING" | "READY" | "FAILED" | "CANCELED";
+  error?: string;
+};
 export type MediaBinding = {
   asset: MediaAsset;
   fit: "contain" | "cover" | "stretch";
@@ -199,6 +223,7 @@ export type MediaBinding = {
   trimStart: number;
   trimEnd: number;
   offset: number;
+  sceneMapping?: Point[];
 };
 export type BlendMode =
   | "normal"
@@ -309,7 +334,11 @@ export type StoryStack = StackBase & {
   scale: number;
   seed: number;
 };
-export type AnimationStack = LiquidStack | ChaseStack | PortalStack | StoryStack;
+export type AnimationStack =
+  | LiquidStack
+  | ChaseStack
+  | PortalStack
+  | StoryStack;
 export type Project = {
   version: 1;
   name: string;
@@ -320,6 +349,7 @@ export type Project = {
   stacks: AnimationStack[];
   layers?: Layer[];
   audioSettings?: AudioSettings;
+  scene?: SceneReference;
 };
 export type AudioSettings = {
   gain: number;
@@ -346,6 +376,7 @@ export type RenderState = {
   blackout: boolean;
   testPattern: boolean;
   placementMesh?: boolean;
+  scenePhoto?: boolean;
   audio?: AudioFrame | null;
   audioFrozen?: AudioFrame | null;
   pointer?: Point | null;
@@ -362,10 +393,24 @@ export type DisplayInfo = {
 };
 export type OutputStatus = { open: boolean; displayId: number | null };
 export type DesktopBridge = {
-  listMedia: () => Promise<LibraryMedia[]>;
-  importMedia: (
+  openSceneLink: (kind: "account" | "pricing") => Promise<void>;
+  importScenePhoto: (
     expectedId?: string,
-  ) => Promise<{
+  ) => Promise<{ canceled: boolean; photo?: ScenePhoto; error?: string }>;
+  sceneAiStatus: () => Promise<{ configured: boolean; jobs: SceneJob[] }>;
+  setSceneAiKey: (key: string) => Promise<void>;
+  generateScene: (request: {
+    photo: ScenePhoto;
+    prompt: string;
+    duration: number;
+  }) => Promise<SceneJob>;
+  pollScene: (id: string) => Promise<SceneJob>;
+  cancelScene: (id: string) => Promise<SceneJob>;
+  loadSceneClip: (
+    id: string,
+  ) => Promise<Pick<MediaAsset, "id" | "name" | "format" | "bytes">>;
+  listMedia: () => Promise<LibraryMedia[]>;
+  importMedia: (expectedId?: string) => Promise<{
     canceled: boolean;
     asset?: Pick<MediaAsset, "id" | "name" | "format" | "bytes">;
     error?: string;

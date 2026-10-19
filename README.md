@@ -4,7 +4,7 @@
 
 **Bring surfaces to life.** A Windows desktop app for mapping animated light onto buildings, props and scenery with one projector. Draw and warp shapes, build linked stories, and react to music with **160 built-in effects and materials**.
 
-Nox runs locally with no account or network connection. Built with Electron, React, TypeScript, Canvas 2D and WebGL.
+Mapping, effects and imported playback run locally with no account. Optional **Scene Animator** generation connects your scene photo and prompt to Runway; it needs internet access and your own paid Runway API account. Built with Electron, React, TypeScript, Canvas 2D and WebGL.
 
 Previously called **Luma**. Your existing `.luma` projects, imported library, preferences and recovery data continue to work. The new name does not require a profile or project migration.
 
@@ -12,8 +12,8 @@ Previously called **Luma**. Your existing `.luma` projects, imported library, pr
 
 Get the Windows build from [GitHub Releases](https://github.com/aransmithson/nox-projection-studio/releases/latest). The repository and downloads are public.
 
-- **Recommended:** download `Nox-Projection-Studio-1.18.0-win-x64.zip`, extract the whole folder, and open `Nox Projection Studio.exe`. Keep the executable beside its resources.
-- **Portable:** download `Nox-Projection-Studio-1.18.0.exe`. It extracts before opening; allow that first launch to finish.
+- **Recommended:** download `Nox-Projection-Studio-1.19.0-win-x64.zip`, extract the whole folder, and open `Nox Projection Studio.exe`. Keep the executable beside its resources.
+- **Portable:** download `Nox-Projection-Studio-1.19.0.exe`. It extracts before opening; allow that first launch to finish.
 - Close an older running copy before opening a new version. Nox restores the existing instance when opened again.
 
 Release builds are not code-signed. The Windows executable keeps Electron's original resources to preserve compatibility with Windows Code Integrity; Nox's own icon appears in the app window and interface.
@@ -27,6 +27,7 @@ Release builds are not code-signed. The Windows executable keeps Electron's orig
 | Compositing | Layers, copy/paste, ten blend modes, feathering, colour overlays and independent content rotation/offset |
 | Effects | 148 animations and 12 still materials, including Halloween, Christmas, space, creatures, shadow puppets, architectural illusions and stage lighting |
 | Imported animations | MP4/H.264 videos and animated GIFs, thumbnails, looping, trim, time offset, speed and fill/fit/stretch |
+| Scene Animator | JPG/PNG reference alignment, optional Runway generation, independent preview and one shared clip across selected props |
 | Linked stories | Six travelling stories with local reactions, plus synchronized liquid stacks, character chases and portal journeys across two to eight shapes |
 | Music | Six equaliser-style effects using computer audio, microphone/line-in or an explicit demo signal |
 | Playback | Shared Play, Pause and Restart, plus immediate output blackout |
@@ -35,6 +36,14 @@ Release builds are not code-signed. The Windows executable keeps Electron's orig
 Projects support **32 surfaces**, **64 vertices per polygon**, and **eight animation stacks**. The stacked editor keeps settings and Save visible in a wide three-column layout.
 
 ![Nox mapping workspace with the effects library and surface inspector](docs/assets/workspace.png)
+
+## Animate a photo of your props
+
+Open **Scene Animator**, import a JPG or PNG photo taken near the projector lens, and align its four corners. Use the main editor to outline and name your props. The reference can appear in the editor and, through a separate toggle, on the projector.
+
+In **Create animation**, enter a prompt, add your Runway API key for this session, and explicitly enable sending the photo to Runway. Generate a five- or ten-second variation, then preview it with the exact shape masks before applying. Alternatively, use **Preview & apply** to import an externally generated MP4 or GIF without connecting an AI service.
+
+One clip spans the selected shapes, so each prop reveals the appropriate part of the scene. Holes, layers and blending remain available, and applied clips use the shared playback clock. AI camera stability and seamless loops are not guaranteed: inspect the preview and trim the loop before use. This is manual photo alignment, not automatic 3D reconstruction or projector calibration. See the [Scene Animator guide](docs/USER_GUIDE.md#scene-animator).
 
 ## New linked stories
 
@@ -68,7 +77,7 @@ Nox copies imports into its local library. Saving a project copies the assets it
 
 ## Run from source
 
-Use Windows and **Node.js 24**. Installing dependencies needs internet access to download Electron; running the built app does not.
+Use Windows and **Node.js 24**. Installing dependencies needs internet access to download Electron. Mapping and playback work offline; optional AI generation needs a connection.
 
 ```powershell
 git clone https://github.com/aransmithson/nox-projection-studio.git
@@ -88,7 +97,7 @@ After building, [Start Nox.cmd](Start%20Nox.cmd) is also a double-click launcher
 
 ## Current scope
 
-Nox supports one projector. The desktop app imports MP4 video and GIF animations. WebM, MOV, standalone images and After Effects projects are not supported. Project Open accepts `.luma` and compatible project JSON files; use **Import animation** for media. Browser preview cannot import or access the desktop media library.
+Nox supports one projector. The desktop app imports MP4 video and GIF animations, plus JPG/PNG reference photos in Scene Animator. WebM, MOV, still-image effects and After Effects projects are not supported. Project Open accepts `.luma` and compatible project JSON files; use **Import animation** for clips. Browser preview cannot import or access the desktop media library or generate scenes.
 
 Timelines, BPM/timecode sync, multi-projector edge blending and automatic camera calibration are also outside the current release.
 

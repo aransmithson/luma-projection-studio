@@ -57,9 +57,9 @@ export function gifFixture() {
   return Buffer.from([...bytes, 0x3b]);
 }
 
-export async function recordVideoFixture(page) {
+export async function recordVideoFixture(page, spatial = false) {
   return Buffer.from(
-    await page.evaluate(async () => {
+    await page.evaluate(async (spatial) => {
       const mimeType = "video/mp4;codecs=avc1.42001E";
       if (!MediaRecorder.isTypeSupported(mimeType))
         throw new Error(
@@ -83,6 +83,10 @@ export async function recordVideoFixture(page) {
       const draw = (index) => {
         ctx.fillStyle = ["#ff1818", "#18ff18", "#1818ff"][index];
         ctx.fillRect(0, 0, 320, 180);
+        if (spatial) {
+          ctx.fillStyle = ["#1818ff", "#ff1818", "#18ff18"][index];
+          ctx.fillRect(160, 0, 160, 180);
+        }
       };
       draw(0);
       recorder.start();
@@ -101,6 +105,6 @@ export async function recordVideoFixture(page) {
           await new Blob(chunks, { type: "video/mp4" }).arrayBuffer(),
         ),
       );
-    }),
+    }, spatial),
   );
 }

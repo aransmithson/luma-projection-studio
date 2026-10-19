@@ -28,6 +28,7 @@ Choose native workflows that exercise the change. Run them sequentially with the
 | Layers or copy/paste | `npm run test:layers`, `npm run test:clipboard` |
 | Audio | `npm run test:audio`, `npm run test:audio-render` |
 | Imported media | `npm run test:media` and `npm run test:media -- --packaged` |
+| Scene Animator | `npm run test:scene` and `npm run test:scene -- --packaged`, plus the media workflows |
 | Effect rendering | `npm run test:effects` and the relevant collection workflow |
 
 Audio checks use generated input and a brief quiet loopback test tone. Clipboard tests restore the original clipboard unless the user has copied something new. Never point a test at the real profile or close an app the test did not launch.
@@ -38,8 +39,8 @@ Stop development servers and desktop tests before packaging. Build each version 
 
 ```powershell
 $env:ELECTRON_BUILDER_COMPRESSION_LEVEL='1'
-npm run package -- --config.directories.output=release/1.18.0
-$env:LUMA_RELEASE_DIR='release/1.18.0'
+npm run package -- --config.directories.output=release/1.19.0
+$env:LUMA_RELEASE_DIR='release/1.19.0'
 npm run test:startup -- unpacked --hidden --copy-saved-profile
 npm run test:startup -- portable
 npm run test:startup-recovery -- --packaged
@@ -61,6 +62,7 @@ Distribute the complete unpacked folder as a ZIP, or the portable executable. Do
 - [Desktop process](electron/main.cjs) and [preload bridge](electron/preload.cjs): native windows, validated IPC and file dialogs.
 - [Audio analysis](src/audioAnalysis.ts) and [desktop permissions](electron/audio.cjs): shared music input.
 - [Media storage](electron/media.cjs), [timing](src/media.ts) and [playback](src/mediaPlayback.ts): native imports, portable companions, GIF decoding and shared video timing. The media workflow generates its own GIF and H.264 test footage in an isolated profile; it downloads no footage or codec tools.
+- [Scene Animator](src/components/SceneAnimator.tsx), [scene mapping](src/scene.ts), [reference photos](electron/scene-photos.cjs) and [Runway jobs](electron/scene-ai.cjs): photo alignment, optional generation and full-scene clips shared across prop masks. The scene workflow intercepts transport only in its isolated Electron process and returns a locally recorded H.264 fixture. It exercises the real IPC, storage and renderer without uploading photos or spending credits. Unit tests cover ambiguous submissions, cancellation, unsafe output URLs, download limits, recovery and credential exclusion. A successful simulated test is not evidence of live provider output quality.
 
 ## Brand assets
 

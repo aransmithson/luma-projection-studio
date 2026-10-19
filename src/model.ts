@@ -137,6 +137,13 @@ const pointSchema = z.object({
   x: z.number().min(0).max(1),
   y: z.number().min(0).max(1),
 });
+const sceneQuadSchema = z
+  .array(pointSchema)
+  .length(4)
+  .refine(
+    (points) => validSurfaceGeometry({ kind: "quad", points }),
+    "Invalid scene alignment.",
+  );
 const mediaSchema = z
   .object({
     asset: z.object({
@@ -157,6 +164,7 @@ const mediaSchema = z
     trimStart: z.number().min(0).max(86400),
     trimEnd: z.number().positive().max(86400),
     offset: z.number().min(0).max(86400),
+    sceneMapping: sceneQuadSchema.optional(),
   })
   .superRefine((media, ctx) => {
     if (
@@ -290,6 +298,26 @@ const projectSchema = z
     width: z.number().int().min(320).max(7680),
     height: z.number().int().min(240).max(4320),
     brightness: z.number().min(0).max(1),
+    scene: z
+      .object({
+        photo: z.object({
+          id: z.string().regex(/^[a-f0-9]{64}$/),
+          name: z.string().min(1).max(160),
+          format: z.literal("png"),
+          bytes: z
+            .number()
+            .int()
+            .min(8)
+            .max(64 * 1024 * 1024),
+          width: z.number().int().min(1).max(4096),
+          height: z.number().int().min(1).max(4096),
+        }),
+        points: sceneQuadSchema,
+        opacity: z.number().min(0).max(1),
+        visible: z.boolean(),
+        prompt: z.string().max(800),
+      })
+      .optional(),
     audioSettings: z
       .object({
         gain: z.number().min(0.25).max(8),

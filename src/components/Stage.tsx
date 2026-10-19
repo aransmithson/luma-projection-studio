@@ -402,7 +402,10 @@ export function Stage({
         <div className="stage-coordinate coord-bottom-left">
           {project.height}
         </div>
-        <ProjectionCanvas state={state} onFps={onFps} />
+        <ProjectionCanvas
+          state={{ ...state, scenePhoto: !!project.scene?.visible }}
+          onFps={onFps}
+        />
         <svg
           className="stage-overlay"
           ref={svg}

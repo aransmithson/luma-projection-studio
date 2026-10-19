@@ -1,6 +1,7 @@
 import { boundingMap, bounds, inverseQuadMap, triangles } from "./geometry";
 import { drawEffect } from "./effects";
 import { MediaPlayers } from "./mediaPlayback";
+import { photoSurface, photoUrl } from "./scene";
 import { projectionItems, renderedProject } from "./layers";
 import { contentMatrix } from "./contentTransform";
 import { isMusicEffect, silentAudio } from "./audioAnalysis";
@@ -56,6 +57,7 @@ uniform mat3 u_mapping;
 uniform mat3 u_content;
 uniform float u_opacity;
 uniform float u_mediaAlpha;
+uniform float u_sceneMapping;
 uniform float u_brightness;
 uniform float u_feather;
 uniform float u_aspect;
@@ -68,7 +70,8 @@ ${blendShader}
 ${overlayShader}
 void main() {
   vec3 mapped = u_mapping * vec3(v_position, 1.0);
-  vec2 uv = clamp(mapped.xy / mapped.z, 0.0, 1.0);
+  vec2 mappedUv = mapped.xy / mapped.z;
+  vec2 uv = mix(clamp(mappedUv, 0.0, 1.0), mappedUv, u_sceneMapping);
   uv = (u_content * vec3(uv, 1.0)).xy;
   vec4 color = texture2D(u_texture, clamp(uv, 0.0, 1.0));
   float coverage = step(0.0, uv.x) * step(uv.x, 1.0) * step(0.0, uv.y) * step(uv.y, 1.0);
@@ -123,6 +126,10 @@ export class ProjectionRenderer {
   private backdropWidth = 1;
   private backdropHeight = 1;
   private time = 0;
+  private photo: HTMLImageElement | null = null;
+  private photoId = "";
+  private photoRetry = 0;
+  private unsubscribePhoto?: () => void;
 
   constructor(private canvas: HTMLCanvasElement) {
     const gl = canvas.getContext("webgl", {
@@ -167,6 +174,7 @@ export class ProjectionRenderer {
       "content",
       "opacity",
       "mediaAlpha",
+      "sceneMapping",
       "brightness",
       "feather",
       "aspect",
@@ -210,6 +218,9 @@ export class ProjectionRenderer {
     gl.activeTexture(gl.TEXTURE0);
     gl.enable(gl.BLEND);
     gl.clearColor(0, 0, 0, 1);
+    this.unsubscribePhoto = window.luma?.onMediaChanged(() => {
+      this.photoRetry = 0;
+    });
   }
 
   private resource(surface: Surface, placementMesh = false) {
@@ -295,6 +306,7 @@ export class ProjectionRenderer {
     gl.clear(gl.COLOR_BUFFER_BIT);
     const alive = new Set(state.project.surfaces.map((s) => s.id));
     alive.add("__calibration");
+    if (state.project.scene) alive.add("__scene-photo");
     state.project.stacks.forEach((stack) => alive.add(`__links-${stack.id}`));
     for (const [id, r] of this.resources)
       if (!alive.has(id)) {
@@ -427,9 +439,15 @@ export class ProjectionRenderer {
         continue;
       const r = this.resource(surface, placementMesh),
         b = bounds(r.outline);
+      const sharedMapping =
+        !placementMesh && surface.effectId === "imported-media"
+          ? surface.media?.sceneMapping
+          : undefined;
       const aspect =
-        (b.width * state.project.width) /
-        Math.max(1, b.height * state.project.height);
+        sharedMapping && surface.media
+          ? surface.media.asset.width / surface.media.asset.height
+          : (b.width * state.project.width) /
+            Math.max(1, b.height * state.project.height);
       const definition = effectById[surface.effectId];
       const detail = placementMesh
         ? 640
@@ -558,9 +576,41 @@ export class ProjectionRenderer {
         changed,
         cutoutsFor(state.project.surfaces, surface.id).filter((s) => s.visible),
         aspect,
+        sharedMapping ? inverseQuadMap(sharedMapping) : undefined,
       );
     }
+    if (state.scenePhoto && !placementMesh) this.drawPhoto(state.project);
     this.mediaPlayers.end();
+  }
+
+  private drawPhoto(project: Project) {
+    const surface = photoSurface(project),
+      scene = project.scene;
+    if (!surface || !scene) return;
+    if (
+      this.photoId !== scene.photo.id ||
+      (!this.photo?.naturalWidth && Date.now() > this.photoRetry)
+    ) {
+      this.photoId = scene.photo.id;
+      this.photoRetry = Date.now() + 10_000;
+      this.photo = new Image();
+      this.photo.crossOrigin = "anonymous";
+      this.photo.src = photoUrl(scene.photo);
+    }
+    if (!this.photo?.complete || !this.photo.naturalWidth) return;
+    const r = this.resource(surface);
+    const changed = r.effectKey !== this.photoId;
+    if (changed) {
+      const scale = Math.min(
+        1,
+        1920 / Math.max(scene.photo.width, scene.photo.height),
+      );
+      r.canvas.width = Math.max(1, Math.round(scene.photo.width * scale));
+      r.canvas.height = Math.max(1, Math.round(scene.photo.height * scale));
+      r.ctx.drawImage(this.photo, 0, 0, r.canvas.width, r.canvas.height);
+      r.effectKey = this.photoId;
+    }
+    this.drawSurface(surface, r, r.canvas, changed);
   }
 
   private drawLinks(project: Project, stack: LiquidStack, time: number) {
@@ -615,6 +665,7 @@ export class ProjectionRenderer {
     changed = true,
     cutouts: Surface[] = [],
     contentAspect = source.width / source.height,
+    mapping?: Float32Array,
   ) {
     const gl = this.gl;
     gl.bindTexture(gl.TEXTURE_2D, r.texture);
@@ -642,7 +693,8 @@ export class ProjectionRenderer {
     gl.bindBuffer(gl.ARRAY_BUFFER, r.buffer);
     gl.enableVertexAttribArray(this.position);
     gl.vertexAttribPointer(this.position, 2, gl.FLOAT, false, 0, 0);
-    gl.uniformMatrix3fv(this.uniforms.mapping, false, r.mapping);
+    gl.uniformMatrix3fv(this.uniforms.mapping, false, mapping ?? r.mapping);
+    gl.uniform1f(this.uniforms.sceneMapping, mapping ? 1 : 0);
     gl.uniformMatrix3fv(
       this.uniforms.content,
       false,
@@ -747,6 +799,9 @@ export class ProjectionRenderer {
   }
 
   dispose() {
+    this.unsubscribePhoto?.();
+    if (this.photo) this.photo.src = "";
+    this.photo = null;
     this.mediaPlayers.dispose();
     for (const r of this.resources.values()) {
       this.gl.deleteTexture(r.texture);

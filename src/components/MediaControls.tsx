@@ -69,11 +69,13 @@ export function MediaControls({
   update,
   locate,
   importing,
+  sceneMode = false,
 }: {
   surface: Surface;
   update: (change: Partial<Surface>) => void;
   locate: (id: string) => void;
   importing: boolean;
+  sceneMode?: boolean;
 }) {
   const media = surface.media!;
   const message = useSyncExternalStore(subscribeMedia, () =>
@@ -97,20 +99,34 @@ export function MediaControls({
       <p role="status" className={`media-status ${error ? "error" : ""}`}>
         {message}
       </p>
-      <label className="select-field">
-        <span>Fit inside shape</span>
-        <select
-          aria-label="Animation fit"
-          value={media.fit}
-          onChange={(event) =>
-            change({ fit: event.target.value as MediaBinding["fit"] })
-          }
-        >
-          <option value="cover">Fill (crop edges)</option>
-          <option value="contain">Fit (show all)</option>
-          <option value="stretch">Stretch to shape</option>
-        </select>
-      </label>
+      {media.sceneMapping ? (
+        <p className="media-help">
+          This clip shares its scene alignment across mapped props.
+          {!sceneMode && (
+            <button
+              className="text-button"
+              onClick={() => change({ sceneMapping: undefined, fit: "cover" })}
+            >
+              Fit clip to this shape instead
+            </button>
+          )}
+        </p>
+      ) : (
+        <label className="select-field">
+          <span>Fit inside shape</span>
+          <select
+            aria-label="Animation fit"
+            value={media.fit}
+            onChange={(event) =>
+              change({ fit: event.target.value as MediaBinding["fit"] })
+            }
+          >
+            <option value="cover">Fill (crop edges)</option>
+            <option value="contain">Fit (show all)</option>
+            <option value="stretch">Stretch to shape</option>
+          </select>
+        </label>
+      )}
       <label className="media-loop">
         <input
           type="checkbox"
@@ -139,17 +155,21 @@ export function MediaControls({
         change={(offset) => change({ offset })}
       />
       <p className="media-help">
-        Pause and Restart control every shape. Matching clips with the same
-        speed, trim and offset stay together. Turn Loop off to hold the final
-        frame.
+        {sceneMode
+          ? "Preview playback is independent of the projector. "
+          : "Pause and Restart control every shape. "}
+        Matching clips with the same speed, trim and offset stay together. Turn
+        Loop off to hold the final frame.
       </p>
-      <button
-        className="secondary-button full-width"
-        disabled={!window.luma || importing}
-        onClick={() => locate(media.asset.id)}
-      >
-        Locate original
-      </button>
+      {!sceneMode && (
+        <button
+          className="secondary-button full-width"
+          disabled={!window.luma || importing}
+          onClick={() => locate(media.asset.id)}
+        >
+          Locate original
+        </button>
+      )}
       <p className="media-help">
         For moving a project, keep its .luma file and .luma.media folder
         together.

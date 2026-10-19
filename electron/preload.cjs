@@ -5,6 +5,14 @@ const subscribe = (channel, callback) => {
   return () => ipcRenderer.removeListener(channel, listener);
 };
 contextBridge.exposeInMainWorld('luma', {
+  openSceneLink: kind => ipcRenderer.invoke('luma:scene-link', kind),
+  importScenePhoto: expectedId => ipcRenderer.invoke('luma:import-scene-photo', expectedId),
+  sceneAiStatus: () => ipcRenderer.invoke('luma:scene-ai-status'),
+  setSceneAiKey: key => ipcRenderer.invoke('luma:scene-ai-key', key),
+  generateScene: input => ipcRenderer.invoke('luma:scene-generate', input),
+  pollScene: id => ipcRenderer.invoke('luma:scene-poll', id),
+  cancelScene: id => ipcRenderer.invoke('luma:scene-cancel', id),
+  loadSceneClip: id => ipcRenderer.invoke('luma:scene-load', id),
   listMedia: () => ipcRenderer.invoke('luma:list-media'),
   importMedia: expectedId => ipcRenderer.invoke('luma:import-media', expectedId),
   completeMedia: asset => ipcRenderer.invoke('luma:complete-media', asset),

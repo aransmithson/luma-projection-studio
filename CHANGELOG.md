@@ -2,6 +2,14 @@
 
 Nox Projection Studio keeps the existing Luma project format and application identity.
 
+## 1.19.0
+
+- Added **Scene Animator** with JPG/PNG reference photos, four-corner perspective alignment, precise projector coordinates, opacity, editor visibility and an independent projector photo toggle. Imported photos are normalized locally and travel with the project's companion folder.
+- Added optional **Runway Gen-4.5** image-to-video generation with five- or ten-second clips, an explicit upload/credit acknowledgement, session-only API keys, resumable job history, cancellation and local MP4 downloads. Failed connections never automatically resubmit a billable generation.
+- Added an independent, masked preview and shared scene mapping across selected props. The same clip continues across shapes; holes, layers and blend modes remain intact. External MP4/GIF clips can use the same workflow without AI.
+- Added loop, trim and time-offset controls in the preview. Applying resets selected props' content transforms and speed, then follows the existing shared Play/Pause/Restart clock. Projector photo visibility resets on reopening a project or app.
+- Preserved version-1 projects, persistent Luma identifiers and all 160 built-in effects/materials. Added model, native storage, mocked-provider, real H.264 rendering and desktop workflow checks. Paid live Runway generation has not been verified without an API key; AI geometry and seamless looping remain dependent on the generated result.
+
 ## 1.18.0
 
 - Added six original linked stories: **Cosmic courier**, **Ghost train**, **Dragon lantern run**, **Reef pearl relay**, **Clockwork marble** and **Firefly garden**. Travellers cross each shape into the next, triggering station lights, lanterns, shells, machinery or flowers along the route, then return to the first shape.

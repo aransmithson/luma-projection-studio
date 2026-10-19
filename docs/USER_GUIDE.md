@@ -16,7 +16,7 @@ On a computer with only one display, output starts in a separate preview window 
 
 In the desktop app, select an editable surface, then choose **Import animation** in the effects library. Pick an **MP4 video** or **animated GIF**. Nox checks decoding, creates a thumbnail, copies the file into its local library and applies it to the selected surface. If no editable surface is selected, the clip is still available in **Imported**. Click its card to use it on another shape. Search includes imported filenames; imported thumbnails are still previews.
 
-Use **MP4 encoded with H.264/AVC**, ideally 1920 × 1080 at 24 or 30 fps, for detailed scenes. Use GIF for short transparent characters or graphics. MP4 sound is always muted; the separate Music input remains opt-in. WebM, MOV, standalone images, After Effects projects and executable effect plugins are not supported.
+Use **MP4 encoded with H.264/AVC**, ideally 1920 × 1080 at 24 or 30 fps, for detailed scenes. Use GIF for short transparent characters or graphics. MP4 sound is always muted; the separate Music input remains opt-in. WebM, MOV, still-image effects, After Effects projects and executable effect plugins are not supported. JPG/PNG photos are available separately as references in Scene Animator.
 
 | Format | Import limits |
 | --- | --- |
@@ -36,6 +36,42 @@ Play, Pause and Restart use the same timeline in the editor and projector. Ident
 Imports remain available when the original file is moved. Save creates a companion folder beside the project, for example **House.luma** and **House.luma.media**. Copy both together when moving computers or sharing. Only animations referenced by the saved project are copied; the built-in effects need no media files. Existing unused files in a companion folder are retained, so review that folder before distributing it.
 
 If media is missing, the shape remains editable and renders without its animation. Open **Effect → Locate original** and choose the exact original file; Nox verifies its content hash and keeps all mapping and timing settings. A different file should be imported and applied as a replacement. Opening a project restores available companion files into the local library. The library survives app restarts and project changes; removing a shape does not delete its source animation.
+
+## Scene Animator
+
+Scene Animator starts with a photo of a small prop arrangement and gives all selected shapes a shared view of one animation. It also works with imported clips without using an AI service. The same manual workflow can be used for larger objects and facades, subject to projector coverage and photo alignment; it does not reconstruct 3D geometry or calibrate a projector automatically.
+
+### Align the reference
+
+1. Position the projector and props, then take a photo from as close to the projector lens as practical. Keep both fixed afterward. Strong camera/projector separation produces parallax, especially with props at different depths.
+2. Open **Scene Animator → Align photo → Import reference photo**. Choose JPG/JPEG or PNG, up to 30 MB and 32 megapixels. Nox stores a normalized PNG at up to 4096 pixels per side. General animation imports remain MP4/GIF only.
+3. Drag the four numbered corners, or type **X px / Y px** coordinates. Keep the corners in order. **Reset photo to fit** restores the complete photo without cropping. Use **Photo opacity** to compare the reference with the content beneath it.
+4. **Show photo in main editor** helps tracing. **Show photo on projector** is independent and only affects an open output window. Blackout, calibration and placement mesh take priority. Projector photo visibility is never saved and starts off after opening a project or relaunching Nox.
+5. Choose **Outline props in editor**. Use existing shape, Bezier, hole and name controls to trace each physical prop, then reopen Scene Animator. Select the props that should receive the animation; locked shapes and locked layers cannot be changed.
+
+Four-corner alignment is a perspective transform for a plane. For protruding objects, refine the individual shape masks and test the result on the actual props. A photo alone cannot guarantee alignment across multiple depths.
+
+### Generate a variation
+
+1. In **Create animation**, describe visible objects and the motion you want. For example: “Tiny ghosts peek from the pumpkins, float from the left box to the right box, then return.” The app adds instructions for a fixed camera, stationary object boundaries and a repeating action. Prompts allow 800 characters; choose five or ten seconds.
+2. Create a [Runway API account](https://dev.runwayml.com/) and check [current API pricing](https://docs.dev.runwayml.com/guides/pricing/). API credits are separate from Nox. Paste your key into the password field and choose **Use key for this session**. The field clears; Nox keeps the key in main-process memory until Disconnect or app exit. It is not saved in the project or job history.
+3. Read and tick the upload/credit acknowledgement, then choose **Generate variation**. This sends the **whole normalized photo and prompt** to Runway Gen-4.5, including areas outside selected props. The photo is resized to a supported output frame without cropping; Nox maps the complete result back into the aligned photo footprint. Shape masks are applied locally, not submitted as hard generation masks.
+4. A variation shows Queued, Generating/downloading, Ready, Failed or Canceled. At most two tasks can be active. **Cancel task** sends a cancellation request; credit handling is controlled by Runway. Closing the panel or app does not cancel a submitted task. Reopen and reconnect the key to resume checking and downloading existing tasks. Nox keeps up to 100 recent task records locally; generated files remain in the profile.
+5. Choose **Preview** when ready. Nox downloads the MP4 locally, checks decoding and adds it to the Imported library. Generating another variation leaves applied content unchanged. Network failures never automatically resubmit a billable request; if confirmation was lost, check your Runway account before generating again.
+
+AI may shift objects, move the camera or create an imperfect loop despite the prompt. Inspect the whole result before projecting. The provider request/download lifecycle is covered by simulated-service tests; a paid live generation was not part of the 1.19.0 verification.
+
+### Preview, loop and apply
+
+**Preview & apply** also offers an existing Imported clip or **Import MP4 or GIF for this scene**. Use footage with the same framing as the photo. A generic clip can span props too, but it will not automatically understand or match their physical details.
+
+The preview has an independent clock with Play/Pause and Restart. **Show full scene** reveals the whole animation; turn it off to inspect selected shapes and their holes. Change **Loop animation**, **Trim start**, **Trim end** and **Time offset** to refine the repeated interval. Loop repeats the interval; it does not synthesize a seamless transition or crossfade.
+
+**Apply to props** sets each selected editable prop to the same source and scene alignment. Different shapes reveal different areas of the full scene instead of repeating the entire video. Shapes, Bezier outlines, holes, layer visibility, opacity, blending and colour overlays remain intact. Applying resets the selected shapes' content rotation/offset and speed, removes them from old linked stacks as necessary, and hides the reference photo in editor and output. Use the main **Restart** to begin at the clip's start. Matching media, speed, trim and offset use the shared scene clock; changing one shape's playback controls independently can desynchronize it intentionally.
+
+Applied media stores an alignment snapshot, so later reference-photo adjustments do not silently move live content. Reapply from Scene Animator to use an updated alignment. The Effect inspector identifies scene-aligned content and offers **Fit clip to this shape instead** to return that shape to independent fill/fit/stretch mapping.
+
+Save copies the reference PNG and any applied animations beside the `.luma` file in its `.luma.media` folder. The project stores the prompt, photo metadata and alignment, plus applied clip settings; credentials and original source paths are excluded. Unapplied variations stay in the local generation history/library. Keep the companion folder with the project when moving computers. If the reference is missing, use **Locate original photo** in Scene Animator; animation recovery remains **Effect → Locate original**. Review the actual photo, prompt and companion files before sharing.
 
 ## Create a linked story
 

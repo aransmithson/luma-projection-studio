@@ -1,8 +1,10 @@
-const { app, BrowserWindow, ipcMain, dialog, screen, powerSaveBlocker, clipboard, protocol } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, screen, powerSaveBlocker, clipboard, protocol, nativeImage, shell } = require('electron');
 const path = require('node:path');
 const fs = require('node:fs/promises');
 const { configureAudio, copyAudioFrame } = require('./audio.cjs');
 const { createMediaLibrary } = require('./media.cjs');
+const { createPhotoLibrary } = require('./scene-photos.cjs');
+const { createSceneAi } = require('./scene-ai.cjs');
 
 protocol.registerSchemesAsPrivileged([{ scheme: 'luma-media', privileges: { standard: true, secure: true, supportFetchAPI: true, stream: true, corsEnabled: true } }]);
 
@@ -51,10 +53,30 @@ function checkState(state) {
 
 if (ownsInstance) app.whenReady().then(async () => {
   const media = createMediaLibrary(path.join(app.getPath('userData'), 'media'));
-  protocol.handle('luma-media', request => media.serve(request));
+  const photos = createPhotoLibrary(path.join(app.getPath('userData'), 'scene-photos'), nativeImage);
+  const sceneAi = createSceneAi(path.join(app.getPath('userData'), 'scene-jobs'), { photos, media, nativeImage });
+  protocol.handle('luma-media', request => new URL(request.url).hostname === 'photos' ? photos.serve(request) : media.serve(request));
   const notifyMedia = () => {
     for (const win of [editor, output]) if (win && !win.isDestroyed()) win.webContents.send('luma:media-changed');
   };
+  ipcMain.handle('luma:import-scene-photo', async (event, expectedId) => {
+    requireEditor(event);
+    const result = await dialog.showOpenDialog(editor, { title: expectedId ? 'Locate the original scene photo' : 'Choose a scene photo', properties: ['openFile'], filters: [{ name: 'Reference photo (JPG or PNG)', extensions: ['jpg', 'jpeg', 'png'] }] });
+    if (result.canceled || !result.filePaths[0]) return { canceled: true };
+    try { const photo = await photos.importFile(result.filePaths[0], expectedId); notifyMedia(); return { canceled: false, photo }; }
+    catch (error) { return { canceled: false, error: error.message }; }
+  });
+  ipcMain.handle('luma:scene-ai-status', event => { requireEditor(event); return sceneAi.status(); });
+  ipcMain.handle('luma:scene-link', (event, kind) => {
+    requireEditor(event);
+    if (!['account','pricing'].includes(kind)) throw Error('Unknown Scene Animator link.');
+    return shell.openExternal(kind === 'account' ? 'https://dev.runwayml.com/' : 'https://docs.dev.runwayml.com/guides/pricing/');
+  });
+  ipcMain.handle('luma:scene-ai-key', (event, key) => { requireEditor(event); sceneAi.setKey(key); });
+  ipcMain.handle('luma:scene-generate', (event, input) => { requireEditor(event); return sceneAi.generate(input); });
+  ipcMain.handle('luma:scene-poll', (event, id) => { requireEditor(event); return sceneAi.poll(id); });
+  ipcMain.handle('luma:scene-cancel', (event, id) => { requireEditor(event); return sceneAi.cancel(id); });
+  ipcMain.handle('luma:scene-load', (event, id) => { requireEditor(event); return sceneAi.load(id); });
   ipcMain.handle('luma:list-media', event => { requireEditor(event); return media.list(); });
   ipcMain.handle('luma:import-media', async (event, expectedId) => {
     requireEditor(event);
@@ -160,7 +182,7 @@ if (ownsInstance) app.whenReady().then(async () => {
     const result = await dialog.showSaveDialog(editor, { title: 'Save Nox project', defaultPath: `${safeName}.luma`, filters: [{ name: 'Nox project', extensions: ['luma'] }] });
     if (result.canceled || !result.filePath) return { canceled: true };
     try {
-      const missing = await media.exportProject(data, result.filePath);
+      const missing = [...await media.exportProject(data, result.filePath), ...await photos.exportProject(data, result.filePath)];
       await fs.writeFile(result.filePath, data, 'utf8');
       return { canceled: false, path: result.filePath, missing };
     }
@@ -174,7 +196,7 @@ if (ownsInstance) app.whenReady().then(async () => {
       const filePath = result.filePaths[0]; const stat = await fs.stat(filePath);
       if (stat.size > 2_000_000) return { canceled: false, error: 'Project files must be smaller than 2 MB.' };
       const data = await fs.readFile(filePath, 'utf8');
-      const missing = await media.restoreProject(data, filePath);
+      const missing = [...await media.restoreProject(data, filePath), ...await photos.restoreProject(data, filePath)];
       notifyMedia();
       return { canceled: false, data, path: filePath, missing };
     } catch (error) { return { canceled: false, error: `Could not open this project: ${error.message}` }; }

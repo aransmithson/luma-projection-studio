@@ -103,6 +103,7 @@ import {
 import { EffectsLibrary } from "./components/EffectsLibrary";
 import { Modal } from "./components/Modal";
 import { StackEditor } from "./components/StackEditor";
+import { SceneAnimator } from "./components/SceneAnimator";
 import { AudioPanel } from "./components/AudioPanel";
 import { useAudioInput } from "./useAudioInput";
 import { getAudioFrame } from "./audioStore";
@@ -307,11 +308,13 @@ export default function App() {
   const [drawToSize, setDrawToSize] = useState(false);
   const [shapeMenu, setShapeMenu] = useState(false),
     [modal, setModal] = useState<
-      "output" | "templates" | "help" | "stacks" | "audio" | null
+      "output" | "templates" | "help" | "stacks" | "audio" | "scene" | null
     >(null);
   const [category, setCategory] = useState("All effects"),
     [expandedLibrary, setExpandedLibrary] = useState(false);
   const [mediaLibrary, setMediaLibrary] = useState<LibraryMedia[]>([]);
+  const [scenePhotoOutput, setScenePhotoOutput] = useState(false);
+  useEffect(() => setScenePhotoOutput(false), [project.scene?.photo.id]);
   const [importing, setImporting] = useState(false);
   const importBusy = useRef(false);
   const [toast, setToast] = useState<{
@@ -363,6 +366,7 @@ export default function App() {
       blackout,
       testPattern,
       placementMesh,
+      scenePhoto: scenePhotoOutput,
       audio: getAudioFrame(),
       audioFrozen,
       pointer: projectedPointer.current.current,
@@ -574,6 +578,7 @@ export default function App() {
     blackout,
     testPattern,
     placementMesh,
+    scenePhotoOutput,
     soloSurfaceId,
     selectedId,
     wireframeMode,
@@ -961,10 +966,10 @@ export default function App() {
         if (!result.canceled)
           notify(
             result.missing?.length
-              ? `Project saved, but ${result.missing.length} animation(s) are missing. Locate the originals before sharing.`
+              ? `Project saved, but ${result.missing.length} media file(s) are missing. Locate the originals before sharing.`
               : current.current.surfaces.some(
                     (s) => s.effectId === "imported-media",
-                  )
+                  ) || current.current.scene
                 ? "Project saved to file. Keep its companion media folder with it."
                 : "Project saved to file.",
             result.missing?.length ? "error" : "success",
@@ -992,6 +997,7 @@ export default function App() {
   function loadProject(data: string) {
     try {
       const loaded = parseProject(data);
+      setScenePhotoOutput(false);
       update(loaded);
       setActiveLayerId(
         loaded.surfaces[0]
@@ -1025,7 +1031,7 @@ export default function App() {
         loadProject(result.data);
         if (result.missing?.length)
           notify(
-            `Project opened. ${result.missing.length} animation(s) are missing; use Locate original in the Effect inspector.`,
+            `Project opened. ${result.missing.length} media file(s) are missing; use Locate original in the Effect inspector or Scene Animator.`,
             "error",
           );
       }
@@ -1418,6 +1424,10 @@ export default function App() {
           <button className="stack-launch" onClick={() => setModal("stacks")}>
             <Layers size={14} />
             Stacked animations<span>{project.stacks.length || "+"}</span>
+          </button>
+          <button className="stack-launch" onClick={() => setModal("scene")}>
+            <Sparkles size={14} /> Scene Animator
+            <span>{project.scene ? "Edit" : "New"}</span>
           </button>
           <LayerPanel
             project={project}
@@ -1947,6 +1957,26 @@ export default function App() {
           />
         </Modal>
       )}
+      {modal === "scene" && (
+        <Modal
+          title="Scene Animator"
+          subtitle="Turn a photo of your props into one connected animation."
+          onClose={closeModal}
+          className="scene-modal"
+        >
+          <SceneAnimator
+            project={project}
+            update={update}
+            begin={begin}
+            finish={finish}
+            library={mediaLibrary}
+            photoOutput={scenePhotoOutput}
+            setPhotoOutput={setScenePhotoOutput}
+            onClose={closeModal}
+            notify={notify}
+          />
+        </Modal>
+      )}
       {modal === "stacks" && (
         <Modal
           title="Stacked animations"
@@ -2278,11 +2308,11 @@ export default function App() {
                 change colour, speed and scale. Position inside shape rotates
                 and offsets the picture while keeping the outline and holes
                 fixed. Linked stories sends a rocket, ghost train, dragon,
-                turtle, marble or firefly between shapes, with each tile reacting
-                as its traveller passes. Choose a theme in Stacked animations
-                and create a ready-made story, or link existing shapes.
-                Stacked animations also creates water, lava, potion and icy
-                water loops, or links a character chase across two to eight
+                turtle, marble or firefly between shapes, with each tile
+                reacting as its traveller passes. Choose a theme in Stacked
+                animations and create a ready-made story, or link existing
+                shapes. Stacked animations also creates water, lava, potion and
+                icy water loops, or links a character chase across two to eight
                 shapes. Portal journey sends a robot, alien or space cat through
                 glowing doorways from tile to tile, then back to the first. Set
                 one duration for the entire stack, then use the shared play,

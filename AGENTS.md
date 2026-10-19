@@ -2,7 +2,7 @@
 
 ## Product and scope
 
-This is **Nox Projection Studio**, a local Windows desktop projection-mapping app for one projector. The user chose Nox as the new brand; the public repository is `aransmithson/nox-projection-studio`. The current release contains 160 built-in effects/materials plus desktop MP4/H.264 and animated GIF imports. WebM, MOV and standalone image imports are not supported. The owner explicitly made the repository public; its licence remains `UNLICENSED`.
+This is **Nox Projection Studio**, a Windows desktop projection-mapping app for one projector. The public repository is `aransmithson/nox-projection-studio`. There are 160 built-in effects/materials plus desktop MP4/H.264 and animated GIF imports. Scene Animator adds local JPG/PNG reference photos, shared clip mapping and optional Runway generation using an explicit user action and session-only key. WebM, MOV and still-image effects are not supported. The owner explicitly made the repository public; its licence remains `UNLICENSED`.
 
 ## Compatibility
 
@@ -10,6 +10,7 @@ This is **Nox Projection Studio**, a local Windows desktop projection-mapping ap
 - Projects use version 1, validated through the model. Keep existing projects, layer behaviour, holes and shared stack timing compatible.
 - Do not move, clear or test against the real user profile. Tests use unique directories under `test-results` and close only their own processes.
 - Audio capture starts only after an explicit user action. A saved project never starts listening.
+- Never persist AI credentials or automatically retry billable generation submissions. Runway keys stay in main-process memory; jobs, photos and generated clips use bounded managed storage. Projector photo visibility is session-only. Preserve applied scene-mapping snapshots and the shared playback clock.
 
 ## Working on the code
 

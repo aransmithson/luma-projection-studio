@@ -28,7 +28,7 @@ export function Modal({
       if (event.key === "Tab") {
         const focusable = Array.from(
           ref.current!.querySelectorAll<HTMLElement>(
-            'button:not(:disabled), input, select, [tabindex="0"]',
+            'button:not(:disabled), input:not(:disabled), textarea:not(:disabled), select:not(:disabled), [tabindex="0"]',
           ),
         );
         const first = focusable[0],
