@@ -2,6 +2,14 @@
 
 Nox Projection Studio keeps the existing Luma project format and application identity.
 
+## 1.19.2
+
+- Liquid style presets now select a style without adding objects. Choose two to eight existing shapes, arrange their flow order and **Apply to selected shapes**. **Add 3 demo shapes** remains an explicit optional action. Opening Liquid flow stack from the effects library opens the liquid selector directly.
+- Fixed linked-story scaling flattening out just above 100%. Traveller size now scales proportionally across the full 45–155% range on every tile, and the story preview follows size and direction. Newly created stories retain the selected size and direction.
+- Scene Animator reference photos now appear in the object list with canvas selection, dragging, corner handles, pixel position/size controls, opacity, editor/projector visibility and removal. Undo and saved alignment work without moving already-applied scene animations.
+- Docked polygon and draw-to-size controls above the canvas. Finish, undo-point and Cancel stay accessible while zooming and scrolling.
+- Verified source and packaged desktop workflows, including shared projector playback, liquid selection without new shapes, story scaling while paused, native media import and photo editing. Existing project and storage identifiers are unchanged.
+
 ## 1.19.1
 
 - Added visible **Effects** and **Properties** toggles above the canvas. Hide either panel independently or both together, then click the same controls to restore them.

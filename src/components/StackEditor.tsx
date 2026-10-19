@@ -40,6 +40,7 @@ import {
 import { EffectPreview } from "./EffectPreview";
 
 type Props = {
+  initialMode?: "liquid";
   project: Project;
   selectedId: string | null;
   activeLayerId: string;
@@ -80,6 +81,7 @@ const liquids: {
 ];
 
 export function StackEditor({
+  initialMode: requestedMode,
   project,
   selectedId,
   activeLayerId,
@@ -102,9 +104,12 @@ export function StackEditor({
       : undefined;
   const first =
     project.stacks.find(
-      (s) => selectedId && s.surfaceIds.includes(selectedId),
+      (s) =>
+        selectedId &&
+        s.surfaceIds.includes(selectedId) &&
+        (!requestedMode || !s.kind || s.kind === "liquid"),
     ) ||
-    (selectedChase || selectedPortal || selectedStory
+    (selectedChase || selectedPortal || selectedStory || requestedMode
       ? undefined
       : project.stacks[0]);
   const availableSelection =
@@ -118,13 +123,14 @@ export function StackEditor({
     s?.kind === "chase" || s?.kind === "portal" || s?.kind === "story";
   const initialMode: Mode = first
     ? first.kind || "liquid"
-    : selectedStory
-      ? "story"
-      : selectedPortal
-        ? "portal"
-        : selectedChase
-          ? "chase"
-          : "liquid";
+    : requestedMode ||
+      (selectedStory
+        ? "story"
+        : selectedPortal
+          ? "portal"
+          : selectedChase
+            ? "chase"
+            : "liquid");
   const title = (kind: Mode) =>
     kind === "story"
       ? "Linked story"
@@ -208,12 +214,12 @@ export function StackEditor({
   };
   const locked = (ids: string[]) =>
     project.surfaces.some(
-      (s) => ids.includes(s.id) && layerFor(project, s).locked,
+      (s) => ids.includes(s.id) && (s.locked || layerFor(project, s).locked),
     );
   const save = () => {
     const previous = project.stacks.find((s) => s.id === editingId);
     if (locked([...members, ...(previous?.surfaceIds || [])])) {
-      notify("Unlock the layers containing this stack before changing it.");
+      notify("Unlock the shapes and layers in this stack before changing it.");
       return;
     }
     const ids = members.filter((id) =>
@@ -279,7 +285,7 @@ export function StackEditor({
             : "Stack saved. All members now follow the same liquid cycle.",
     );
   };
-  const create = (liquidStyle: LiquidStyle = "water") => {
+  const create = () => {
     const result =
       mode === "story"
         ? createStoryStack(project, activeLayerId, storyId)
@@ -287,15 +293,18 @@ export function StackEditor({
           ? createPortalStack(project, activeLayerId, character)
           : mode === "chase"
             ? createChaseStack(project, activeLayerId, effectId)
-            : createLiquidStack(project, activeLayerId, liquidStyle);
+            : createLiquidStack(project, activeLayerId, style);
     if (!result) {
       notify(
         "There is room for up to 32 surfaces and eight stacks. The active layer must be unlocked.",
       );
       return;
     }
-    update(result.project);
-    load(result.stack);
+    const stack = hasActors(result.stack)
+      ? { ...result.stack, scale, direction }
+      : result.stack;
+    update(withStack(result.project, stack));
+    load(stack);
     selectSurface(result.stack.surfaceIds[0]);
     notify(
       `Three linked ${mode === "story" ? "story" : mode === "portal" ? "portal" : mode === "chase" ? "chase" : "liquid"} surfaces added. Close this panel to place them.`,
@@ -337,7 +346,12 @@ export function StackEditor({
           <div className="stack-intro">
             {mode === "story" && (
               <div className="stack-story-preview">
-                <EffectPreview effect={story} active />
+                <EffectPreview
+                  effect={story}
+                  active
+                  scale={scale}
+                  direction={direction}
+                />
               </div>
             )}
             <div
@@ -368,10 +382,12 @@ export function StackEditor({
                     ? "Fire a portal, cross into the next tile, and repeat around the loop. Every tile follows the same clock."
                     : mode === "chase"
                       ? "Characters leave one shape and enter the next. Reverse direction to swap who is chasing."
-                      : "Liquid flows between surfaces and returns to the start, with every reservoir and stream in sync."}
+                      : "Choose a liquid style, select two to eight of your existing shapes, then apply. Flow order sets where the liquid travels next."}
               </p>
               <button
-                className="primary-button"
+                className={
+                  mode === "liquid" ? "secondary-button" : "primary-button"
+                }
                 disabled={
                   layersFor(project).find((l) => l.id === activeLayerId)?.locked
                 }
@@ -392,27 +408,31 @@ export function StackEditor({
                     ? "Create portal journey"
                     : mode === "chase"
                       ? "Create linked chase"
-                      : "Create liquid stack"}
+                      : "Add 3 demo shapes"}
               </button>
-              <small>Adds three movable shapes, ready to place.</small>
+              <small>
+                {mode === "liquid"
+                  ? "Optional: create a new three-shape example."
+                  : "Adds three movable shapes, ready to place."}
+              </small>
             </div>
           </div>
           {mode === "liquid" && (
             <div className="liquid-presets">
-              {liquids.slice(1).map((preset) => (
+              {liquids.map((preset) => (
                 <button
                   key={preset.id}
-                  disabled={
-                    layersFor(project).find((l) => l.id === activeLayerId)
-                      ?.locked
-                  }
-                  onClick={() => create(preset.id)}
-                  aria-label={`Add ${preset.name.toLowerCase()}`}
+                  onClick={() => {
+                    setStyle(preset.id);
+                    setColor(preset.color);
+                  }}
+                  aria-label={`Choose ${preset.name.toLowerCase()}`}
+                  aria-pressed={style === preset.id}
                 >
                   <Droplets size={19} style={{ color: preset.color }} />
                   <strong>{preset.name}</strong>
                   <small>{preset.detail}</small>
-                  <Plus size={14} />
+                  {style === preset.id && <Check size={14} />}
                 </button>
               ))}
             </div>
@@ -462,8 +482,8 @@ export function StackEditor({
                 ))
               ) : (
                 <p className="muted-copy">
-                  Create a ready-made stack, or choose your existing surfaces to
-                  link.
+                  Choose your existing surfaces to link. Saved loops appear
+                  here.
                 </p>
               )}
             </div>
@@ -647,7 +667,7 @@ export function StackEditor({
         </div>
         <div className="stack-routing">
           <h3>
-            {mode !== "liquid" ? "Route order" : "Flow order"}
+            {mode !== "liquid" ? "Route order" : "Selected shapes · flow order"}
             <span>{members.length} / 8 surfaces</span>
           </h3>
           <p className="muted-copy">
@@ -657,7 +677,7 @@ export function StackEditor({
                 ? "Choose two to eight tiles. Arrows set the next destination. Reversing direction visits the tiles in reverse order."
                 : mode === "chase"
                   ? `Choose shapes below. Arrows set their place in the route. ${direction === "right" ? "The chase currently follows this list backwards." : "The chase follows this list, then returns to the start."}`
-                  : "Choose surfaces below. Use the arrows to set where the liquid goes next."}
+                  : "Tick the shapes below, arrange them with the arrows, then apply. Your shapes keep their position, size, layers and holes."}
           </p>
           <ol className="stack-order">
             {members.map((id, i) => {
@@ -719,6 +739,7 @@ export function StackEditor({
                       checked={members.includes(surface.id)}
                       disabled={
                         occupied ||
+                        surface.locked ||
                         layerFor(project, surface).locked ||
                         (!members.includes(surface.id) && members.length >= 8)
                       }
@@ -732,6 +753,10 @@ export function StackEditor({
                     />
                     <span title={surface.name}>{surface.name}</span>
                     {occupied && <small>In another stack</small>}
+                    {surface.locked && <small>Shape locked</small>}
+                    {layerFor(project, surface).locked && (
+                      <small>Layer locked</small>
+                    )}
                   </label>
                 );
               })}
@@ -754,7 +779,7 @@ export function StackEditor({
                 )
               ) {
                 notify(
-                  "Unlock the layers containing this stack before unlinking it.",
+                  "Unlock the shapes and layers in this stack before unlinking it.",
                 );
                 return;
               }
@@ -781,7 +806,9 @@ export function StackEditor({
           onClick={save}
         >
           <Check size={14} />
-          Save stack
+          {mode === "liquid" && !editingId
+            ? "Apply to selected shapes"
+            : "Save stack"}
         </button>
       </div>
     </div>

@@ -825,10 +825,9 @@ kbd {
 .transform-actions + .number-field {
   margin-top: 10px;
 }
-.placement-toolbar {
-  max-width: calc(100% - 24px);
-}
 .placement-toolbar > span {
+  flex: 1;
+  min-width: 0;
   flex-wrap: wrap;
 }
 .shape-menu button {
@@ -1903,6 +1902,39 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
   font-size: 10px;
   line-height: 1.8;
   color: #8d799b;
+}
+.reference-photo-row {
+  border: 1px solid #48616a;
+  border-radius: 6px;
+  margin: 4px 0 10px;
+}
+.reference-photo-details {
+  display: grid;
+  gap: 5px;
+  padding: 14px 18px;
+  overflow-wrap: anywhere;
+}
+.reference-photo-details small {
+  color: #a49aac;
+}
+.reference-photo-inspector .field-row {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.reference-photo-inspector .number-field > span {
+  white-space: nowrap;
+}
+.reference-photo-inspector .scene-check {
+  margin: 12px 0;
+}
+.reference-photo-outline {
+  stroke: #99d7dd80;
+  stroke-dasharray: 5 4;
+  cursor: move;
+}
+.reference-photo-outline.selected {
+  stroke: #b1f3fa;
 }
 .empty-layers {
   text-align: center;
@@ -3129,21 +3161,19 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
   stroke: #eadbff;
 }
 .draw-toolbar {
-  position: absolute;
-  left: 50%;
-  bottom: 12px;
-  transform: translateX(-50%);
   display: flex;
+  flex-shrink: 0;
+  flex-wrap: wrap;
   align-items: center;
   gap: 9px;
-  background: #25202df5;
-  border: 1px solid #79628f;
-  border-radius: 7px;
-  padding: 7px 10px;
-  white-space: nowrap;
-  box-shadow: 0 4px 20px #0006;
+  background: #211c29;
+  border-bottom: 1px solid #51415f;
+  padding: 6px 14px;
   color: #d2c1e9;
   font-size: 11px;
+}
+.draw-toolbar .tool-divider {
+  margin-right: auto;
 }
 .draw-toolbar > span {
   display: flex;
@@ -3151,6 +3181,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
   align-items: center;
 }
 .draw-toolbar > button {
+  flex-shrink: 0;
   min-height: 28px;
   padding: 0 5px;
 }
@@ -3772,7 +3803,8 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
   line-height: 1.5;
   margin: 6px 0 10px;
 }
-.stack-modal .stack-intro .primary-button {
+.stack-modal .stack-intro .primary-button,
+.stack-modal .stack-intro .secondary-button {
   width: 100%;
 }
 .stack-modal .liquid-presets {
@@ -4001,6 +4033,10 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
 }
 .liquid-presets button:hover {
   border-color: #a68aca;
+}
+.liquid-presets button[aria-pressed="true"] {
+  border-color: #b595e0;
+  background: #373047;
 }
 .liquid-presets strong {
   font-size: 11px;

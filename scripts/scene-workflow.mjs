@@ -236,6 +236,89 @@ try {
   await page.screenshot({ path: path.join(artifacts, "scene-align-1120.png") });
   await closeScene();
 
+  const referenceRow = page.getByRole("button", {
+    name: "Select reference photo",
+    exact: true,
+  });
+  await expect(referenceRow).toContainText("Reference props.png");
+  await referenceRow.click();
+  await expect(
+    page.getByRole("complementary", { name: "Reference photo properties" }),
+  ).toBeVisible();
+  await expect(page.locator(".vertex-handle")).toHaveCount(4);
+  const setPhotoField = async (name, value) => {
+    await page.getByLabel(name, { exact: true }).fill(String(value));
+    await page.getByLabel(name, { exact: true }).press("Enter");
+  };
+  await setPhotoField("Photo width", 512);
+  await setPhotoField("Photo height", 288);
+  await setPhotoField("Photo X", 64);
+  await setPhotoField("Photo Y", 36);
+  const stageArea = await page.locator(".stage-overlay").boundingBox();
+  await page.mouse.move(
+    stageArea.x + stageArea.width * 0.5,
+    stageArea.y + stageArea.height * 0.5,
+  );
+  await page.mouse.down();
+  await page.mouse.move(
+    stageArea.x + stageArea.width * 0.54,
+    stageArea.y + stageArea.height * 0.54,
+    { steps: 6 },
+  );
+  await page.mouse.up();
+  await expect
+    .poll(async () =>
+      Number(await page.getByLabel("Photo X", { exact: true }).inputValue()),
+    )
+    .toBeGreaterThan(64);
+  await page.keyboard.press("Control+z");
+  await expect(page.getByLabel("Photo X", { exact: true })).toHaveValue("64");
+  await expect(page.getByLabel("Photo Y", { exact: true })).toHaveValue("36");
+  await page.getByRole("button", { name: "Corner 1", exact: true }).focus();
+  await page.keyboard.press("Enter");
+  await page.keyboard.press("ArrowRight");
+  await expect(page.getByLabel("Photo corner X", { exact: true })).toHaveValue(
+    "65",
+  );
+  await page.keyboard.press("Control+z");
+  await expect(page.getByLabel("Photo corner X", { exact: true })).toHaveValue(
+    "64",
+  );
+  await page
+    .getByRole("button", { name: "Hide reference photo", exact: true })
+    .click();
+  await expect(page.locator(".reference-photo-outline")).toHaveCount(0);
+  await expect(referenceRow).toBeVisible();
+  await page
+    .getByRole("button", { name: "Show reference photo", exact: true })
+    .click();
+  await expect(page.locator(".vertex-handle")).toHaveCount(4);
+  await page.getByLabel("Reference photo opacity", { exact: true }).fill("0.4");
+  await page
+    .getByRole("button", { name: "Remove reference photo", exact: true })
+    .click();
+  await expect(referenceRow).toHaveCount(0);
+  await page.keyboard.press("Control+z");
+  await referenceRow.click();
+  await expect(
+    page.getByLabel("Reference photo opacity", { exact: true }),
+  ).toHaveValue("0.4");
+  await page
+    .getByRole("button", { name: "Fit photo to canvas", exact: true })
+    .click();
+  await expect(page.getByLabel("Photo width", { exact: true })).toHaveValue(
+    "640",
+  );
+  await page.screenshot({
+    path: path.join(artifacts, "reference-photo-properties-1120.png"),
+  });
+  await page
+    .getByRole("button", { name: "Select Left box", exact: true })
+    .click();
+  check(
+    "Reference photo appears in the object list with canvas dragging, corner nudging, size, opacity, visibility, removal and undo",
+  );
+
   await page
     .getByRole("button", { name: "Launch output", exact: true })
     .click();

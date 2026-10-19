@@ -39,8 +39,8 @@ Stop development servers and desktop tests before packaging. Build each version 
 
 ```powershell
 $env:ELECTRON_BUILDER_COMPRESSION_LEVEL='1'
-npm run package -- --config.directories.output=release/1.19.1
-$env:LUMA_RELEASE_DIR='release/1.19.1'
+npm run package -- --config.directories.output=release/1.19.2
+$env:LUMA_RELEASE_DIR='release/1.19.2'
 node scripts/improvements.mjs --packaged
 npm run test:startup -- unpacked --hidden --copy-saved-profile
 npm run test:startup -- portable

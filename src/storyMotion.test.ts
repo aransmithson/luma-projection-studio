@@ -30,6 +30,40 @@ function routeOf(count: number): ChaseRoute {
 }
 
 describe("travelling linked stories", () => {
+  it.each(["wide", "tall"])(
+    "scales travellers proportionally from 45% to 155% on unequal %s tiles without changing the shared route or timing",
+    (aspect) => {
+      const created = createStoryStack(createProject("blank"))!;
+      const project = {
+        ...created.project,
+        surfaces: created.project.surfaces.map((s, i) => ({
+          ...s,
+          points: s.points.map((p) => ({
+            x: p.x * (aspect === "wide" ? 1 : 0.25) * (1 - i * 0.1),
+            y: p.y * (aspect === "wide" ? 0.25 : 1) * (1 - i * 0.05),
+          })),
+        })),
+      };
+      const normal = chaseRoute(project, created.stack);
+      for (const scale of [0.45, 0.8, 1, 1.15, 1.3, 1.55]) {
+        const stack = { ...created.stack, scale };
+        const scaled = withStack(project, stack);
+        const route = chaseRoute(scaled, stack);
+        expect(route.unit / normal.unit).toBeCloseTo(scale, 8);
+        expect(route.segments).toEqual(normal.segments);
+        expect(route.width).toBe(normal.width);
+        expect(storyMotion(7.25, stack, route)).toEqual(
+          storyMotion(7.25, created.stack, normal),
+        );
+        expect(
+          scaled.surfaces
+            .filter((s) => stack.surfaceIds.includes(s.id))
+            .every((s) => s.scale === scale),
+        ).toBe(true);
+        expect(parseProject(serializeProject(scaled)).stacks[0]).toEqual(stack);
+      }
+    },
+  );
   it.each(["left", "right"] as const)(
     "visits unequal tiles once, with continuous handoffs and a closed loop: %s",
     (direction) => {

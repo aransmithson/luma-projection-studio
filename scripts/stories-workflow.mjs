@@ -112,6 +112,30 @@ try {
           `${effect.name}: full loop differs: ${difference(a, b)}; ${a.reduce((n, v, i) => n + (v !== b[i] ? 1 : 0), 0)} channels`,
         );
         assert(difference(a, moved) > 0.3, `${effect.name}: no animation`);
+        const sizedFrame = (scale) => {
+          const settings = { ...stack, scale };
+          const scaledProject = withStack(p, settings);
+          const scaledRoute = chaseRoute(scaledProject, settings);
+          const data = new Uint8ClampedArray(
+            400 * 280 * 4 * stack.surfaceIds.length,
+          );
+          stack.surfaceIds.forEach((id, j) => {
+            drawLinkedStory(c, 5.9, settings, scaledRoute, id);
+            data.set(c.getImageData(0, 0, 400, 280).data, j * 400 * 280 * 4);
+          });
+          return data;
+        };
+        assert(
+          difference(sizedFrame(1.3), sizedFrame(1.55)) > 0.1,
+          `${effect.name}: linked size stops growing above 130%`,
+        );
+        drawEffect(c, effect.id, 6, effect.color, 42, 1.3, false, "left");
+        const smaller = c.getImageData(0, 0, 400, 280).data;
+        drawEffect(c, effect.id, 6, effect.color, 42, 1.55, false, "left");
+        assert(
+          difference(smaller, c.getImageData(0, 0, 400, 280).data) > 0.1,
+          `${effect.name}: standalone size stops growing above 130%`,
+        );
         assert(
           difference(a, reversed) > 0.3,
           `${effect.name}: no reverse change`,
@@ -317,6 +341,7 @@ try {
     .getByLabel("Story direction", { exact: true })
     .selectOption("right");
   await page.getByLabel("Stack duration", { exact: true }).fill("18");
+  await page.getByLabel("Story traveller size", { exact: true }).fill("1.3");
   await click(`Move ${example.surfaces[2].name} earlier`);
   await click("Save stack");
   const modal = page.locator(".stack-modal");
@@ -352,6 +377,8 @@ try {
     example.surfaces[1].id,
   ]);
   expect(saved.stacks[0].duration).toBe(18);
+  expect(saved.stacks[0].scale).toBe(1.3);
+  expect(saved.surfaces.every((s) => s.scale === 1.3)).toBe(true);
   check(
     "Effect browser, link-existing-shapes, route order, reverse direction, timing, compact editor and native save pass",
   );
@@ -388,6 +415,25 @@ try {
   await click("Restart animation");
   await expect.poll(async () => firstFrame.equals(await snapshot())).toBe(true);
   await click("Edit linked story");
+  await page.getByLabel("Story traveller size", { exact: true }).fill("1.55");
+  await click("Save stack");
+  await click("Close dialog");
+  await expect
+    .poll(async () => (await state()).project.stacks[0].scale)
+    .toBe(1.55);
+  await expect
+    .poll(async () => firstFrame.equals(await snapshot()))
+    .toBe(false);
+  await page.locator(".panel-heading").first().click();
+  await page.keyboard.press("Control+z");
+  await expect
+    .poll(async () => (await state()).project.stacks[0].scale)
+    .toBe(1.3);
+  await expect.poll(async () => firstFrame.equals(await snapshot())).toBe(true);
+  check(
+    "Traveller size grows above 130% on the projector while paused; Undo restores every tile and its frame",
+  );
+  await click("Edit linked story");
   await page
     .getByLabel("Story theme", { exact: true })
     .selectOption("story-ghost-train");
@@ -415,6 +461,9 @@ try {
   await expect(page.getByLabel("Stack duration", { exact: true })).toHaveValue(
     "18",
   );
+  await expect(
+    page.getByLabel("Story traveller size", { exact: true }),
+  ).toHaveValue("1.3");
   await expect(
     modal.getByLabel("Story direction", { exact: true }),
   ).toHaveValue("right");

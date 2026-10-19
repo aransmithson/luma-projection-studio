@@ -104,6 +104,13 @@ import { EffectsLibrary } from "./components/EffectsLibrary";
 import { Modal } from "./components/Modal";
 import { StackEditor } from "./components/StackEditor";
 import { SceneAnimator } from "./components/SceneAnimator";
+import { ScenePhotoInspector } from "./components/ScenePhotoInspector";
+import {
+  photoSurface,
+  SCENE_PHOTO_ID,
+  updatePhotoReference,
+  type PhotoChange,
+} from "./scene";
 import { AudioPanel } from "./components/AudioPanel";
 import { useAudioInput } from "./useAudioInput";
 import { getAudioFrame } from "./audioStore";
@@ -265,6 +272,7 @@ export default function App() {
     project.surfaces[1]?.id || project.surfaces[0]?.id || null,
   );
   const [selectedPoint, setSelectedPoint] = useState<number | null>(null);
+  const [editingPhoto, setEditingPhoto] = useState(false);
   const [activeLayerId, setActiveLayerId] = useState(() => {
     const initial = project.surfaces.find((s) => s.id === selectedId);
     return initial ? layerIdFor(project, initial) : layersFor(project)[0].id;
@@ -316,13 +324,23 @@ export default function App() {
   const [drawToSize, setDrawToSize] = useState(false);
   const [shapeMenu, setShapeMenu] = useState(false),
     [modal, setModal] = useState<
-      "output" | "templates" | "help" | "stacks" | "audio" | "scene" | null
+      | "output"
+      | "templates"
+      | "help"
+      | "stacks"
+      | "liquid-stacks"
+      | "audio"
+      | "scene"
+      | null
     >(null);
   const [category, setCategory] = useState("All effects"),
     [expandedLibrary, setExpandedLibrary] = useState(false);
   const [mediaLibrary, setMediaLibrary] = useState<LibraryMedia[]>([]);
   const [scenePhotoOutput, setScenePhotoOutput] = useState(false);
-  useEffect(() => setScenePhotoOutput(false), [project.scene?.photo.id]);
+  useEffect(() => {
+    setScenePhotoOutput(false);
+    setEditingPhoto(false);
+  }, [project.scene?.photo.id]);
   const [importing, setImporting] = useState(false);
   const importBusy = useRef(false);
   const [toast, setToast] = useState<{
@@ -438,6 +456,13 @@ export default function App() {
       );
   }, [recovered, notify]);
   const selectSurface = (id: string | null) => {
+    if (id === SCENE_PHOTO_ID) {
+      setEditingPhoto(true);
+      setSelectedId(null);
+      setSelectedPoint(null);
+      return;
+    }
+    setEditingPhoto(false);
     const surface = project.surfaces.find((s) => s.id === id);
     if (surface) setActiveLayerId(layerIdFor(project, surface));
     setSelectedId(id);
@@ -476,12 +501,13 @@ export default function App() {
   useEffect(() => {
     if (soloSurfaceId && !effectiveSolo(viewProject.surfaces, soloSurfaceId))
       setSoloSurfaceId(null);
+    const pointSurface = editingPhoto ? photoSurface(project) : selected;
     if (
       selectedPoint !== null &&
-      (!selected || selectedPoint >= selected.points.length)
+      (!pointSurface || selectedPoint >= pointSurface.points.length)
     )
       setSelectedPoint(null);
-  }, [project, selectedId, selectedPoint, soloSurfaceId]);
+  }, [project, selectedId, selectedPoint, soloSurfaceId, editingPhoto]);
 
   useEffect(() => {
     setAutosave("saving");
@@ -614,7 +640,24 @@ export default function App() {
     return () => window.removeEventListener("click", close);
   }, [shapeMenu]);
 
+  const updatePhoto = (change: PhotoChange) => {
+    if (
+      change.points &&
+      (change.points.length !== 4 ||
+        !validSurfaceGeometry({ kind: "quad", points: change.points }))
+    ) {
+      notify(
+        "Keep the photo corners inside the canvas without crossing edges.",
+      );
+      return;
+    }
+    update((p) => updatePhotoReference(p, change));
+  };
   const updateSurface = (id: string, change: Partial<Surface>) => {
+    if (id === SCENE_PHOTO_ID) {
+      updatePhoto(change);
+      return;
+    }
     const surface = current.current.surfaces.find((s) => s.id === id);
     if (surface && layerFor(current.current, surface).locked) {
       notify("Unlock the layer before editing its shapes.");
@@ -802,6 +845,13 @@ export default function App() {
     }
   }
   function removeSelected() {
+    if (editingPhoto) {
+      update((p) => ({ ...p, scene: undefined }));
+      setEditingPhoto(false);
+      setSelectedPoint(null);
+      notify("Reference photo removed. Undo with Ctrl+Z.");
+      return;
+    }
     if (!selected) return;
     if (selected.locked) {
       notify("Unlock this surface before deleting it.");
@@ -882,7 +932,7 @@ export default function App() {
       return;
     }
     if (effectId === "stacked-liquid") {
-      setModal("stacks");
+      setModal("liquid-stacks");
       return;
     }
     if (!selected) {
@@ -1194,7 +1244,7 @@ export default function App() {
       if (drawing) return;
       if (e.key === "Delete" || e.key === "Backspace") {
         e.preventDefault();
-        if (selectedPoint !== null) removeSelectedPoint();
+        if (!editingPhoto && selectedPoint !== null) removeSelectedPoint();
         else removeSelected();
       }
       if (e.key.toLowerCase() === "r") addSurface("quad");
@@ -1206,15 +1256,16 @@ export default function App() {
         if (selectedPoint !== null) setSelectedPoint(null);
         else selectSurface(null);
       }
-      if (e.key.startsWith("Arrow") && selected && !selected.locked) {
+      const movable = editingPhoto ? photoSurface(project) : selected;
+      if (e.key.startsWith("Arrow") && movable && !movable.locked) {
         e.preventDefault();
         const step = e.shiftKey ? 10 : 1;
-        if (selectedPoint !== null && selected.kind !== "ellipse") {
-          const original = selected.points[selectedPoint];
+        if (selectedPoint !== null && movable.kind !== "ellipse") {
+          const original = movable.points[selectedPoint];
           if (!original) return;
           const points = moveVertex(
-            selected.kind,
-            selected.points,
+            movable.kind,
+            movable.points,
             selectedPoint,
             {
               x:
@@ -1235,12 +1286,12 @@ export default function App() {
                   project.height,
             },
           );
-          if (points) updateSurface(selected.id, { points });
+          if (points) updateSurface(movable.id, { points });
           return;
         }
-        updateSurface(selected.id, {
+        updateSurface(movable.id, {
           points: translate(
-            selected.points,
+            movable.points,
             e.key === "ArrowLeft"
               ? -step / project.width
               : e.key === "ArrowRight"
@@ -1443,7 +1494,7 @@ export default function App() {
           <LayerPanel
             project={project}
             activeId={activeLayer.id}
-            selectedId={selectedId}
+            selectedId={editingPhoto ? SCENE_PHOTO_ID : selectedId}
             soloId={soloSurfaceId}
             selectLayer={(id) => {
               setActiveLayerId(id);
@@ -1453,6 +1504,8 @@ export default function App() {
             }}
             selectSurface={(id) => {
               selectSurface(id);
+              if (id === SCENE_PHOTO_ID)
+                setPreferences((p) => ({ ...p, propertiesHidden: false }));
               setDrawing(false);
               setPlacing(null);
             }}
@@ -1752,7 +1805,7 @@ export default function App() {
           </div>
           <Stage
             state={state}
-            selectedId={selectedId}
+            selectedId={editingPhoto ? SCENE_PHOTO_ID : selectedId}
             select={selectSurface}
             selectedPoint={selectedPoint}
             selectPoint={selectPoint}
@@ -1855,39 +1908,56 @@ export default function App() {
             </div>
           </div>
         </section>
-        <Inspector
-          hidden={propertiesHidden}
-          mediaLibrary={mediaLibrary}
-          locateMedia={(id) => void importAnimation(id)}
-          importing={importing}
-          project={viewProject}
-          surface={selected}
-          update={(change) => selected && updateSurface(selected.id, change)}
-          begin={begin}
-          finish={finish}
-          duplicate={duplicate}
-          remove={removeSelected}
-          reorder={reorder}
-          browse={browseEffects}
-          notify={notify}
-          selectedPoint={selectedPoint}
-          stack={project.stacks.find((stack) =>
-            stack.surfaceIds.includes(selectedId || ""),
-          )}
-          editStack={() => setModal("stacks")}
-          openAudio={() => setModal("audio")}
-          selectPoint={selectPoint}
-          removePoint={removeSelectedPoint}
-          tab={inspectorTab}
-          setTab={setInspectorTab}
-          addCutout={addCutout}
-          subtract={subtract}
-          selectSurface={selectSurface}
-          restoreCutout={(id) => {
-            updateSurface(id, { cutoutOf: undefined });
-            markMapping();
-          }}
-        />
+        {editingPhoto && project.scene ? (
+          <ScenePhotoInspector
+            scene={project.scene}
+            width={project.width}
+            height={project.height}
+            hidden={propertiesHidden}
+            change={updatePhoto}
+            begin={begin}
+            finish={finish}
+            remove={removeSelected}
+            openAnimator={() => setModal("scene")}
+            selectedPoint={selectedPoint}
+            photoOutput={scenePhotoOutput}
+            setPhotoOutput={setScenePhotoOutput}
+          />
+        ) : (
+          <Inspector
+            hidden={propertiesHidden}
+            mediaLibrary={mediaLibrary}
+            locateMedia={(id) => void importAnimation(id)}
+            importing={importing}
+            project={viewProject}
+            surface={selected}
+            update={(change) => selected && updateSurface(selected.id, change)}
+            begin={begin}
+            finish={finish}
+            duplicate={duplicate}
+            remove={removeSelected}
+            reorder={reorder}
+            browse={browseEffects}
+            notify={notify}
+            selectedPoint={selectedPoint}
+            stack={project.stacks.find((stack) =>
+              stack.surfaceIds.includes(selectedId || ""),
+            )}
+            editStack={() => setModal("stacks")}
+            openAudio={() => setModal("audio")}
+            selectPoint={selectPoint}
+            removePoint={removeSelectedPoint}
+            tab={inspectorTab}
+            setTab={setInspectorTab}
+            addCutout={addCutout}
+            subtract={subtract}
+            selectSurface={selectSurface}
+            restoreCutout={(id) => {
+              updateSurface(id, { cutoutOf: undefined });
+              markMapping();
+            }}
+          />
+        )}
       </main>
 
       <EffectsLibrary
@@ -2023,7 +2093,7 @@ export default function App() {
           />
         </Modal>
       )}
-      {modal === "stacks" && (
+      {(modal === "stacks" || modal === "liquid-stacks") && (
         <Modal
           title="Stacked animations"
           subtitle="Link shapes for travelling stories, liquid flows, chases and portal journeys."
@@ -2032,6 +2102,7 @@ export default function App() {
         >
           <StackEditor
             project={project}
+            initialMode={modal === "liquid-stacks" ? "liquid" : undefined}
             selectedId={selectedId}
             activeLayerId={activeLayer.id}
             update={update}

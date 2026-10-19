@@ -4,6 +4,7 @@ import {
   ArrowUp,
   ChevronDown,
   ChevronRight,
+  Camera,
   Circle,
   ClipboardPaste,
   Copy,
@@ -28,6 +29,7 @@ import {
   MAX_LAYERS,
 } from "../layers";
 import { surfaceIsVisible } from "../cutouts";
+import { SCENE_PHOTO_ID } from "../scene";
 import type { Layer, Project, Surface } from "../types";
 
 type Props = {
@@ -118,6 +120,46 @@ export function LayerPanel(p: Props) {
         </label>
       )}
       <div className="layer-list">
+        {p.project.scene && (
+          <div
+            className={`layer-row reference-photo-row ${p.selectedId === SCENE_PHOTO_ID ? "selected" : ""} ${p.project.scene.visible ? "" : "is-hidden"}`}
+          >
+            <button
+              className="layer-select"
+              aria-label="Select reference photo"
+              onClick={() => p.selectSurface(SCENE_PHOTO_ID)}
+            >
+              <span className="layer-shape">
+                <Camera size={15} />
+              </span>
+              <span className="layer-title">
+                <strong>{p.project.scene.photo.name}</strong>
+                <small>Reference photo · alignment guide</small>
+              </span>
+            </button>
+            <div className="layer-controls">
+              <button
+                aria-label={
+                  p.project.scene.visible
+                    ? "Hide reference photo"
+                    : "Show reference photo"
+                }
+                title="Show or hide reference in editor"
+                onClick={() =>
+                  p.changeSurface(SCENE_PHOTO_ID, {
+                    visible: !p.project.scene!.visible,
+                  })
+                }
+              >
+                {p.project.scene.visible ? (
+                  <Eye size={13} />
+                ) : (
+                  <EyeOff size={13} />
+                )}
+              </button>
+            </div>
+          </div>
+        )}
         {[...layers].reverse().map((layer) => {
           const members = p.project.surfaces.filter(
               (s) => layerIdFor(p.project, s) === layer.id,

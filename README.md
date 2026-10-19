@@ -12,8 +12,8 @@ Previously called **Luma**. Your existing `.luma` projects, imported library, pr
 
 Get the Windows build from [GitHub Releases](https://github.com/aransmithson/nox-projection-studio/releases/latest). The repository and downloads are public.
 
-- **Recommended:** download `Nox-Projection-Studio-1.19.1-win-x64.zip`, extract the whole folder, and open `Nox Projection Studio.exe`. Keep the executable beside its resources.
-- **Portable:** download `Nox-Projection-Studio-1.19.1.exe`. It extracts before opening; allow that first launch to finish.
+- **Recommended:** download `Nox-Projection-Studio-1.19.2-win-x64.zip`, extract the whole folder, and open `Nox Projection Studio.exe`. Keep the executable beside its resources.
+- **Portable:** download `Nox-Projection-Studio-1.19.2.exe`. It extracts before opening; allow that first launch to finish.
 - Close an older running copy before opening a new version. Nox restores the existing instance when opened again.
 
 Release builds are not code-signed. The Windows executable keeps Electron's original resources to preserve compatibility with Windows Code Integrity; Nox's own icon appears in the app window and interface.
@@ -42,6 +42,8 @@ Projects support **32 surfaces**, **64 vertices per polygon**, and **eight anima
 
 Open **Scene Animator**, import a JPG or PNG photo taken near the projector lens, and align its four corners. Use the main editor to outline and name your props. The reference can appear in the editor and, through a separate toggle, on the projector.
 
+The reference photo appears in the object list above the layers. Select it to drag it on the canvas, adjust its corners, position, size and opacity, or hide/remove it. It remains an alignment guide; applied animations keep their saved alignment until reapplied.
+
 In **Create animation**, enter a prompt, add your Runway API key for this session, and explicitly enable sending the photo to Runway. Generate a five- or ten-second variation, then preview it with the exact shape masks before applying. Alternatively, use **Preview & apply** to import an externally generated MP4 or GIF without connecting an AI service.
 
 One clip spans the selected shapes, so each prop reveals the appropriate part of the scene. Holes, layers and blending remain available, and applied clips use the shared playback clock. AI camera stability and seamless loops are not guaranteed: inspect the preview and trim the loop before use. This is manual photo alignment, not automatic 3D reconstruction or projector calibration. See the [Scene Animator guide](docs/USER_GUIDE.md#scene-animator).
@@ -55,6 +57,8 @@ Open **Stacked animations → Linked stories**, choose a **Story theme**, then *
 ![Six original linked story themes](docs/assets/linked-stories.png)
 
 See the [linked-story guide and examples](docs/USER_GUIDE.md#create-a-linked-story) for ready-made projects and placement tips.
+
+For liquid loops, open **Stacked animations → Liquid flow**, choose a style, tick two to eight existing shapes, arrange their flow order and click **Apply to selected shapes**. **Add 3 demo shapes** is a separate optional example.
 
 ## Your first projection
 

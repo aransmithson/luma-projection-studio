@@ -91,6 +91,27 @@ try {
   await page
     .getByRole("button", { name: "Draw custom polygon", exact: true })
     .click();
+  const drawingTools = page.getByRole("group", {
+    name: "Polygon drawing tools",
+  });
+  await expect(drawingTools).toBeVisible();
+  const dockedTools = await drawingTools.boundingBox();
+  const drawingArea = await page.locator(".stage-scroll").boundingBox();
+  expect(dockedTools.y + dockedTools.height).toBeLessThanOrEqual(
+    drawingArea.y + 1,
+  );
+  for (let i = 0; i < 4; i++)
+    await page.getByRole("button", { name: "Zoom in", exact: true }).click();
+  await page.locator(".stage-scroll").evaluate((element) => {
+    element.scrollTop = element.scrollHeight;
+    element.scrollLeft = element.scrollWidth;
+  });
+  expect(await drawingTools.boundingBox()).toEqual(dockedTools);
+  await expect(
+    drawingTools.getByRole("button", { name: "Cancel", exact: true }),
+  ).toBeInViewport();
+  await page.getByRole("button", { name: "200%", exact: true }).click();
+  await page.waitForTimeout(150);
   const stage = await page.locator(".stage-overlay").boundingBox();
   for (const [x, y] of [
     [0.04, 0.2],

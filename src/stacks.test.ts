@@ -7,6 +7,18 @@ import { curtainOpening } from "./effects/halloween";
 import { inverseQuadMap } from "./geometry";
 
 describe("synchronised liquid stacks", () => {
+  it("cannot apply or edit a linked loop through a locked shape", () => {
+    const { project, stack } = createLiquidStack(createProject("blank"))!;
+    const locked = {
+      ...project,
+      surfaces: project.surfaces.map((s) =>
+        s.id === stack.surfaceIds[0] ? { ...s, locked: true } : s,
+      ),
+    };
+    expect(withStack(locked, { ...stack, style: "lava" })).toBe(locked);
+    const loose = { ...locked, stacks: [] };
+    expect(withStack(loose, stack)).toBe(loose);
+  });
   it("conserves liquid and transfers it only between adjacent members", () => {
     for (let count = 2; count <= 8; count++)
       for (let t = 0; t < 40; t += 0.17) {

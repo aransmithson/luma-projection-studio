@@ -173,7 +173,7 @@ try {
     .getByRole("button", { name: "Stacked animations", exact: false })
     .click();
   await page
-    .getByRole("button", { name: "Create liquid stack", exact: true })
+    .getByRole("button", { name: "Add 3 demo shapes", exact: true })
     .click();
   await expect(page.locator(".stack-choice")).toHaveCount(1);
   await page.getByLabel("Stack duration", { exact: true }).fill("12");
@@ -204,7 +204,10 @@ try {
   // Compare projection content, excluding editor-only handles/labels and expiring
   // output alignment guides. Different viewport sizes place those overlays at
   // different sampled pixels; they are not part of the synchronized animation.
-  const contentOnly = { style: ".stage-overlay, .output-wireframe, .canvas-instruction, .stage-coordinate { visibility: hidden !important; }" };
+  const contentOnly = {
+    style:
+      ".stage-overlay, .output-wireframe, .canvas-instruction, .stage-coordinate { visibility: hidden !important; }",
+  };
   const first = PNG.sync.read(
     await output.locator(".projection-canvas").screenshot(contentOnly),
   );
@@ -212,9 +215,14 @@ try {
   const second = PNG.sync.read(
     await output.locator(".projection-canvas").screenshot(contentOnly),
   );
-  expect(second.data.equals(first.data), "The entire liquid stack freezes when paused").toBe(true);
+  expect(
+    second.data.equals(first.data),
+    "The entire liquid stack freezes when paused",
+  ).toBe(true);
   const editor = PNG.sync.read(
-    await page.locator(".mapping-workspace .projection-canvas").screenshot(contentOnly),
+    await page
+      .locator(".mapping-workspace .projection-canvas")
+      .screenshot(contentOnly),
   );
   let totalError = 0,
     samples = 0;
@@ -305,7 +313,7 @@ try {
     .getByRole("button", { name: "Stacked animations", exact: false })
     .click();
   await page
-    .getByRole("button", { name: "Create liquid stack", exact: true })
+    .getByRole("button", { name: "Add 3 demo shapes", exact: true })
     .click();
   await expect(page.locator(".stack-choice")).toHaveCount(2);
   await page.getByRole("button", { name: "Close dialog", exact: true }).click();

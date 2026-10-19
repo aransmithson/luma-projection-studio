@@ -5,7 +5,12 @@ import {
   parseProject,
   serializeProject,
 } from "./model";
-import { applySceneClip, fitPhoto, sceneBinding } from "./scene";
+import {
+  applySceneClip,
+  fitPhoto,
+  sceneBinding,
+  updatePhotoReference,
+} from "./scene";
 import { copyShapeData, pastedShapes } from "./shapeClipboard";
 import { withStack } from "./stacks";
 import type { LibraryMedia, Point, ScenePhoto } from "./types";
@@ -45,6 +50,30 @@ function project() {
   return p;
 }
 describe("scene alignment and shared media", () => {
+  it("edits a reference without moving applied clip snapshots or changing layers", () => {
+    const base = project();
+    const original = applySceneClip(
+      base,
+      [base.surfaces[0].id],
+      sceneBinding(asset, full),
+    );
+    const points = full.map((p) => ({
+      x: p.x * 0.8 + 0.1,
+      y: p.y * 0.8 + 0.1,
+    }));
+    const next = updatePhotoReference(original, {
+      points,
+      visible: false,
+      opacity: 0.4,
+    });
+    expect(next.scene).toMatchObject({ points, visible: false, opacity: 0.4 });
+    expect(next.surfaces).toBe(original.surfaces);
+    expect(next.layers).toBe(original.layers);
+    expect(next.surfaces[0].media?.sceneMapping).toEqual(full);
+    expect(original.scene?.points).toEqual(full);
+    points[0].x = 0.2;
+    expect(next.scene?.points[0].x).toBe(0.1);
+  });
   it("fits landscape and portrait photos without cropping", () => {
     expect(fitPhoto(photo, 1920, 1080)).toEqual(full);
     const tall = fitPhoto({ ...photo, width: 900, height: 1600 }, 1920, 1080);
@@ -141,6 +170,7 @@ describe("scene alignment and shared media", () => {
     ].map((points) => ({ points })),
   )("rejects invalid photo and clip registration $points", ({ points }) => {
     const p = project();
+    expect(updatePhotoReference(p, { points })).toBe(p);
     p.scene!.points = points;
     expect(() => parseProject(JSON.stringify(p))).toThrow();
     p.scene!.points = full;

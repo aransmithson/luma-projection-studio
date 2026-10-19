@@ -429,21 +429,124 @@ try {
     .getByRole("button", { name: "Stacked animations", exact: false })
     .click();
   for (const [label, style] of [
-    ["Add molten lava", "lava"],
-    ["Add glowing potion", "potion"],
-    ["Add icy water", "ice"],
+    ["Choose molten lava", "lava"],
+    ["Choose glowing potion", "potion"],
+    ["Choose icy water", "ice"],
   ]) {
+    const before = (await state()).project;
     await page.getByRole("button", { name: label, exact: true }).click();
     await expect(page.getByLabel("Liquid style", { exact: true })).toHaveValue(
       style,
     );
+    expect((await state()).project).toEqual(before);
+    await page.getByRole("button", { name: "Save stack", exact: true }).click();
     await expect
       .poll(async () => (await state()).project.stacks.at(-1).style)
       .toBe(style);
+    expect((await state()).project.surfaces.map((s) => s.id)).toEqual(
+      before.surfaces.map((s) => s.id),
+    );
   }
   await page.screenshot({
     path: path.join(artifacts, "linked-liquid-presets.png"),
   });
+  await close();
+  const liquidTargetPath = path.join(profile, "liquid-targets.luma");
+  await writeFile(
+    liquidTargetPath,
+    JSON.stringify({
+      ...loose,
+      surfaces: loose.surfaces.map((s, i) =>
+        i === 2 ? { ...s, locked: true } : s,
+      ),
+    }),
+  );
+  await open(liquidTargetPath);
+  await page.getByRole("button", { name: "Ambient", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Apply Liquid flow stack", exact: true })
+    .click();
+  await expect(
+    page.getByRole("button", { name: "Liquid flow", exact: true }),
+  ).toHaveAttribute("aria-pressed", "true");
+  const existingShapes = (await state()).project.surfaces;
+  await page
+    .getByRole("button", { name: "Choose glowing potion", exact: true })
+    .click();
+  for (let i = 0; i < existingShapes.length; i++) {
+    const checkbox = page.getByLabel(`Include ${existingShapes[i].name}`, {
+      exact: true,
+    });
+    if (i < 2) await checkbox.check();
+    else {
+      await expect(checkbox).not.toBeChecked();
+      await expect(checkbox).toBeDisabled();
+    }
+  }
+  expect((await state()).project.surfaces).toEqual(existingShapes);
+  expect((await state()).project.stacks).toHaveLength(0);
+  await page
+    .getByRole("button", {
+      name: `Move ${existingShapes[1].name} earlier`,
+      exact: true,
+    })
+    .click();
+  await page
+    .getByRole("button", { name: "Apply to selected shapes", exact: true })
+    .click();
+  await expect.poll(async () => (await state()).project.stacks.length).toBe(1);
+  const applied = (await state()).project;
+  expect(applied.stacks[0].surfaceIds).toEqual([
+    existingShapes[1].id,
+    existingShapes[0].id,
+  ]);
+  expect(applied.stacks[0].style).toBe("potion");
+  expect(
+    applied.surfaces.map((s) => ({
+      id: s.id,
+      points: s.points,
+      layerId: s.layerId,
+      curves: s.curves,
+      cutoutOf: s.cutoutOf,
+    })),
+  ).toEqual(
+    existingShapes.map((s) => ({
+      id: s.id,
+      points: s.points,
+      layerId: s.layerId,
+      curves: s.curves,
+      cutoutOf: s.cutoutOf,
+    })),
+  );
+  expect(applied.surfaces[2]).toEqual(existingShapes[2]);
+  await page.screenshot({
+    path: path.join(artifacts, "liquid-existing-shapes.png"),
+  });
+  await close();
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await expect
+    .poll(async () => (await state()).project.surfaces)
+    .toEqual(existingShapes);
+  await expect.poll(async () => (await state()).project.stacks.length).toBe(0);
+  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  await expect
+    .poll(async () => (await state()).project.stacks[0]?.surfaceIds)
+    .toEqual(applied.stacks[0].surfaceIds);
+  await page.getByRole("button", { name: "Save project", exact: true }).click();
+  await expect
+    .poll(
+      async () =>
+        JSON.parse(await readFile(savedPath, "utf8")).stacks[0]?.style,
+    )
+    .toBe("potion");
+  await open(savedPath);
+  await expect.poll(async () => (await state()).project).toEqual(applied);
+  console.log(
+    "PASS: liquid presets wait for selection; applying to two existing shapes preserves geometry and unselected shapes, with route order, Undo/Redo and native save/reopen",
+  );
+  await page
+    .getByRole("button", { name: "Stacked animations", exact: false })
+    .click();
   await page
     .getByRole("button", { name: "Character chase", exact: true })
     .click();
@@ -464,7 +567,7 @@ try {
     .click();
   await page.getByRole("button", { name: "Liquid flow", exact: true }).click();
   await expect(
-    page.getByRole("button", { name: "Add glowing potion", exact: true }),
+    page.getByRole("button", { name: "Choose glowing potion", exact: true }),
   ).toBeVisible();
   await page.screenshot({
     path: path.join(artifacts, "linked-small-window.png"),
@@ -495,7 +598,7 @@ try {
     ),
   );
   console.log(
-    "PASS: three animated liquid materials, valid example files and one-click presets; liquid and chase groups coexist.",
+    "PASS: three animated liquid materials, valid example files and style selection; liquid and chase groups coexist.",
   );
 } catch (error) {
   if (page && !page.isClosed())

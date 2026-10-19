@@ -5,9 +5,13 @@ import type { Effect } from "../catalog";
 export function EffectPreview({
   effect,
   active = false,
+  scale = 1,
+  direction = "left",
 }: {
   effect: Effect;
   active?: boolean;
+  scale?: number;
+  direction?: "left" | "right";
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
@@ -19,8 +23,9 @@ export function EffectPreview({
       effect.previewTime ?? 8.5,
       effect.color,
       42,
-      1,
+      scale,
       effect.cycleByDefault,
+      direction,
     );
     if (!active || effect.still) return;
     let frame = 0,
@@ -35,8 +40,9 @@ export function EffectPreview({
           now / 1000,
           effect.color,
           42,
-          1,
+          scale,
           effect.cycleByDefault,
+          direction,
         );
         last = now;
       }
@@ -53,6 +59,6 @@ export function EffectPreview({
       cancelAnimationFrame(frame);
       observer.disconnect();
     };
-  }, [effect, active]);
+  }, [effect, active, scale, direction]);
   return <canvas ref={ref} width={280} height={160} aria-hidden="true" />;
 }

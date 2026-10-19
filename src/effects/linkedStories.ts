@@ -500,7 +500,7 @@ const preview =
     };
     const route: ChaseRoute = {
       width: w,
-      unit: Math.min(h * 0.245 * scale, w * 0.17 * scale, h * 0.275, w * 0.18),
+      unit: Math.min(h * 0.245, w * 0.17) * scale,
       key: "preview",
       segments: [{ id: "preview", start: 0, width: w, height: h }],
     };

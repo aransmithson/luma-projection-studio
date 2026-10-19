@@ -291,7 +291,7 @@ function ColorOverlayControls({
     </section>
   );
 }
-function NumberField({
+export function NumberField({
   label,
   value,
   onChange,

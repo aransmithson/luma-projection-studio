@@ -45,14 +45,15 @@ export function chaseRoute(
   });
   const height = Math.min(...segments.map((s) => s.height)),
     shortest = Math.min(...segments.map((s) => s.width));
-  const unit = Math.min(
-    height * 0.245 * stack.scale,
-    shortest *
-      (stack.kind === "portal" || stack.kind === "story" ? 0.17 : 0.24) *
-      stack.scale,
-    height * 0.275,
-    shortest * (stack.kind === "portal" || stack.kind === "story" ? 0.18 : 0.3),
-  );
+  const unit =
+    stack.kind === "story"
+      ? Math.min(height * 0.245, shortest * 0.17) * stack.scale
+      : Math.min(
+          height * 0.245 * stack.scale,
+          shortest * (stack.kind === "portal" ? 0.17 : 0.24) * stack.scale,
+          height * 0.275,
+          shortest * (stack.kind === "portal" ? 0.18 : 0.3),
+        );
   const route = {
     width,
     unit,

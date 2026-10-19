@@ -42,7 +42,7 @@ export function withStack(project: Project, stack: AnimationStack): Project {
     project.surfaces.some(
       (s) =>
         (members.has(s.id) || previous?.surfaceIds.includes(s.id)) &&
-        layerFor(project, s).locked,
+        (s.locked || layerFor(project, s).locked),
     )
   )
     return project;

@@ -4,11 +4,42 @@ import type {
   Point,
   Project,
   ScenePhoto,
+  SceneReference,
   Surface,
 } from "./types";
 import { bindMedia } from "./media";
 import { layerFor } from "./layers";
 import { pruneStacks } from "./stacks";
+import { validSurfaceGeometry } from "./curves";
+
+export const SCENE_PHOTO_ID = "__scene-photo";
+export type PhotoChange = Partial<
+  Pick<SceneReference, "points" | "opacity" | "visible">
+>;
+export function updatePhotoReference(
+  project: Project,
+  change: PhotoChange,
+): Project {
+  if (
+    !project.scene ||
+    (change.points &&
+      (change.points.length !== 4 ||
+        !validSurfaceGeometry({ kind: "quad", points: change.points })))
+  )
+    return project;
+  return {
+    ...project,
+    scene: {
+      ...project.scene,
+      points:
+        change.points?.map((point) => ({ ...point })) ?? project.scene.points,
+      opacity: Number.isFinite(change.opacity)
+        ? Math.max(0, Math.min(1, change.opacity!))
+        : project.scene.opacity,
+      visible: change.visible ?? project.scene.visible,
+    },
+  };
+}
 
 export const photoUrl = (photo: ScenePhoto) =>
   `luma-media://photos/${photo.id}.png`;
@@ -70,7 +101,7 @@ export function photoSurface(project: Project): Surface | null {
   const scene = project.scene;
   return scene
     ? {
-        id: "__scene-photo",
+        id: SCENE_PHOTO_ID,
         name: "Scene photo",
         kind: "quad",
         points: scene.points,
