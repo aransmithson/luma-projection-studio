@@ -11,6 +11,7 @@ import { drawLiquid, drawStackLinks } from "./effects/stacked";
 import { chaseRoute } from "./chaseRoute";
 import { drawLinkedChase } from "./effects/chaseScenes";
 import { drawLinkedPortal } from "./effects/portalScene";
+import { drawLinkedStory } from "./effects/linkedStories";
 import { drawEdgeRunner } from "./effects/edgeRunner";
 import { drawToyTrain } from "./effects/toyTrain";
 import { hslHex, hue } from "./effects/common";
@@ -453,7 +454,9 @@ export class ProjectionRenderer {
       );
       const effectTime = definition.still ? 0 : time * surface.speed;
       const route =
-        stack?.kind === "chase" || stack?.kind === "portal"
+        stack?.kind === "chase" ||
+        stack?.kind === "portal" ||
+        stack?.kind === "story"
           ? chaseRoute(state.project, stack)
           : undefined;
       const effectKey = placementMesh
@@ -490,6 +493,8 @@ export class ProjectionRenderer {
           drawLinkedChase(r.ctx, time, stack, route, surface.id);
         else if (stack?.kind === "portal" && route)
           drawLinkedPortal(r.ctx, time, stack, route, surface.id);
+        else if (stack?.kind === "story" && route)
+          drawLinkedStory(r.ctx, time, stack, route, surface.id);
         else if (stack) {
           const index = stack.surfaceIds.indexOf(surface.id),
             flow = stackFlow(time, stack.duration, stack.surfaceIds.length);
@@ -503,7 +508,9 @@ export class ProjectionRenderer {
             flow.levels[index],
             flow.to === index ? flow.stream : 0,
             flow.from === index ? flow.stream : 0,
-            stack.kind !== "chase" && stack.kind !== "portal"
+            stack.kind !== "chase" &&
+              stack.kind !== "portal" &&
+              stack.kind !== "story"
               ? stack.style
               : undefined,
           );

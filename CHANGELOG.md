@@ -2,6 +2,14 @@
 
 Nox Projection Studio keeps the existing Luma project format and application identity.
 
+## 1.18.0
+
+- Added six original linked stories: **Cosmic courier**, **Ghost train**, **Dragon lantern run**, **Reef pearl relay**, **Clockwork marble** and **Firefly garden**. Travellers cross each shape into the next, triggering station lights, lanterns, shells, machinery or flowers along the route, then return to the first shape.
+- Added **Linked stories** to the stacked editor with live theme previews, one-click three-tile scenes, linking of two to eight existing shapes, route ordering, reverse travel, traveller size, accent colour and full-loop duration.
+- Added six ready-to-open example projects. Each story also works as an individual effect in the library. The library now contains **160 effects and materials: 148 animations and 12 still textures**.
+- Stories follow the shared Play, Pause and Restart clock in both editor and projector. Hidden tiles keep their turn; holes, content transforms, layers, blending, colour overlays, mesh mode, Undo and version-1 project save/open remain supported.
+- Added timing, rendering and native desktop checks covering loop continuity, reverse travel, unequal tiles, compact-window layout and projector synchronization. Existing liquid, chase and portal stacks remain compatible.
+
 ## 1.17.0
 
 - Rebranded the app as **Nox Projection Studio**, with a faceted neon N icon, refreshed banner, window titles, project dialogs and calibration label.

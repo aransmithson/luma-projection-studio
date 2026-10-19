@@ -1950,7 +1950,7 @@ export default function App() {
       {modal === "stacks" && (
         <Modal
           title="Stacked animations"
-          subtitle="Link shapes for liquid flows, character chases and portal journeys."
+          subtitle="Link shapes for travelling stories, liquid flows, chases and portal journeys."
           onClose={closeModal}
           className="stack-modal"
         >
@@ -2277,7 +2277,11 @@ export default function App() {
                 Select a surface and click an effect. Use the Effect tab to
                 change colour, speed and scale. Position inside shape rotates
                 and offsets the picture while keeping the outline and holes
-                fixed. Stacked animations creates water, lava, potion and icy
+                fixed. Linked stories sends a rocket, ghost train, dragon,
+                turtle, marble or firefly between shapes, with each tile reacting
+                as its traveller passes. Choose a theme in Stacked animations
+                and create a ready-made story, or link existing shapes.
+                Stacked animations also creates water, lava, potion and icy
                 water loops, or links a character chase across two to eight
                 shapes. Portal journey sends a robot, alien or space cat through
                 glowing doorways from tile to tile, then back to the first. Set

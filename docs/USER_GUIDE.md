@@ -37,11 +37,30 @@ Imports remain available when the original file is moved. Save creates a compani
 
 If media is missing, the shape remains editable and renders without its animation. Open **Effect → Locate original** and choose the exact original file; Nox verifies its content hash and keeps all mapping and timing settings. A different file should be imported and applied as a replacement. Opening a project restores available companion files into the local library. The library survives app restarts and project changes; removing a shape does not delete its source animation.
 
+## Create a linked story
+
+Open **Stacked animations → Linked stories**, choose a **Story theme**, then click **Create linked story**. This adds three movable tiles to the active unlocked layer. Close the editor to place and warp each tile over a physical surface.
+
+| Story and example project | What happens along the route |
+| --- | --- |
+| [Cosmic courier](../examples/Cosmic-courier.luma) | A rocket carries a tiny star past orbital outposts; receivers light up and send holographic rings into the sky. |
+| [Ghost train](../examples/Ghost-train.luma) | A midnight locomotive pulls ghost-filled carriages past glowing station lamps, with moving wheels, rods and smoke. |
+| [Dragon lantern run](../examples/Dragon-lantern-run.luma) | An emerald dragon flies between towers, waking their lanterns with a trail of embers. |
+| [Reef pearl relay](../examples/Reef-pearl-relay.luma) | A sea turtle guides a pearl through swaying coral and jellyfish; shells open as it passes. |
+| [Clockwork marble](../examples/Clockwork-marble.luma) | A polished energy marble rolls through brass machinery and illuminates inspection gates. |
+| [Firefly garden](../examples/Firefly-garden.luma) | A firefly carries glowing pollen over flowers that bloom, shimmer and close before its next visit. |
+
+To link your own shapes, apply a story from the **Linked stories** effects collection, then choose **Effect → Link this story across shapes**. Select **two to eight** shapes, use the arrows to set **Route order**, and click **Save stack**. Reopen **Edit linked story** to change the theme, colour, traveller size, direction or **4–120 second** full-loop duration. Changing a theme keeps the mapped outlines and holes. **Create linked story** always adds a new three-tile scene; use **Save stack** to update the selected stack.
+
+The traveller leaves one tile and enters the next, skipping the physical gap between them. The last tile returns to the first. Right-to-left travel follows the route backwards. Align adjoining edges and travel heights for the smoothest visual handoff. Traveller size is shared across differently sized tiles; the smallest tile limits its maximum size. Each tile can still use its own rotation, offset, cutouts, blend and colour overlay.
+
+All stories use the same scene clock in editor and projector. **Pause** freezes travellers and local reactions; **Restart** resets the entire scene. Hidden tiles keep their place in the route. Stack duration replaces individual surface speed. Unlinked story effects loop within a single shape. The existing **Portal journey**, **Character chase** and **Liquid flow** modes remain available in the same editor.
+
 ## Create a linked liquid loop
 
 For a ready-to-play scene, use **Open project** and select [Liquid cascade](../examples/Liquid-cascade.luma). It contains just the three linked reservoirs and their return flow.
 
-1. Click **Stacked animations** beneath Add surface, then **Create liquid stack**. This adds three reservoirs and a return stream to your current scene.
+1. Click **Stacked animations** beneath Add surface, choose **Liquid flow**, then **Create liquid stack**. This adds three reservoirs and a return stream to your current scene.
 2. Close the panel and move, resize or warp each surface onto your physical objects. Connecting streams follow the inlet and outlet positions. Turn off **Show connecting streams and return loop** when you only want the mapped reservoirs.
 3. Reopen the stack to change its colour, full-loop duration or flow order. Click **Save stack** to apply these settings. Use **New stack from existing surfaces** to link two to eight surfaces of your own.
 4. Use the normal playback controls. **Pause** freezes the entire scene; **Restart** resets every stack to the beginning. Individual surface speed is replaced by the stack's shared duration. Hiding a surface keeps its place in the cycle; solo hides the connecting streams while you align one surface.
@@ -78,12 +97,12 @@ Projects support up to eight stacks within the 32-surface total. A surface belon
 
 ## Effects library
 
-All 154 effects and materials are generated locally: 142 animations and twelve still textures. Animation previews play on hover, or continuously when **Previews** is enabled. Still textures remain fixed unless an independent colour overlay is enabled. They do not require stock footage or external downloads.
+All 160 effects and materials are generated locally: 148 animations and twelve still textures. Animation previews play on hover, or continuously when **Previews** is enabled. Still textures remain fixed unless an independent colour overlay is enabled. They do not require stock footage or external downloads.
 
 | Collection | Effects |
 | --- | --- |
 | Music | Spectrum towers, Mirror pulse, Spectrum halo, Neon waveform, Bass reactor, Spectrum skyline |
-| Linked stories | Portal gun journey (robot, alien and space cat explorers) |
+| Linked stories | Cosmic courier, Ghost train, Dragon lantern run, Reef pearl relay, Clockwork marble, Firefly garden, Portal gun journey (robot, alien and space cat explorers) |
 | Chase scenes | Cat & mouse chase, Fox & rabbit chase, Ghost & pumpkin chase, Robot & alien chase, Snowman & penguin chase |
 | Stage & light | Marquee light wall, Prism LED flares, Stardust cascade, Hex relief wave, Photon runway, LED stage wings, Spectrum dot matrix, Pearl silk, Marquee alphabet, Crimson silk, LED cylinder hall, LED proscenium, Ribbon light stage, Canopy of lights, LED orb chamber, Recessed diamond lattice, Cubic tide, Turning tile wall, Triangular prism skin, Concentric relief rings, Sliding relief maze |
 | 3D illusions | Flying brick builders, Tumbling brick wall, Clockwork iris, Crystal geode, Origami facade, Chrome piston ocean, Celestial gyroscope, Infinite arcade, Floating citadel, Ribbon vortex, Tectonic rift, Gravity staircase |

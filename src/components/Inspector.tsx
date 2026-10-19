@@ -17,6 +17,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { effectById } from "../catalog";
 import { chaseRoleLabel, isChaseEffect } from "../chaseConfig";
+import { isStoryEffect } from "../storyCatalog";
 import { defaultContentTransform } from "../contentTransform";
 import { layerFor, layerIdFor } from "../layers";
 import {
@@ -1055,11 +1056,13 @@ export function Inspector({
                     <p>{chaseRoleLabel(stack.effectId, stack.direction)}</p>
                   )}
                   <button className="secondary-button" onClick={editStack}>
-                    {stack.kind === "chase"
-                      ? "Edit linked chase"
-                      : stack.kind === "portal"
-                        ? "Edit portal journey"
-                        : "Edit stack timing & colour"}
+                    {stack.kind === "story"
+                      ? "Edit linked story"
+                      : stack.kind === "chase"
+                        ? "Edit linked chase"
+                        : stack.kind === "portal"
+                          ? "Edit portal journey"
+                          : "Edit stack timing & colour"}
                   </button>
                   <small>
                     Applying another effect removes this surface from the stack.
@@ -1218,6 +1221,31 @@ export function Inspector({
                         <span>Portal direction</span>
                         <select
                           aria-label="Portal direction"
+                          value={surface.effectSide || "left"}
+                          onChange={(e) =>
+                            update({
+                              effectSide: e.target.value as "left" | "right",
+                            })
+                          }
+                        >
+                          <option value="left">Left to right</option>
+                          <option value="right">Right to left</option>
+                        </select>
+                      </label>
+                    </>
+                  )}
+                  {isStoryEffect(surface.effectId) && (
+                    <>
+                      <button
+                        className="secondary-button full-width"
+                        onClick={editStack}
+                      >
+                        Link this story across shapes
+                      </button>
+                      <label className="select-field">
+                        <span>Story direction</span>
+                        <select
+                          aria-label="Story direction"
                           value={surface.effectSide || "left"}
                           onChange={(e) =>
                             update({

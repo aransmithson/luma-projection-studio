@@ -5,6 +5,7 @@ import { validSurfaceGeometry } from "./curves";
 import { blendModes, overlayStyles, overlayPalettes } from "./compositing";
 import { MAX_LAYERS } from "./layers";
 import { chaseIds } from "./chaseConfig";
+import { storyIds } from "./storyCatalog";
 import type { BlendMode, ColorOverlay } from "./types";
 import type { EffectId, Point, Project, ShapeKind, Surface } from "./types";
 
@@ -253,6 +254,14 @@ const stackBaseSchema = z.object({
 });
 const stackSchema = z.union([
   stackBaseSchema.extend({
+    kind: z.literal("story"),
+    effectId: z.enum(storyIds),
+    direction: z.enum(["left", "right"]),
+    scale: z.number().min(0.45).max(1.55),
+    seed: z.number().int().min(0).max(100000),
+    links: z.literal(false),
+  }),
+  stackBaseSchema.extend({
     kind: z.literal("liquid").optional(),
     style: z.enum(["water", "lava", "potion", "ice"]).optional(),
   }),
@@ -347,7 +356,7 @@ const projectSchema = z
                 s.id === id &&
                 !s.cutoutOf &&
                 s.effectId ===
-                  (stack.kind === "chase"
+                  (stack.kind === "chase" || stack.kind === "story"
                     ? stack.effectId
                     : stack.kind === "portal"
                       ? "portal-hopper"

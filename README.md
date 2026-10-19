@@ -2,7 +2,7 @@
 
 ![Nox - Bring surfaces to life](docs/assets/nox-banner.svg)
 
-**Bring surfaces to life.** A Windows desktop app for mapping animated light onto buildings, props and scenery with one projector. Draw and warp shapes, build linked stories, and react to music with **154 built-in effects and materials**.
+**Bring surfaces to life.** A Windows desktop app for mapping animated light onto buildings, props and scenery with one projector. Draw and warp shapes, build linked stories, and react to music with **160 built-in effects and materials**.
 
 Nox runs locally with no account or network connection. Built with Electron, React, TypeScript, Canvas 2D and WebGL.
 
@@ -12,8 +12,8 @@ Previously called **Luma**. Your existing `.luma` projects, imported library, pr
 
 Get the Windows build from [GitHub Releases](https://github.com/aransmithson/nox-projection-studio/releases/latest). The repository and downloads are public.
 
-- **Recommended:** download `Nox-Projection-Studio-1.17.0-win-x64.zip`, extract the whole folder, and open `Nox Projection Studio.exe`. Keep the executable beside its resources.
-- **Portable:** download `Nox-Projection-Studio-1.17.0.exe`. It extracts before opening; allow that first launch to finish.
+- **Recommended:** download `Nox-Projection-Studio-1.18.0-win-x64.zip`, extract the whole folder, and open `Nox Projection Studio.exe`. Keep the executable beside its resources.
+- **Portable:** download `Nox-Projection-Studio-1.18.0.exe`. It extracts before opening; allow that first launch to finish.
 - Close an older running copy before opening a new version. Nox restores the existing instance when opened again.
 
 Release builds are not code-signed. The Windows executable keeps Electron's original resources to preserve compatibility with Windows Code Integrity; Nox's own icon appears in the app window and interface.
@@ -25,9 +25,9 @@ Release builds are not code-signed. The Windows executable keeps Electron's orig
 | Shape mapping | Rectangles, triangles, ellipses, polygons, Bezier curves, precise corner editing, perspective warping and editable cutout holes |
 | Placement | Projected wireframe/mesh, visible placement cursor, snapping, pixel nudging, calibration and solo view |
 | Compositing | Layers, copy/paste, ten blend modes, feathering, colour overlays and independent content rotation/offset |
-| Effects | 142 animations and 12 still materials, including Halloween, Christmas, space, creatures, shadow puppets, architectural illusions and stage lighting |
+| Effects | 148 animations and 12 still materials, including Halloween, Christmas, space, creatures, shadow puppets, architectural illusions and stage lighting |
 | Imported animations | MP4/H.264 videos and animated GIFs, thumbnails, looping, trim, time offset, speed and fill/fit/stretch |
-| Linked stories | Synchronized liquid stacks, character chases and portal journeys across two to eight shapes |
+| Linked stories | Six travelling stories with local reactions, plus synchronized liquid stacks, character chases and portal journeys across two to eight shapes |
 | Music | Six equaliser-style effects using computer audio, microphone/line-in or an explicit demo signal |
 | Playback | Shared Play, Pause and Restart, plus immediate output blackout |
 | Projects | `.luma` files, undo/redo, autosave and recovery of the previous valid save |
@@ -35,6 +35,16 @@ Release builds are not code-signed. The Windows executable keeps Electron's orig
 Projects support **32 surfaces**, **64 vertices per polygon**, and **eight animation stacks**. The stacked editor keeps settings and Save visible in a wide three-column layout.
 
 ![Nox mapping workspace with the effects library and surface inspector](docs/assets/workspace.png)
+
+## New linked stories
+
+Send a star-carrying rocket, a ghost train, an emerald dragon, a pearl-guiding turtle, a clockwork marble or a glowing firefly through your mapped shapes. Each tile reacts as its traveller passes, and the last tile leads back to the first.
+
+Open **Stacked animations → Linked stories**, choose a **Story theme**, then **Create linked story** for three ready-to-place shapes. To use existing shapes, apply a story from the effects library and choose **Effect → Link this story across shapes**. Set the route order, direction, size, colour and loop duration together. All tiles share Play, Pause and Restart.
+
+![Six original linked story themes](docs/assets/linked-stories.png)
+
+See the [linked-story guide and examples](docs/USER_GUIDE.md#create-a-linked-story) for ready-made projects and placement tips.
 
 ## Your first projection
 

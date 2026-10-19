@@ -8,8 +8,11 @@ import type {
   PortalCharacter,
   PortalStack,
   Project,
+  StoryEffectId,
+  StoryStack,
 } from "./types";
 import { layerFor, layersFor } from "./layers";
+import { storyDefinition } from "./storyCatalog";
 
 export function pruneStacks(project: Project): Project {
   const stacks = (project.stacks || [])
@@ -20,7 +23,7 @@ export function pruneStacks(project: Project): Project {
           (s) =>
             s.id === id &&
             s.effectId ===
-              (stack.kind === "chase"
+              (stack.kind === "chase" || stack.kind === "story"
                 ? stack.effectId
                 : stack.kind === "portal"
                   ? "portal-hopper"
@@ -51,7 +54,7 @@ export function withStack(project: Project, stack: AnimationStack): Project {
             ...s,
             media: undefined,
             effectId:
-              stack.kind === "chase"
+              stack.kind === "chase" || stack.kind === "story"
                 ? stack.effectId
                 : stack.kind === "portal"
                   ? "portal-hopper"
@@ -59,7 +62,9 @@ export function withStack(project: Project, stack: AnimationStack): Project {
             color: stack.color,
             colorCycle: false,
             speed: 1,
-            ...(stack.kind === "chase" || stack.kind === "portal"
+            ...(stack.kind === "chase" ||
+            stack.kind === "portal" ||
+            stack.kind === "story"
               ? {
                   effectSide: stack.direction,
                   scale: stack.scale,
@@ -71,6 +76,34 @@ export function withStack(project: Project, stack: AnimationStack): Project {
     ),
     stacks: [...project.stacks.filter((s) => s.id !== stack.id), stack],
   };
+}
+
+export function createStoryStack(
+  project: Project,
+  layerId = layersFor(project)[0].id,
+  effectId: StoryEffectId = "story-cosmic-courier",
+): { project: Project; stack: StoryStack } | null {
+  const created = createChaseStack(project, layerId);
+  if (!created) return null;
+  const definition = storyDefinition(effectId);
+  const stack: StoryStack = {
+    ...created.stack,
+    kind: "story",
+    effectId,
+    name: `${definition.name} ${project.stacks.length + 1}`,
+    duration: 24,
+    color: definition.color,
+  };
+  const next = {
+    ...created.project,
+    surfaces: created.project.surfaces.map((s) => {
+      const index = stack.surfaceIds.indexOf(s.id);
+      return index < 0
+        ? s
+        : { ...s, name: `${definition.name} · Tile ${index + 1}` };
+    }),
+  };
+  return { project: withStack(next, stack), stack };
 }
 
 export function createPortalStack(

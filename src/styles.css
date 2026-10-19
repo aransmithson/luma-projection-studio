@@ -3261,6 +3261,18 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
   padding: 14px;
   display: block;
 }
+.stack-story-preview {
+  margin: -3px 0 10px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #03050b;
+}
+.stack-story-preview canvas {
+  display: block;
+  width: 100%;
+  height: 110px;
+  object-fit: contain;
+}
 .stack-modal .stack-flow-illustration {
   display: none;
 }

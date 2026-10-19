@@ -29,6 +29,12 @@ export type EffectId =
   | "eq-reactor"
   | "eq-city"
   | "portal-hopper"
+  | "story-cosmic-courier"
+  | "story-ghost-train"
+  | "story-dragon-lanterns"
+  | "story-reef-relay"
+  | "story-clockwork-marble"
+  | "story-firefly-garden"
   | "chase-cat-mouse"
   | "chase-fox-rabbit"
   | "chase-ghost-pumpkin"
@@ -294,7 +300,16 @@ export type PortalStack = StackBase & {
   scale: number;
   seed: number;
 };
-export type AnimationStack = LiquidStack | ChaseStack | PortalStack;
+export type StoryEffectId = Extract<EffectId, `story-${string}`>;
+export type StoryStack = StackBase & {
+  kind: "story";
+  effectId: StoryEffectId;
+  links: false;
+  direction: "left" | "right";
+  scale: number;
+  seed: number;
+};
+export type AnimationStack = LiquidStack | ChaseStack | PortalStack | StoryStack;
 export type Project = {
   version: 1;
   name: string;

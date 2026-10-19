@@ -84,7 +84,7 @@ export function drawEffect(
   const patternScale =
     id === "edge-runner" ||
     id === "toy-train" ||
-    id === "portal-hopper" ||
+    effectById[id].category === "Linked stories" ||
     effectById[id].audioReactive ||
     effectById[id].category === "Chase scenes" ||
     effectById[id].category === "Creatures"

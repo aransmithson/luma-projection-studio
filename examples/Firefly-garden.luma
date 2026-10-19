@@ -1,0 +1,133 @@
+{
+  "version": 1,
+  "name": "Firefly garden",
+  "width": 1200,
+  "height": 600,
+  "brightness": 1,
+  "surfaces": [
+    {
+      "id": "6abe8e00-ba92-4366-9c90-f9aa6025e6f7",
+      "name": "Firefly garden · Tile 1",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.055,
+          "y": 0.32
+        },
+        {
+          "x": 0.315,
+          "y": 0.32
+        },
+        {
+          "x": 0.315,
+          "y": 0.74
+        },
+        {
+          "x": 0.055,
+          "y": 0.74
+        }
+      ],
+      "effectId": "story-firefly-garden",
+      "color": "#dbff8b",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "effectSide": "left"
+    },
+    {
+      "id": "e6f69b4f-a14f-4109-8693-740bd3631460",
+      "name": "Firefly garden · Tile 2",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.37,
+          "y": 0.32
+        },
+        {
+          "x": 0.63,
+          "y": 0.32
+        },
+        {
+          "x": 0.63,
+          "y": 0.74
+        },
+        {
+          "x": 0.37,
+          "y": 0.74
+        }
+      ],
+      "effectId": "story-firefly-garden",
+      "color": "#dbff8b",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "effectSide": "left"
+    },
+    {
+      "id": "cc53b111-dcb5-4b7e-b909-465aa377ed7d",
+      "name": "Firefly garden · Tile 3",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.685,
+          "y": 0.32
+        },
+        {
+          "x": 0.9450000000000001,
+          "y": 0.32
+        },
+        {
+          "x": 0.9450000000000001,
+          "y": 0.74
+        },
+        {
+          "x": 0.685,
+          "y": 0.74
+        }
+      ],
+      "effectId": "story-firefly-garden",
+      "color": "#dbff8b",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "effectSide": "left"
+    }
+  ],
+  "stacks": [
+    {
+      "id": "7e4b1833-dafb-402d-973f-cd12a18c239e",
+      "kind": "story",
+      "name": "Firefly garden",
+      "surfaceIds": [
+        "6abe8e00-ba92-4366-9c90-f9aa6025e6f7",
+        "e6f69b4f-a14f-4109-8693-740bd3631460",
+        "cc53b111-dcb5-4b7e-b909-465aa377ed7d"
+      ],
+      "duration": 24,
+      "color": "#dbff8b",
+      "links": false,
+      "effectId": "story-firefly-garden",
+      "direction": "left",
+      "scale": 1,
+      "seed": 42
+    }
+  ]
+}

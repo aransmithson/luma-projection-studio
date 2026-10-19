@@ -23,7 +23,7 @@ Choose native workflows that exercise the change. Run them sequentially with the
 | Change | Relevant checks |
 | --- | --- |
 | General editor or output | `npm run test:desktop` |
-| Stacked animations | `npm run test:creative`, `npm run test:linked`, `npm run test:portals` |
+| Stacked animations | `npm run test:stories`, `npm run test:creative`, `npm run test:linked`, `npm run test:portals` |
 | Shapes, curves or holes | `npm run test:placement`, `npm run test:cutouts` |
 | Layers or copy/paste | `npm run test:layers`, `npm run test:clipboard` |
 | Audio | `npm run test:audio`, `npm run test:audio-render` |
@@ -38,8 +38,8 @@ Stop development servers and desktop tests before packaging. Build each version 
 
 ```powershell
 $env:ELECTRON_BUILDER_COMPRESSION_LEVEL='1'
-npm run package -- --config.directories.output=release/1.17.0
-$env:LUMA_RELEASE_DIR='release/1.17.0'
+npm run package -- --config.directories.output=release/1.18.0
+$env:LUMA_RELEASE_DIR='release/1.18.0'
 npm run test:startup -- unpacked --hidden --copy-saved-profile
 npm run test:startup -- portable
 npm run test:startup-recovery -- --packaged
@@ -56,7 +56,7 @@ Distribute the complete unpacked folder as a ZIP, or the portable executable. Do
 - [Renderer](src/renderer.ts): shared playback clock, mapping and WebGL compositing.
 - [Project model](src/model.ts): validation, limits and recovery.
 - [Geometry](src/geometry.ts), [curves](src/curves.ts) and [cutouts](src/cutouts.ts): shape editing and masks.
-- [Stacks](src/stacks.ts), [chase routes](src/chaseRoute.ts) and [portal motion](src/portalMotion.ts): linked scenes.
+- [Stacks](src/stacks.ts), [chase routes](src/chaseRoute.ts), [story timing](src/storyMotion.ts) and [portal motion](src/portalMotion.ts): linked scenes. Follow the [linked-story instructions](.github/instructions/linked-stories.instructions.md) for new travellers and arrival reactions. `npm run test:stories` checks rendering, native editing, examples and output; `npm run test:stories -- --packaged` verifies a packaged build using `LUMA_RELEASE_DIR`.
 - [Effects](src/effects/) and [catalogue](src/catalog.ts): procedural artwork and effect metadata.
 - [Desktop process](electron/main.cjs) and [preload bridge](electron/preload.cjs): native windows, validated IPC and file dialogs.
 - [Audio analysis](src/audioAnalysis.ts) and [desktop permissions](electron/audio.cjs): shared music input.

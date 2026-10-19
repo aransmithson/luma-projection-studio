@@ -6,6 +6,7 @@ import {
   Droplets,
   Footprints,
   Plus,
+  Sparkles,
   Trash2,
 } from "lucide-react";
 import { useState } from "react";
@@ -17,16 +18,26 @@ import type {
   PortalCharacter,
   LiquidStyle,
   Project,
+  StoryEffectId,
+  StoryStack,
 } from "../types";
 import {
   createChaseStack,
   createLiquidStack,
   createPortalStack,
+  createStoryStack,
   withStack,
 } from "../stacks";
 import { layerFor, layersFor } from "../layers";
 import { chaseIds, chaseRoleLabel, isChaseEffect } from "../chaseConfig";
 import { chaseEffects } from "../chaseCatalog";
+import {
+  isStoryEffect,
+  storyDefinition,
+  storyEffects,
+  storyIds,
+} from "../storyCatalog";
+import { EffectPreview } from "./EffectPreview";
 
 type Props = {
   project: Project;
@@ -85,32 +96,45 @@ export function StackEditor({
       ? selected.effectId
       : undefined;
   const selectedPortal = selected?.effectId === "portal-hopper";
+  const selectedStory =
+    selected && isStoryEffect(selected.effectId)
+      ? selected.effectId
+      : undefined;
   const first =
     project.stacks.find(
       (s) => selectedId && s.surfaceIds.includes(selectedId),
-    ) || (selectedChase || selectedPortal ? undefined : project.stacks[0]);
+    ) ||
+    (selectedChase || selectedPortal || selectedStory
+      ? undefined
+      : project.stacks[0]);
   const availableSelection =
     selected && !project.stacks.some((s) => s.surfaceIds.includes(selected.id))
       ? [selected.id]
       : [];
-  type Mode = "liquid" | "chase" | "portal";
-  const hasActors = (s?: AnimationStack): s is ChaseStack | PortalStack =>
-    s?.kind === "chase" || s?.kind === "portal";
+  type Mode = "liquid" | "chase" | "portal" | "story";
+  const hasActors = (
+    s?: AnimationStack,
+  ): s is ChaseStack | PortalStack | StoryStack =>
+    s?.kind === "chase" || s?.kind === "portal" || s?.kind === "story";
   const initialMode: Mode = first
     ? first.kind || "liquid"
-    : selectedPortal
-      ? "portal"
-      : selectedChase
-        ? "chase"
-        : "liquid";
+    : selectedStory
+      ? "story"
+      : selectedPortal
+        ? "portal"
+        : selectedChase
+          ? "chase"
+          : "liquid";
   const title = (kind: Mode) =>
-    kind === "portal"
-      ? "Portal journey"
-      : kind === "chase"
-        ? "Linked chase"
-        : "Liquid loop";
+    kind === "story"
+      ? "Linked story"
+      : kind === "portal"
+        ? "Portal journey"
+        : kind === "chase"
+          ? "Linked chase"
+          : "Liquid loop";
   const seconds = (kind: Mode) =>
-    kind === "portal" ? 24 : kind === "chase" ? 12 : 18;
+    kind === "portal" || kind === "story" ? 24 : kind === "chase" ? 12 : 18;
   const [mode, setMode] = useState<Mode>(initialMode);
   const [editingId, setEditingId] = useState<string | null>(first?.id || null);
   const [members, setMembers] = useState<string[]>(
@@ -135,6 +159,10 @@ export function StackEditor({
   const [character, setCharacter] = useState<PortalCharacter>(
     first?.kind === "portal" ? first.character : "robot",
   );
+  const [storyId, setStoryId] = useState<StoryEffectId>(
+    first?.kind === "story" ? first.effectId : selectedStory || storyIds[0],
+  );
+  const story = storyDefinition(storyId);
   const [direction, setDirection] = useState<"left" | "right">(
     hasActors(first) ? first.direction : selected?.effectSide || "left",
   );
@@ -165,6 +193,9 @@ export function StackEditor({
       stack?.kind === "chase" ? stack.effectId : selectedChase || chaseIds[0],
     );
     setCharacter(stack?.kind === "portal" ? stack.character : "robot");
+    setStoryId(
+      stack?.kind === "story" ? stack.effectId : selectedStory || storyIds[0],
+    );
     setDirection(
       hasActors(stack) ? stack.direction : selected?.effectSide || "left",
     );
@@ -204,45 +235,59 @@ export function StackEditor({
       color,
     };
     const stack: AnimationStack =
-      mode === "portal"
+      mode === "story"
         ? {
             ...base,
-            kind: "portal",
-            character,
+            kind: "story",
+            effectId: storyId,
             direction,
             scale,
             seed,
             links: false,
           }
-        : mode === "chase"
+        : mode === "portal"
           ? {
               ...base,
-              kind: "chase",
-              effectId,
+              kind: "portal",
+              character,
               direction,
               scale,
               seed,
               links: false,
             }
-          : { ...base, links, ...(style === "water" ? {} : { style }) };
+          : mode === "chase"
+            ? {
+                ...base,
+                kind: "chase",
+                effectId,
+                direction,
+                scale,
+                seed,
+                links: false,
+              }
+            : { ...base, links, ...(style === "water" ? {} : { style }) };
     update(withStack(project, stack));
     load(stack);
     selectSurface(ids[0]);
     notify(
-      mode === "portal"
-        ? "Portal journey linked. Every tile follows the same story clock."
-        : mode === "chase"
-          ? "Chase linked. Characters now travel from shape to shape on one loop."
-          : "Stack saved. All members now follow the same liquid cycle.",
+      mode === "story"
+        ? "Story linked. Every tile now shares one journey and its arrival reactions."
+        : mode === "portal"
+          ? "Portal journey linked. Every tile follows the same story clock."
+          : mode === "chase"
+            ? "Chase linked. Characters now travel from shape to shape on one loop."
+            : "Stack saved. All members now follow the same liquid cycle.",
     );
   };
   const create = (liquidStyle: LiquidStyle = "water") => {
     const result =
-      mode === "portal"
-        ? createPortalStack(project, activeLayerId, character)
-        : mode === "chase"
-          ? createChaseStack(project, activeLayerId, effectId)
-          : createLiquidStack(project, activeLayerId, liquidStyle);
+      mode === "story"
+        ? createStoryStack(project, activeLayerId, storyId)
+        : mode === "portal"
+          ? createPortalStack(project, activeLayerId, character)
+          : mode === "chase"
+            ? createChaseStack(project, activeLayerId, effectId)
+            : createLiquidStack(project, activeLayerId, liquidStyle);
     if (!result) {
       notify(
         "There is room for up to 32 surfaces and eight stacks. The active layer must be unlocked.",
@@ -253,12 +298,18 @@ export function StackEditor({
     load(result.stack);
     selectSurface(result.stack.surfaceIds[0]);
     notify(
-      `Three linked ${mode === "portal" ? "portal" : mode === "chase" ? "chase" : "liquid"} surfaces added. Close this panel to place them.`,
+      `Three linked ${mode === "story" ? "story" : mode === "portal" ? "portal" : mode === "chase" ? "chase" : "liquid"} surfaces added. Close this panel to place them.`,
     );
   };
   return (
     <div className="stack-editor">
       <div className="stack-mode" aria-label="Linked animation type">
+        <button
+          aria-pressed={mode === "story"}
+          onClick={() => mode !== "story" && load(undefined, "story")}
+        >
+          <Sparkles size={16} /> Linked stories
+        </button>
         <button
           aria-pressed={mode === "liquid"}
           onClick={() => mode !== "liquid" && load(undefined, "liquid")}
@@ -284,6 +335,11 @@ export function StackEditor({
       <div className="stack-editor-grid">
         <div className="stack-browser">
           <div className="stack-intro">
+            {mode === "story" && (
+              <div className="stack-story-preview">
+                <EffectPreview effect={story} active />
+              </div>
+            )}
             <div
               className={`stack-flow-illustration ${mode !== "liquid" ? "chase-route-illustration" : ""}`}
               aria-hidden="true"
@@ -297,18 +353,22 @@ export function StackEditor({
             </div>
             <div>
               <h3>
-                {mode === "portal"
-                  ? "Open a doorway to the next tile."
-                  : mode === "chase"
-                    ? "One chase across your shapes."
-                    : "One flow. Every surface in time."}
+                {mode === "story"
+                  ? story.name
+                  : mode === "portal"
+                    ? "Open a doorway to the next tile."
+                    : mode === "chase"
+                      ? "One chase across your shapes."
+                      : "One flow. Every surface in time."}
               </h3>
               <p>
-                {mode === "portal"
-                  ? "Fire a portal, cross into the next tile, and repeat around the loop. Every tile follows the same clock."
-                  : mode === "chase"
-                    ? "Characters leave one shape and enter the next. Reverse direction to swap who is chasing."
-                    : "Liquid flows between surfaces and returns to the start, with every reservoir and stream in sync."}
+                {mode === "story"
+                  ? story.description
+                  : mode === "portal"
+                    ? "Fire a portal, cross into the next tile, and repeat around the loop. Every tile follows the same clock."
+                    : mode === "chase"
+                      ? "Characters leave one shape and enter the next. Reverse direction to swap who is chasing."
+                      : "Liquid flows between surfaces and returns to the start, with every reservoir and stream in sync."}
               </p>
               <button
                 className="primary-button"
@@ -317,18 +377,22 @@ export function StackEditor({
                 }
                 onClick={() => create()}
               >
-                {mode === "portal" ? (
+                {mode === "story" ? (
+                  <Sparkles size={16} />
+                ) : mode === "portal" ? (
                   <Aperture size={16} />
                 ) : mode === "chase" ? (
                   <Footprints size={15} />
                 ) : (
                   <Droplets size={15} />
                 )}
-                {mode === "portal"
-                  ? "Create portal journey"
-                  : mode === "chase"
-                    ? "Create linked chase"
-                    : "Create liquid stack"}
+                {mode === "story"
+                  ? "Create linked story"
+                  : mode === "portal"
+                    ? "Create portal journey"
+                    : mode === "chase"
+                      ? "Create linked chase"
+                      : "Create liquid stack"}
               </button>
               <small>Adds three movable shapes, ready to place.</small>
             </div>
@@ -372,7 +436,9 @@ export function StackEditor({
                     className={`stack-choice ${editingId === stack.id ? "active" : ""}`}
                     onClick={() => load(stack)}
                   >
-                    {stack.kind === "portal" ? (
+                    {stack.kind === "story" ? (
+                      <Sparkles size={17} />
+                    ) : stack.kind === "portal" ? (
                       <Aperture size={17} />
                     ) : stack.kind === "chase" ? (
                       <Footprints size={17} />
@@ -383,11 +449,13 @@ export function StackEditor({
                       <strong>{stack.name}</strong>
                       <small>
                         {stack.surfaceIds.length} surfaces · {stack.duration}s{" "}
-                        {stack.kind === "portal"
-                          ? "portal loop"
-                          : stack.kind === "chase"
-                            ? "chase"
-                            : "loop"}
+                        {stack.kind === "story"
+                          ? "story loop"
+                          : stack.kind === "portal"
+                            ? "portal loop"
+                            : stack.kind === "chase"
+                              ? "chase"
+                              : "loop"}
                       </small>
                     </span>
                   </button>
@@ -414,7 +482,29 @@ export function StackEditor({
           </label>
           {mode !== "liquid" ? (
             <>
-              {mode === "chase" ? (
+              {mode === "story" ? (
+                <label className="stack-field">
+                  Story theme
+                  <select
+                    aria-label="Story theme"
+                    value={storyId}
+                    onChange={(e) => {
+                      const definition = storyDefinition(
+                        e.target.value as StoryEffectId,
+                      );
+                      setStoryId(definition.id);
+                      setColor(definition.color);
+                      if (!editingId) setName(definition.name);
+                    }}
+                  >
+                    {storyEffects.map((effect) => (
+                      <option key={effect.id} value={effect.id}>
+                        {effect.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              ) : mode === "chase" ? (
                 <label className="stack-field">
                   Characters
                   <select
@@ -451,9 +541,11 @@ export function StackEditor({
                 Travel direction
                 <select
                   aria-label={
-                    mode === "chase"
-                      ? "Linked chase direction"
-                      : "Portal direction"
+                    mode === "story"
+                      ? "Story direction"
+                      : mode === "chase"
+                        ? "Linked chase direction"
+                        : "Portal direction"
                   }
                   value={direction}
                   onChange={(e) =>
@@ -466,23 +558,30 @@ export function StackEditor({
               </label>
               <p className="chase-role-note">
                 <strong>
-                  {mode === "portal"
-                    ? "Aim, fire, step through, repeat"
-                    : chaseRoleLabel(effectId, direction)}
+                  {mode === "story"
+                    ? "One traveller, a reaction in every tile"
+                    : mode === "portal"
+                      ? "Aim, fire, step through, repeat"
+                      : chaseRoleLabel(effectId, direction)}
                 </strong>
                 <span>
-                  {mode === "portal"
-                    ? "One character travels through the entire loop. Hidden tiles keep their turn."
-                    : "Reversing swaps the pursuer and reverses the route."}
+                  {mode === "story"
+                    ? "Reversing changes the travel and arrival order. Hidden tiles keep their place in the loop."
+                    : mode === "portal"
+                      ? "One character travels through the entire loop. Hidden tiles keep their turn."
+                      : "Reversing swaps the pursuer and reverses the route."}
                 </span>
               </p>
               <label className="stack-field">
-                Character size · {Math.round(scale * 100)}%
+                {mode === "story" ? "Traveller size" : "Character size"} ·{" "}
+                {Math.round(scale * 100)}%
                 <input
                   aria-label={
-                    mode === "portal"
-                      ? "Portal character size"
-                      : "Linked character size"
+                    mode === "story"
+                      ? "Story traveller size"
+                      : mode === "portal"
+                        ? "Portal character size"
+                        : "Linked character size"
                   }
                   type="range"
                   min="0.45"
@@ -552,11 +651,13 @@ export function StackEditor({
             <span>{members.length} / 8 surfaces</span>
           </h3>
           <p className="muted-copy">
-            {mode === "portal"
-              ? "Choose two to eight tiles. Arrows set the next destination. Reversing direction visits the tiles in reverse order."
-              : mode === "chase"
-                ? `Choose shapes below. Arrows set their place in the route. ${direction === "right" ? "The chase currently follows this list backwards." : "The chase follows this list, then returns to the start."}`
-                : "Choose surfaces below. Use the arrows to set where the liquid goes next."}
+            {mode === "story"
+              ? "Choose two to eight shapes. Arrows set their order. The traveller crosses each edge into the next tile and returns from the last tile to the first."
+              : mode === "portal"
+                ? "Choose two to eight tiles. Arrows set the next destination. Reversing direction visits the tiles in reverse order."
+                : mode === "chase"
+                  ? `Choose shapes below. Arrows set their place in the route. ${direction === "right" ? "The chase currently follows this list backwards." : "The chase follows this list, then returns to the start."}`
+                  : "Choose surfaces below. Use the arrows to set where the liquid goes next."}
           </p>
           <ol className="stack-order">
             {members.map((id, i) => {

@@ -3,7 +3,7 @@ import { surfaceOutline } from "./curves";
 import { chaseRoles } from "./chaseConfig";
 import { chasePhase, CHASE_LOOP } from "./effects/chaseMotion";
 import { mod, random, TAU } from "./effects/common";
-import type { ChaseStack, PortalStack, Project } from "./types";
+import type { ChaseStack, PortalStack, StoryStack, Project } from "./types";
 
 export type ChaseRoute = {
   width: number;
@@ -14,7 +14,7 @@ export type ChaseRoute = {
 const cache = new WeakMap<Project, Map<string, ChaseRoute>>();
 export function chaseRoute(
   project: Project,
-  stack: ChaseStack | PortalStack,
+  stack: ChaseStack | PortalStack | StoryStack,
 ): ChaseRoute {
   let routes = cache.get(project);
   if (!routes) {
@@ -47,9 +47,11 @@ export function chaseRoute(
     shortest = Math.min(...segments.map((s) => s.width));
   const unit = Math.min(
     height * 0.245 * stack.scale,
-    shortest * (stack.kind === "portal" ? 0.17 : 0.24) * stack.scale,
+    shortest *
+      (stack.kind === "portal" || stack.kind === "story" ? 0.17 : 0.24) *
+      stack.scale,
     height * 0.275,
-    shortest * (stack.kind === "portal" ? 0.18 : 0.3),
+    shortest * (stack.kind === "portal" || stack.kind === "story" ? 0.18 : 0.3),
   );
   const route = {
     width,

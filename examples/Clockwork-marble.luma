@@ -1,0 +1,133 @@
+{
+  "version": 1,
+  "name": "Clockwork marble",
+  "width": 1200,
+  "height": 600,
+  "brightness": 1,
+  "surfaces": [
+    {
+      "id": "3fe64211-a860-473d-995d-17537e71418d",
+      "name": "Clockwork marble · Tile 1",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.055,
+          "y": 0.32
+        },
+        {
+          "x": 0.315,
+          "y": 0.32
+        },
+        {
+          "x": 0.315,
+          "y": 0.74
+        },
+        {
+          "x": 0.055,
+          "y": 0.74
+        }
+      ],
+      "effectId": "story-clockwork-marble",
+      "color": "#ffca79",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "effectSide": "left"
+    },
+    {
+      "id": "46e52511-f856-4b2c-aea9-c12f790ccc5e",
+      "name": "Clockwork marble · Tile 2",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.37,
+          "y": 0.32
+        },
+        {
+          "x": 0.63,
+          "y": 0.32
+        },
+        {
+          "x": 0.63,
+          "y": 0.74
+        },
+        {
+          "x": 0.37,
+          "y": 0.74
+        }
+      ],
+      "effectId": "story-clockwork-marble",
+      "color": "#ffca79",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "effectSide": "left"
+    },
+    {
+      "id": "b1d392f7-067a-4e0b-bf7e-c44452d7ad89",
+      "name": "Clockwork marble · Tile 3",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.685,
+          "y": 0.32
+        },
+        {
+          "x": 0.9450000000000001,
+          "y": 0.32
+        },
+        {
+          "x": 0.9450000000000001,
+          "y": 0.74
+        },
+        {
+          "x": 0.685,
+          "y": 0.74
+        }
+      ],
+      "effectId": "story-clockwork-marble",
+      "color": "#ffca79",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "effectSide": "left"
+    }
+  ],
+  "stacks": [
+    {
+      "id": "dbb4c8b5-3bc2-4204-90a6-6084a26432a1",
+      "kind": "story",
+      "name": "Clockwork marble",
+      "surfaceIds": [
+        "3fe64211-a860-473d-995d-17537e71418d",
+        "46e52511-f856-4b2c-aea9-c12f790ccc5e",
+        "b1d392f7-067a-4e0b-bf7e-c44452d7ad89"
+      ],
+      "duration": 24,
+      "color": "#ffca79",
+      "links": false,
+      "effectId": "story-clockwork-marble",
+      "direction": "left",
+      "scale": 1,
+      "seed": 42
+    }
+  ]
+}

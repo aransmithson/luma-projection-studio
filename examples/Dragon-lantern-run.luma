@@ -1,0 +1,133 @@
+{
+  "version": 1,
+  "name": "Dragon lantern run",
+  "width": 1200,
+  "height": 600,
+  "brightness": 1,
+  "surfaces": [
+    {
+      "id": "faec7526-a759-4f69-b573-d1a1c6c3f0cb",
+      "name": "Dragon lantern run · Tile 1",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.055,
+          "y": 0.32
+        },
+        {
+          "x": 0.315,
+          "y": 0.32
+        },
+        {
+          "x": 0.315,
+          "y": 0.74
+        },
+        {
+          "x": 0.055,
+          "y": 0.74
+        }
+      ],
+      "effectId": "story-dragon-lanterns",
+      "color": "#ffb86e",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "effectSide": "left"
+    },
+    {
+      "id": "1c7b9366-39ff-4526-89c6-70b6f57fa8f2",
+      "name": "Dragon lantern run · Tile 2",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.37,
+          "y": 0.32
+        },
+        {
+          "x": 0.63,
+          "y": 0.32
+        },
+        {
+          "x": 0.63,
+          "y": 0.74
+        },
+        {
+          "x": 0.37,
+          "y": 0.74
+        }
+      ],
+      "effectId": "story-dragon-lanterns",
+      "color": "#ffb86e",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "effectSide": "left"
+    },
+    {
+      "id": "ca4f29f2-0efa-47b7-9883-036b34feb4d4",
+      "name": "Dragon lantern run · Tile 3",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.685,
+          "y": 0.32
+        },
+        {
+          "x": 0.9450000000000001,
+          "y": 0.32
+        },
+        {
+          "x": 0.9450000000000001,
+          "y": 0.74
+        },
+        {
+          "x": 0.685,
+          "y": 0.74
+        }
+      ],
+      "effectId": "story-dragon-lanterns",
+      "color": "#ffb86e",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "effectSide": "left"
+    }
+  ],
+  "stacks": [
+    {
+      "id": "4c9dfb5d-c7ea-4b82-9155-f4b2dfd09dc4",
+      "kind": "story",
+      "name": "Dragon lantern run",
+      "surfaceIds": [
+        "faec7526-a759-4f69-b573-d1a1c6c3f0cb",
+        "1c7b9366-39ff-4526-89c6-70b6f57fa8f2",
+        "ca4f29f2-0efa-47b7-9883-036b34feb4d4"
+      ],
+      "duration": 24,
+      "color": "#ffb86e",
+      "links": false,
+      "effectId": "story-dragon-lanterns",
+      "direction": "left",
+      "scale": 1,
+      "seed": 42
+    }
+  ]
+}

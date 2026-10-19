@@ -1,0 +1,133 @@
+{
+  "version": 1,
+  "name": "Ghost train",
+  "width": 1200,
+  "height": 600,
+  "brightness": 1,
+  "surfaces": [
+    {
+      "id": "dd1acdad-fe9c-4cce-85e0-22994ded7fd9",
+      "name": "Ghost train · Tile 1",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.055,
+          "y": 0.32
+        },
+        {
+          "x": 0.315,
+          "y": 0.32
+        },
+        {
+          "x": 0.315,
+          "y": 0.74
+        },
+        {
+          "x": 0.055,
+          "y": 0.74
+        }
+      ],
+      "effectId": "story-ghost-train",
+      "color": "#ab96ff",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "effectSide": "left"
+    },
+    {
+      "id": "78f03fea-0d24-449a-8f31-deca1fe3e360",
+      "name": "Ghost train · Tile 2",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.37,
+          "y": 0.32
+        },
+        {
+          "x": 0.63,
+          "y": 0.32
+        },
+        {
+          "x": 0.63,
+          "y": 0.74
+        },
+        {
+          "x": 0.37,
+          "y": 0.74
+        }
+      ],
+      "effectId": "story-ghost-train",
+      "color": "#ab96ff",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "effectSide": "left"
+    },
+    {
+      "id": "582919d8-ec97-4464-9c3e-def475b46864",
+      "name": "Ghost train · Tile 3",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.685,
+          "y": 0.32
+        },
+        {
+          "x": 0.9450000000000001,
+          "y": 0.32
+        },
+        {
+          "x": 0.9450000000000001,
+          "y": 0.74
+        },
+        {
+          "x": 0.685,
+          "y": 0.74
+        }
+      ],
+      "effectId": "story-ghost-train",
+      "color": "#ab96ff",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "effectSide": "left"
+    }
+  ],
+  "stacks": [
+    {
+      "id": "76089afd-672a-4f49-8643-6d84f0a0a13c",
+      "kind": "story",
+      "name": "Ghost train",
+      "surfaceIds": [
+        "dd1acdad-fe9c-4cce-85e0-22994ded7fd9",
+        "78f03fea-0d24-449a-8f31-deca1fe3e360",
+        "582919d8-ec97-4464-9c3e-def475b46864"
+      ],
+      "duration": 24,
+      "color": "#ab96ff",
+      "links": false,
+      "effectId": "story-ghost-train",
+      "direction": "left",
+      "scale": 1,
+      "seed": 42
+    }
+  ]
+}

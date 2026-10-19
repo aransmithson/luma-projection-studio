@@ -5,6 +5,7 @@ import { depthEffects } from "./depthCatalog";
 import { stageEffects } from "./stageCatalog";
 import { chaseEffects } from "./chaseCatalog";
 import { musicEffects } from "./musicCatalog";
+import { storyEffects } from "./storyCatalog";
 
 export type Effect = {
   id: EffectId;
@@ -42,6 +43,7 @@ export const effectCategories: EffectCategory[] = [
 ];
 export const effects: Effect[] = [
   ...musicEffects,
+  ...storyEffects,
   {
     id: "portal-hopper",
     name: "Portal gun journey",

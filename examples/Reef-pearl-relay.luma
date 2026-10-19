@@ -1,0 +1,133 @@
+{
+  "version": 1,
+  "name": "Reef pearl relay",
+  "width": 1200,
+  "height": 600,
+  "brightness": 1,
+  "surfaces": [
+    {
+      "id": "ac30abc8-8b3e-44cb-97f2-f9aa51c4a12d",
+      "name": "Reef pearl relay · Tile 1",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.055,
+          "y": 0.32
+        },
+        {
+          "x": 0.315,
+          "y": 0.32
+        },
+        {
+          "x": 0.315,
+          "y": 0.74
+        },
+        {
+          "x": 0.055,
+          "y": 0.74
+        }
+      ],
+      "effectId": "story-reef-relay",
+      "color": "#66eed4",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "effectSide": "left"
+    },
+    {
+      "id": "5320a7a7-44e4-42dc-a1aa-4e1df913ba54",
+      "name": "Reef pearl relay · Tile 2",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.37,
+          "y": 0.32
+        },
+        {
+          "x": 0.63,
+          "y": 0.32
+        },
+        {
+          "x": 0.63,
+          "y": 0.74
+        },
+        {
+          "x": 0.37,
+          "y": 0.74
+        }
+      ],
+      "effectId": "story-reef-relay",
+      "color": "#66eed4",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "effectSide": "left"
+    },
+    {
+      "id": "aaeb0c53-57a0-485b-aa87-bc6586613b0f",
+      "name": "Reef pearl relay · Tile 3",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.685,
+          "y": 0.32
+        },
+        {
+          "x": 0.9450000000000001,
+          "y": 0.32
+        },
+        {
+          "x": 0.9450000000000001,
+          "y": 0.74
+        },
+        {
+          "x": 0.685,
+          "y": 0.74
+        }
+      ],
+      "effectId": "story-reef-relay",
+      "color": "#66eed4",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "effectSide": "left"
+    }
+  ],
+  "stacks": [
+    {
+      "id": "ae9b268f-5c3c-4e3f-8b87-1efebc7cc560",
+      "kind": "story",
+      "name": "Reef pearl relay",
+      "surfaceIds": [
+        "ac30abc8-8b3e-44cb-97f2-f9aa51c4a12d",
+        "5320a7a7-44e4-42dc-a1aa-4e1df913ba54",
+        "aaeb0c53-57a0-485b-aa87-bc6586613b0f"
+      ],
+      "duration": 24,
+      "color": "#66eed4",
+      "links": false,
+      "effectId": "story-reef-relay",
+      "direction": "left",
+      "scale": 1,
+      "seed": 42
+    }
+  ]
+}
