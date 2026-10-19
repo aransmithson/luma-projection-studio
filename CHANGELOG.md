@@ -2,6 +2,12 @@
 
 Nox Projection Studio keeps the existing Luma project format and application identity.
 
+## 1.19.1
+
+- Added visible **Effects** and **Properties** toggles above the canvas. Hide either panel independently or both together, then click the same controls to restore them.
+- Hiding effects now removes the whole browser, including its header, to free more vertical space. Hiding properties expands the workspace across the right-hand side. Panel controls wrap at smaller window sizes and remain accessible with both panels hidden.
+- Panel visibility is remembered on this device. Hiding panels preserves shape selection, effect search and projector playback; the inspector's **Change effect** action still opens the library.
+
 ## 1.19.0
 
 - Added **Scene Animator** with JPG/PNG reference photos, four-corner perspective alignment, precise projector coordinates, opacity, editor visibility and an independent projector photo toggle. Imported photos are normalized locally and travel with the project's companion folder.

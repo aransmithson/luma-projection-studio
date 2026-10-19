@@ -2908,7 +2908,21 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
   grid-template-rows: 64px minmax(230px, 1fr) 280px 30px;
 }
 .workspace {
-  grid-template-columns: 246px minmax(390px, 1fr) 276px;
+  --surfaces-panel-width: 246px;
+  --properties-panel-width: 276px;
+  grid-template-columns: var(--surfaces-panel-width) minmax(390px, 1fr) var(
+      --properties-panel-width
+    );
+}
+.workspace.properties-is-hidden {
+  --properties-panel-width: 0px;
+}
+.inspector[hidden],
+.effects-library[hidden] {
+  display: none;
+}
+.status-bar {
+  grid-row: 4;
 }
 .panel-heading {
   height: 44px;
@@ -2970,8 +2984,13 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
   color: #a49aac;
 }
 .canvas-heading {
-  height: 70px;
-  padding: 0 20px;
+  height: auto;
+  min-height: 70px;
+  padding: 10px 20px;
+  gap: 12px;
+}
+.canvas-heading > div:first-child {
+  flex-shrink: 0;
 }
 .canvas-heading h1 {
   font-size: 22px;
@@ -2981,8 +3000,36 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
 }
 .canvas-view-controls {
   display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   gap: 6px;
   align-items: center;
+}
+.workspace-panel-controls {
+  display: flex;
+  flex-shrink: 0;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid #39323f;
+  border-radius: 6px;
+  background: #19171e;
+}
+.workspace-panel-controls button {
+  padding: 5px 7px;
+  gap: 5px;
+  border-radius: 4px;
+  font-size: 11px;
+  color: #ada2bb;
+}
+.workspace-panel-controls button:hover {
+  background: #302838;
+  color: #e2d3f4;
+}
+.workspace-panel-controls button.active {
+  background: #393044;
+  color: #d8bafa;
 }
 .placement-mesh-button {
   gap: 6px;
@@ -3369,7 +3416,8 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
 }
 @media (max-width: 1300px) {
   .workspace {
-    grid-template-columns: 232px minmax(390px, 1fr) 268px;
+    --surfaces-panel-width: 232px;
+    --properties-panel-width: 268px;
   }
   .app-header {
     padding: 0 18px;
@@ -3385,8 +3433,8 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
     padding: 0 10px;
   }
   .canvas-heading {
-    padding: 0 14px;
-    height: 68px;
+    padding: 8px 14px;
+    min-height: 68px;
   }
   .placement-mesh-button {
     padding: 6px;
@@ -3461,7 +3509,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
     grid-template-rows: 64px minmax(200px, 1fr) 380px 30px;
   }
   .canvas-heading {
-    height: 68px;
+    min-height: 68px;
   }
   .canvas-heading h1 {
     font-size: 20px;
@@ -3509,7 +3557,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
   }
 }
 .app.library-is-collapsed {
-  grid-template-rows: 64px minmax(230px, 1fr) 50px 30px;
+  grid-template-rows: 64px minmax(230px, 1fr) 0px 30px;
 }
 
 .category-tabs button {

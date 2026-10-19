@@ -10,8 +10,21 @@ const env = { ...process.env };
 delete env.ELECTRON_RUN_AS_NODE;
 delete env.VITE_DEV_SERVER_URL;
 const errors = [];
+const packaged = process.argv.includes("--packaged");
 const app = await electron.launch({
-  args: [path.resolve("."), `--user-data-dir=${profile}`],
+  ...(packaged
+    ? {
+        executablePath: path.resolve(
+          process.env.LUMA_RELEASE_DIR || "release",
+          "win-unpacked",
+          "Nox Projection Studio.exe",
+        ),
+      }
+    : {}),
+  args: [
+    ...(packaged ? [] : [path.resolve(".")]),
+    `--user-data-dir=${profile}`,
+  ],
   env,
   timeout: 60000,
 });
@@ -244,7 +257,6 @@ try {
       .data.equals(PNG.sync.read(changedFrame).data),
     "Paused output stays still",
   ).toBe(true);
-  await output.close();
   console.log(
     "PASS: solo changes projected pixels without changing visibility, clean output, accurate preview status and paused-effect refresh",
   );
@@ -256,11 +268,41 @@ try {
   );
   await expect.poll(() => page.evaluate(() => innerWidth)).toBeLessThan(1121);
   await page.waitForTimeout(150);
-  const compactBefore = await page.locator(".stage-board").boundingBox();
+  const pointsBeforePanels = await selectedPoints();
+  const workspaceBefore = await page
+    .locator(".mapping-workspace")
+    .boundingBox();
   await page
-    .getByRole("button", { name: "Expand canvas", exact: true })
+    .getByRole("button", { name: "Hide properties", exact: true })
     .click();
-  await expect(page.locator(".effects-library")).toHaveClass(/collapsed/);
+  await expect(
+    page.getByRole("button", { name: "Show properties", exact: true }),
+  ).toHaveAttribute("aria-expanded", "false");
+  await expect(page.locator(".inspector")).toBeHidden();
+  await expect(page.locator(".effects-library")).toBeVisible();
+  await expect
+    .poll(
+      async () =>
+        (await page.locator(".mapping-workspace").boundingBox()).width,
+    )
+    .toBeGreaterThan(workspaceBefore.width + 260);
+  // Restore with the keyboard; panel controls remain reachable when hidden.
+  await page
+    .getByRole("button", { name: "Show properties", exact: true })
+    .focus();
+  await page.keyboard.press("Space");
+  await expect(page.locator(".inspector")).toBeVisible();
+  await expect
+    .poll(
+      async () =>
+        (await page.locator(".mapping-workspace").boundingBox()).width,
+    )
+    .toBeCloseTo(workspaceBefore.width, 0);
+  await page.getByLabel("Search effects", { exact: true }).fill("ghost");
+  await page.waitForTimeout(150);
+  const compactBefore = await page.locator(".stage-board").boundingBox();
+  await page.getByRole("button", { name: "Hide effects", exact: true }).click();
+  await expect(page.locator(".effects-library")).toBeHidden();
   await page.waitForTimeout(150);
   const compactAfter = await page.locator(".stage-board").boundingBox();
   expect(compactAfter.height).toBeGreaterThan(compactBefore.height * 1.4);
@@ -288,17 +330,99 @@ try {
     path: path.join(artifacts, "luma-improved-compact.png"),
   });
   await page
+    .getByRole("button", { name: "Hide properties", exact: true })
+    .click();
+  await expect(page.locator(".inspector")).toBeHidden();
+  await expect
+    .poll(async () => (await page.locator(".stage-board").boundingBox()).width)
+    .toBeGreaterThan(compactAfter.width + 150);
+  const bothHidden = await page.locator(".stage-board").boundingBox();
+  const panelLayout = await page.evaluate(() => {
+    const controls = document
+      .querySelector(".workspace-panel-controls")
+      .getBoundingClientRect();
+    const heading = document
+      .querySelector(".canvas-heading")
+      .getBoundingClientRect();
+    const footer = document
+      .querySelector(".status-bar")
+      .getBoundingClientRect();
+    return {
+      noOverflow:
+        document.documentElement.scrollWidth === innerWidth &&
+        document.documentElement.scrollHeight === innerHeight,
+      controlsVisible:
+        controls.left >= heading.left &&
+        controls.right <= heading.right &&
+        controls.bottom <= heading.bottom,
+      footerVisible: footer.height > 0 && footer.bottom <= innerHeight,
+    };
+  });
+  expect(panelLayout).toEqual({
+    noOverflow: true,
+    controlsVisible: true,
+    footerVisible: true,
+  });
+  expect(await selectedPoints()).toEqual(pointsBeforePanels);
+  expect(
+    PNG.sync
+      .read(await outputCanvas.screenshot())
+      .data.equals(PNG.sync.read(changedFrame).data),
+    "Panel layout leaves paused projector pixels unchanged",
+  ).toBe(true);
+  await output.close();
+  await page.screenshot({
+    path: path.join(artifacts, "nox-workspace-panels-hidden.png"),
+  });
+  await page
+    .getByRole("button", { name: "Show effects library", exact: true })
+    .click();
+  await expect(page.getByLabel("Search effects", { exact: true })).toHaveValue(
+    "ghost",
+  );
+  await expect(page.locator(".inspector")).toBeHidden();
+  // The library's own close control returns focus to its visible restore button.
+  await page
+    .getByRole("button", { name: "Hide effects library", exact: true })
+    .click();
+  await expect(
+    page.getByRole("button", { name: "Show effects library", exact: true }),
+  ).toBeFocused();
+  await page
     .getByRole("button", { name: "Surface labels", exact: true })
     .click();
   await expect(page.locator(".surface-label")).toHaveCount(0);
   await page.reload();
-  await expect(page.locator(".effects-library")).toHaveClass(/collapsed/);
+  await expect(page.locator(".effects-library")).toBeHidden();
+  await expect(page.locator(".inspector")).toBeHidden();
   await expect(
     page.getByRole("button", { name: "Surface labels", exact: true }),
   ).toHaveAttribute("aria-pressed", "false");
   console.log(
-    `PASS: compact canvas ${Math.round(compactBefore.width)}×${Math.round(compactBefore.height)} → ${Math.round(compactAfter.width)}×${Math.round(compactAfter.height)}, no overflow, persistent preferences`,
+    `PASS: independent panels, compact canvas ${Math.round(compactBefore.width)}×${Math.round(compactBefore.height)} → ${Math.round(bothHidden.width)}×${Math.round(bothHidden.height)}, no overflow, preserved output and persistent preferences`,
   );
+  await page
+    .getByRole("button", { name: "Show properties", exact: true })
+    .click();
+  await expect(page.locator(".inspector")).toBeVisible();
+  await page.getByRole("tab", { name: "Effect", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Change effect", exact: true })
+    .click();
+  await expect(page.locator(".effects-library")).toBeVisible();
+  await page
+    .getByRole("button", { name: "Hide effects library", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Show effects library", exact: true })
+    .click();
+  await expect(page.locator(".effects-library")).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Hide effects", exact: true }),
+  ).toHaveAttribute("aria-expanded", "true");
+  await page.screenshot({
+    path: path.join(artifacts, "nox-workspace-panels-restored.png"),
+  });
 
   await page.getByLabel("Project name", { exact: true }).fill("");
   await expect

@@ -12,6 +12,12 @@
 
 On a computer with only one display, output starts in a separate preview window so the editor remains accessible. External displays open fullscreen. The output is letterboxed to preserve the canvas aspect ratio, so use a resolution matching your projector for edge-to-edge output. The native output prevents display sleep while open and closes if its display is disconnected.
 
+## Make more room for mapping
+
+Use **Effects** and **Properties** above the canvas to hide or show the effects browser and the right-hand inspector independently. Turn both off for the largest workspace. The buttons stay visible so you can bring either panel back with one click; highlighted buttons mean that panel is open.
+
+Nox remembers these choices on this device, including after restarting. Hiding a panel keeps your selected shape and effect search, and leaves projector playback running. The library's down-arrow also hides it; **Change effect** in the inspector opens it again. **View all** and **Compact view** still resize the effects browser while it is visible.
+
 ## Import animations
 
 In the desktop app, select an editable surface, then choose **Import animation** in the effects library. Pick an **MP4 video** or **animated GIF**. Nox checks decoding, creates a thumbnail, copies the file into its local library and applies it to the selected surface. If no editable surface is selected, the clip is still available in **Imported**. Click its card to use it on another shape. Search includes imported filenames; imported thumbnails are still previews.

@@ -12,8 +12,8 @@ Previously called **Luma**. Your existing `.luma` projects, imported library, pr
 
 Get the Windows build from [GitHub Releases](https://github.com/aransmithson/nox-projection-studio/releases/latest). The repository and downloads are public.
 
-- **Recommended:** download `Nox-Projection-Studio-1.19.0-win-x64.zip`, extract the whole folder, and open `Nox Projection Studio.exe`. Keep the executable beside its resources.
-- **Portable:** download `Nox-Projection-Studio-1.19.0.exe`. It extracts before opening; allow that first launch to finish.
+- **Recommended:** download `Nox-Projection-Studio-1.19.1-win-x64.zip`, extract the whole folder, and open `Nox Projection Studio.exe`. Keep the executable beside its resources.
+- **Portable:** download `Nox-Projection-Studio-1.19.1.exe`. It extracts before opening; allow that first launch to finish.
 - Close an older running copy before opening a new version. Nox restores the existing instance when opened again.
 
 Release builds are not code-signed. The Windows executable keeps Electron's original resources to preserve compatibility with Windows Code Integrity; Nox's own icon appears in the app window and interface.
@@ -24,6 +24,7 @@ Release builds are not code-signed. The Windows executable keeps Electron's orig
 | --- | --- |
 | Shape mapping | Rectangles, triangles, ellipses, polygons, Bezier curves, precise corner editing, perspective warping and editable cutout holes |
 | Placement | Projected wireframe/mesh, visible placement cursor, snapping, pixel nudging, calibration and solo view |
+| Workspace | Independently hide or restore Effects and Properties panels; your layout is remembered on this device |
 | Compositing | Layers, copy/paste, ten blend modes, feathering, colour overlays and independent content rotation/offset |
 | Effects | 148 animations and 12 still materials, including Halloween, Christmas, space, creatures, shadow puppets, architectural illusions and stage lighting |
 | Imported animations | MP4/H.264 videos and animated GIFs, thumbnails, looping, trim, time offset, speed and fill/fit/stretch |

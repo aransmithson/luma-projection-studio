@@ -130,6 +130,8 @@ export function EffectsLibrary({
 
   return (
     <section
+      id="effects-library"
+      hidden={collapsed}
       className={`effects-library ${expanded ? "expanded" : ""} ${collapsed ? "collapsed" : ""}`}
       aria-label="Effects library"
     >

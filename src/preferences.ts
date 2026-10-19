@@ -1,5 +1,6 @@
 export type Preferences = {
   libraryCollapsed: boolean;
+  propertiesHidden: boolean;
   labels: boolean;
   animatePreviews: boolean;
   grid: boolean;
@@ -9,6 +10,7 @@ export const PREFERENCES_KEY = "luma-preferences-v1";
 export function readPreferences(): Preferences {
   const defaults = {
     libraryCollapsed: innerHeight < 800,
+    propertiesHidden: false,
     labels: true,
     animatePreviews: false,
     grid: false,

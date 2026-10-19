@@ -16,8 +16,8 @@ import {
   Info,
   Layers,
   Magnet,
-  Maximize2,
-  Minimize2,
+  PanelBottom,
+  PanelRight,
   Monitor,
   MousePointer2,
   Octagon,
@@ -280,7 +280,15 @@ export default function App() {
     "surface",
   );
   const [preferences, setPreferences] = useState(readPreferences);
-  const { libraryCollapsed, labels, animatePreviews, grid, snap } = preferences;
+  const {
+    libraryCollapsed,
+    propertiesHidden,
+    labels,
+    animatePreviews,
+    grid,
+    snap,
+  } = preferences;
+  const effectsToggle = useRef<HTMLButtonElement>(null);
   const [playback, setPlayback] = useState<Playback>({
     playing: true,
     offset: 0,
@@ -443,6 +451,7 @@ export default function App() {
     if (index !== null) setInspectorTab("surface");
   };
   const toggleLibrary = () => {
+    effectsToggle.current?.focus();
     setPreferences((p) => ({ ...p, libraryCollapsed: !p.libraryCollapsed }));
     setExpandedLibrary(false);
   };
@@ -1359,7 +1368,9 @@ export default function App() {
         </div>
       </header>
 
-      <main className="workspace">
+      <main
+        className={`workspace ${propertiesHidden ? "properties-is-hidden" : ""}`}
+      >
         <aside className="surfaces-panel">
           <div className="panel-heading">
             <span>
@@ -1566,22 +1577,56 @@ export default function App() {
               >
                 <Tags size={16} />
               </button>
-              <button
-                className="tool-button"
-                aria-label={libraryCollapsed ? "Show effects" : "Expand canvas"}
-                title={
-                  libraryCollapsed
-                    ? "Show effects library"
-                    : "Expand canvas · hide effects library"
-                }
-                onClick={toggleLibrary}
+              <div
+                className="workspace-panel-controls"
+                role="group"
+                aria-label="Workspace panels"
+                onKeyDown={(event) => {
+                  // Space activates the focused toggle without changing playback.
+                  if (event.code === "Space") event.stopPropagation();
+                }}
               >
-                {libraryCollapsed ? (
-                  <Minimize2 size={16} />
-                ) : (
-                  <Maximize2 size={16} />
-                )}
-              </button>
+                <button
+                  ref={effectsToggle}
+                  className={!libraryCollapsed ? "active" : ""}
+                  aria-label={
+                    libraryCollapsed ? "Show effects library" : "Hide effects"
+                  }
+                  aria-expanded={!libraryCollapsed}
+                  aria-controls="effects-library"
+                  title={
+                    libraryCollapsed
+                      ? "Show effects library"
+                      : "Hide effects library to make more room"
+                  }
+                  onClick={toggleLibrary}
+                >
+                  <PanelBottom size={14} />
+                  Effects
+                </button>
+                <button
+                  className={!propertiesHidden ? "active" : ""}
+                  aria-label={
+                    propertiesHidden ? "Show properties" : "Hide properties"
+                  }
+                  aria-expanded={!propertiesHidden}
+                  aria-controls="properties-panel"
+                  title={
+                    propertiesHidden
+                      ? "Show surface and effect properties"
+                      : "Hide properties to make more room"
+                  }
+                  onClick={() =>
+                    setPreferences((p) => ({
+                      ...p,
+                      propertiesHidden: !p.propertiesHidden,
+                    }))
+                  }
+                >
+                  <PanelRight size={14} />
+                  Properties
+                </button>
+              </div>
               <button
                 className="canvas-resolution"
                 onClick={() => setModal("output")}
@@ -1811,6 +1856,7 @@ export default function App() {
           </div>
         </section>
         <Inspector
+          hidden={propertiesHidden}
           mediaLibrary={mediaLibrary}
           locateMedia={(id) => void importAnimation(id)}
           importing={importing}

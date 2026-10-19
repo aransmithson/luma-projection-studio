@@ -432,6 +432,7 @@ function ContentTransformControls({
 }
 
 type Props = CutoutActions & {
+  hidden: boolean;
   mediaLibrary: LibraryMedia[];
   locateMedia: (id: string) => void;
   importing: boolean;
@@ -456,6 +457,7 @@ type Props = CutoutActions & {
 };
 
 export function Inspector({
+  hidden,
   mediaLibrary,
   locateMedia,
   importing,
@@ -484,7 +486,12 @@ export function Inspector({
 }: Props) {
   if (!surface)
     return (
-      <aside className="inspector">
+      <aside
+        id="properties-panel"
+        className="inspector"
+        aria-label="Properties"
+        hidden={hidden}
+      >
         <div className="panel-heading">
           INSPECTOR
           <SlidersHorizontal size={14} />
@@ -570,7 +577,12 @@ export function Inspector({
     else notify("Move this surface away from the canvas edge before rotating.");
   };
   return (
-    <aside className="inspector">
+    <aside
+      id="properties-panel"
+      className="inspector"
+      aria-label="Properties"
+      hidden={hidden}
+    >
       <div className="panel-heading">
         INSPECTOR
         <SlidersHorizontal size={14} />
