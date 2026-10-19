@@ -11,14 +11,26 @@ import {
   Star,
   Theater,
   X,
+  Upload,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { effectCategories, effects } from "../catalog";
-import type { EffectId } from "../types";
+import type { EffectId, LibraryMedia, MediaAsset } from "../types";
+import { MediaThumbnail } from "./MediaControls";
 import { EffectPreview } from "./EffectPreview";
 
-const categories = ["All effects", ...effectCategories, "Favourites"] as const;
+const categories = [
+  "All effects",
+  "Imported",
+  ...effectCategories,
+  "Favourites",
+] as const;
 type Props = {
+  mediaLibrary: LibraryMedia[];
+  selectedMediaId?: string;
+  applyMedia: (asset: MediaAsset) => void;
+  importMedia: () => void;
+  importing: boolean;
   selectedEffect?: EffectId;
   selectedName?: string;
   hasSelection: boolean;
@@ -34,6 +46,11 @@ type Props = {
 };
 
 export function EffectsLibrary({
+  mediaLibrary,
+  selectedMediaId,
+  applyMedia,
+  importMedia,
+  importing,
   selectedEffect,
   selectedName,
   hasSelection,
@@ -92,12 +109,24 @@ export function EffectsLibrary({
       ),
   );
   if (sort === "name") visible.sort((a, b) => a.name.localeCompare(b.name));
+  const visibleMedia = mediaLibrary.filter(
+    (asset) =>
+      (category === "Imported" || category === "All effects") &&
+      searchWords.every((word) =>
+        `${asset.name} ${asset.format} imported animation`
+          .toLowerCase()
+          .includes(word),
+      ),
+  );
+  const resultCount = visible.length + visibleMedia.length;
   const countFor = (name: string) =>
     name === "All effects"
-      ? effects.length
-      : name === "Favourites"
-        ? favourites.length
-        : effects.filter((e) => e.category === name).length;
+      ? effects.length + mediaLibrary.length
+      : name === "Imported"
+        ? mediaLibrary.length
+        : name === "Favourites"
+          ? favourites.length
+          : effects.filter((e) => e.category === name).length;
 
   return (
     <section
@@ -108,7 +137,9 @@ export function EffectsLibrary({
         <div className="library-title">
           <Sparkles size={17} />
           <h2>Effects library</h2>
-          <span className="count-badge">{effects.length}</span>
+          <span className="count-badge">
+            {effects.length + mediaLibrary.length}
+          </span>
         </div>
         {hasSelection ? (
           <span className="effect-target">
@@ -121,6 +152,19 @@ export function EffectsLibrary({
         )}
         {!collapsed && (
           <>
+            <button
+              className="import-animation-button"
+              onClick={importMedia}
+              disabled={!window.luma || importing}
+              title={
+                window.luma
+                  ? "Import MP4/H.264 video or animated GIF"
+                  : "Open the desktop app to import animations"
+              }
+            >
+              <Upload size={14} />
+              {importing ? "Importing..." : "Import animation"}
+            </button>
             <label className="search-field">
               <Search size={14} />
               <input
@@ -223,8 +267,8 @@ export function EffectsLibrary({
           <div className="library-results">
             <div className="library-results-heading">
               <span aria-live="polite">
-                <strong>{category}</strong> · {visible.length}{" "}
-                {visible.length === 1 ? "effect" : "effects"}
+                <strong>{category}</strong> · {resultCount}{" "}
+                {resultCount === 1 ? "effect" : "effects"}
               </span>
               <span className="scroll-hint">Scroll to browse</span>
               <select
@@ -243,6 +287,39 @@ export function EffectsLibrary({
               aria-label="Effect results"
               tabIndex={0}
             >
+              {visibleMedia.map((asset) => (
+                <div
+                  key={asset.id}
+                  className={`effect-card ${selectedMediaId === asset.id ? "applied" : ""}`}
+                >
+                  <button
+                    className="effect-apply"
+                    aria-label={`Apply ${asset.name}`}
+                    disabled={!hasSelection}
+                    onClick={() => applyMedia(asset)}
+                    title={`${asset.name} · ${asset.width} × ${asset.height} · ${asset.duration.toFixed(2)}s`}
+                  >
+                    <div className="effect-thumbnail">
+                      <MediaThumbnail asset={asset} />
+                      <span className="effect-tag">
+                        {asset.format.toUpperCase()} ·{" "}
+                        {asset.duration.toFixed(1)}s
+                      </span>
+                      {selectedMediaId === asset.id && (
+                        <span className="applied-badge">
+                          <Check size={11} /> Applied
+                        </span>
+                      )}
+                    </div>
+                    <div className="effect-card-info">
+                      <strong>{asset.name}</strong>
+                      <span>
+                        Imported · {asset.width} × {asset.height}
+                      </span>
+                    </div>
+                  </button>
+                </div>
+              ))}
               {visible.map((effect) => (
                 <div
                   key={effect.id}
@@ -304,19 +381,23 @@ export function EffectsLibrary({
                   </button>
                 </div>
               ))}
-              {visible.length === 0 && (
+              {resultCount === 0 && (
                 <div className="no-effects">
                   <Search size={22} />
                   <div>
                     <strong>
-                      {category === "Favourites" && !search
-                        ? "Your favourite effects live here"
-                        : "No effects found"}
+                      {category === "Imported" && !search
+                        ? "Your animations, mapped to any shape"
+                        : category === "Favourites" && !search
+                          ? "Your favourite effects live here"
+                          : "No effects found"}
                     </strong>
                     <p>
-                      {category === "Favourites" && !search
-                        ? "Use the star on any effect to save it here."
-                        : `No matches${search ? ` for “${search}”` : ""} in ${category.toLowerCase()}.`}
+                      {category === "Imported" && !search
+                        ? "Import MP4/H.264 video or animated GIF in the desktop app. Clips loop with the shared playback controls."
+                        : category === "Favourites" && !search
+                          ? "Use the star on any effect to save it here."
+                          : `No matches${search ? ` for “${search}”` : ""} in ${category.toLowerCase()}.`}
                     </p>
                     <button
                       className="text-button"

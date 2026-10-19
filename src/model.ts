@@ -136,13 +136,49 @@ const pointSchema = z.object({
   x: z.number().min(0).max(1),
   y: z.number().min(0).max(1),
 });
+const mediaSchema = z
+  .object({
+    asset: z.object({
+      id: z.string().regex(/^[a-f0-9]{64}$/),
+      name: z.string().min(1).max(160),
+      format: z.enum(["mp4", "gif"]),
+      bytes: z
+        .number()
+        .int()
+        .min(6)
+        .max(512 * 1024 * 1024),
+      width: z.number().int().min(1).max(4096),
+      height: z.number().int().min(1).max(4096),
+      duration: z.number().positive().max(86400),
+    }),
+    fit: z.enum(["contain", "cover", "stretch"]),
+    loop: z.boolean(),
+    trimStart: z.number().min(0).max(86400),
+    trimEnd: z.number().positive().max(86400),
+    offset: z.number().min(0).max(86400),
+  })
+  .superRefine((media, ctx) => {
+    if (
+      media.trimEnd > media.asset.duration ||
+      media.trimStart >= media.trimEnd ||
+      (media.asset.format === "gif" && media.asset.bytes > 50 * 1024 * 1024)
+    )
+      ctx.addIssue({
+        code: "custom",
+        message: "Invalid animation trim or size.",
+      });
+  });
 const surfaceSchema = z
   .object({
     id: z.string().min(1).max(100),
     name: z.string().min(1).max(80),
     kind: z.enum(["quad", "triangle", "ellipse", "polygon"]),
     points: z.array(pointSchema).min(3).max(64),
-    effectId: z.enum(effects.map((e) => e.id) as [EffectId, ...EffectId[]]),
+    effectId: z.enum(["imported-media", ...effects.map((e) => e.id)] as [
+      EffectId,
+      ...EffectId[],
+    ]),
+    media: mediaSchema.optional(),
     curves: z
       .array(
         z.object({ control1: pointSchema, control2: pointSchema }).nullable(),
@@ -195,6 +231,11 @@ const surfaceSchema = z
       .optional(),
   })
   .superRefine((surface, ctx) => {
+    if (surface.effectId === "imported-media" && !surface.media)
+      ctx.addIssue({
+        code: "custom",
+        message: "Imported animations need media settings.",
+      });
     if (
       (surface.kind === "quad" && surface.points.length !== 4) ||
       (surface.kind === "triangle" && surface.points.length !== 3) ||

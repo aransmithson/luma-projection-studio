@@ -1,5 +1,6 @@
 import { boundingMap, bounds, inverseQuadMap, triangles } from "./geometry";
 import { drawEffect } from "./effects";
+import { MediaPlayers } from "./mediaPlayback";
 import { projectionItems, renderedProject } from "./layers";
 import { contentMatrix } from "./contentTransform";
 import { isMusicEffect, silentAudio } from "./audioAnalysis";
@@ -53,6 +54,7 @@ uniform sampler2D u_texture;
 uniform mat3 u_mapping;
 uniform mat3 u_content;
 uniform float u_opacity;
+uniform float u_mediaAlpha;
 uniform float u_brightness;
 uniform float u_feather;
 uniform float u_aspect;
@@ -69,7 +71,7 @@ void main() {
   uv = (u_content * vec3(uv, 1.0)).xy;
   vec4 color = texture2D(u_texture, clamp(uv, 0.0, 1.0));
   float coverage = step(0.0, uv.x) * step(uv.x, 1.0) * step(0.0, uv.y) * step(uv.y, 1.0);
-  float alpha = u_opacity * coverage;
+  float alpha = u_opacity * coverage * mix(1.0, color.a, u_mediaAlpha);
   if (u_feather > 0.0) {
     float nearest = 10.0;
     vec2 ratio = vec2(u_aspect, 1.0);
@@ -92,6 +94,7 @@ void main() {
 }`;
 
 type SurfaceResource = {
+  sourceAlpha: boolean;
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
   texture: WebGLTexture;
@@ -108,6 +111,7 @@ type SurfaceResource = {
 };
 
 export class ProjectionRenderer {
+  private mediaPlayers = new MediaPlayers();
   private gl: WebGLRenderingContext;
   private program: WebGLProgram;
   private position: number;
@@ -161,6 +165,7 @@ export class ProjectionRenderer {
       "mapping",
       "content",
       "opacity",
+      "mediaAlpha",
       "brightness",
       "feather",
       "aspect",
@@ -209,9 +214,18 @@ export class ProjectionRenderer {
   private resource(surface: Surface, placementMesh = false) {
     const gl = this.gl;
     let resource = this.resources.get(surface.id);
+    const sourceAlpha = surface.effectId === "imported-media";
+    // Preserve the opaque black canvas used by procedural glow painters.
+    // Imported media alone needs transparent source pixels.
+    if (resource && resource.sourceAlpha !== sourceAlpha) {
+      gl.deleteTexture(resource.texture);
+      gl.deleteBuffer(resource.buffer);
+      this.resources.delete(surface.id);
+      resource = undefined;
+    }
     if (!resource) {
       const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d", { alpha: false })!;
+      const ctx = canvas.getContext("2d", { alpha: sourceAlpha })!;
       const texture = gl.createTexture()!;
       gl.bindTexture(gl.TEXTURE_2D, texture);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
@@ -219,6 +233,7 @@ export class ProjectionRenderer {
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
       resource = {
+        sourceAlpha,
         canvas,
         ctx,
         texture,
@@ -266,6 +281,7 @@ export class ProjectionRenderer {
   }
 
   render(state: RenderState, width: number, height: number) {
+    this.mediaPlayers.begin();
     state = { ...state, project: renderedProject(state.project) };
     const { gl, canvas } = this;
     width = Math.max(1, Math.round(width));
@@ -285,7 +301,10 @@ export class ProjectionRenderer {
         gl.deleteBuffer(r.buffer);
         this.resources.delete(id);
       }
-    if (state.blackout || gl.isContextLost()) return;
+    if (state.blackout || gl.isContextLost()) {
+      this.mediaPlayers.end();
+      return;
+    }
     gl.useProgram(this.program);
     gl.activeTexture(gl.TEXTURE0);
     gl.uniform1i(this.uniforms.texture, 0);
@@ -387,6 +406,7 @@ export class ProjectionRenderer {
         th * 0.9,
       );
       this.drawSurface(surface, r, this.testCanvas);
+      this.mediaPlayers.end();
       return;
     }
     const soloId = effectiveSolo(state.project.surfaces, state.soloSurfaceId);
@@ -410,7 +430,14 @@ export class ProjectionRenderer {
         (b.width * state.project.width) /
         Math.max(1, b.height * state.project.height);
       const definition = effectById[surface.effectId];
-      const detail = placementMesh ? 640 : definition.detail || 640;
+      const detail = placementMesh
+        ? 640
+        : surface.effectId === "imported-media" && surface.media
+          ? Math.min(
+              1920,
+              Math.max(surface.media.asset.width, surface.media.asset.height),
+            )
+          : definition.detail || 640;
       const tw = Math.round(
         Math.max(96, aspect >= 1 ? detail : detail * aspect),
       );
@@ -432,9 +459,21 @@ export class ProjectionRenderer {
       const effectKey = placementMesh
         ? `placement-mesh:${tw}:${th}`
         : `${surface.effectId}:${(stack ? time : effectTime).toFixed(4)}:${surface.color}:${surface.colorCycle}:${surface.seed}:${surface.scale}:${surface.effectSide}:${tw}:${th}:${stack ? JSON.stringify(stack) : ""}:${route?.key ?? ""}:${["edge-runner", "toy-train"].includes(surface.effectId) ? r.geometryKey : ""}:${definition.audioReactive ? `${audio.sequence}:${audio.capturedAt}` : ""}`;
-      const changed = effectKey !== r.effectKey;
+      const imported =
+        !placementMesh &&
+        surface.effectId === "imported-media" &&
+        !!surface.media;
+      let changed = imported || effectKey !== r.effectKey;
       if (changed) {
         if (placementMesh) drawPlacementMesh(r.ctx);
+        else if (imported && surface.media)
+          changed = this.mediaPlayers.draw(
+            r.ctx,
+            surface.media,
+            time,
+            surface.speed,
+            state.playback.playing,
+          );
         else if (isMusicEffect(surface.effectId))
           drawMusicEffect(
             r.ctx,
@@ -514,6 +553,7 @@ export class ProjectionRenderer {
         aspect,
       );
     }
+    this.mediaPlayers.end();
   }
 
   private drawLinks(project: Project, stack: LiquidStack, time: number) {
@@ -602,6 +642,10 @@ export class ProjectionRenderer {
       contentMatrix(surface.contentTransform, contentAspect),
     );
     gl.uniform1f(this.uniforms.opacity, surface.opacity);
+    gl.uniform1f(
+      this.uniforms.mediaAlpha,
+      surface.effectId === "imported-media" ? 1 : 0,
+    );
     gl.uniform1f(this.uniforms.feather, surface.feather);
     gl.uniform2fv(this.uniforms.points, r.edges);
     gl.uniform1i(this.uniforms.count, r.edgeCount);
@@ -696,6 +740,7 @@ export class ProjectionRenderer {
   }
 
   dispose() {
+    this.mediaPlayers.dispose();
     for (const r of this.resources.values()) {
       this.gl.deleteTexture(r.texture);
       this.gl.deleteBuffer(r.buffer);

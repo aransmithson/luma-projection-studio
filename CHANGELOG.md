@@ -2,6 +2,15 @@
 
 Luma Projection Studio keeps its existing project format and application identity.
 
+## 1.16.0
+
+- Made the GitHub repository and release downloads public, preserving `UNLICENSED` status and the Luma name.
+- Added desktop imports for MP4 video (H.264 recommended) and animated GIFs, with local thumbnails and an Imported collection.
+- Added fill, fit and stretch, looping or final-frame hold, trim, time offset and speed. Shared Play, Pause and Restart drive both editor and projector; video sound is muted.
+- Preserved transparent GIF pixels, shape warping, cutouts, content transforms, layers, blend modes and colour overlays for imported animations.
+- Added managed media copies, portable `.luma.media` companion folders and Locate original for missing footage. Existing version-1 projects and clipboard identities remain compatible.
+- Added native import/render/save/restore checks using original generated GIF and H.264 footage.
+
 ## 1.15.2
 
 - Refreshed Luma's faceted light mark, application icon and browser favicon.

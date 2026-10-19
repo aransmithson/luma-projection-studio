@@ -5,6 +5,10 @@ const subscribe = (channel, callback) => {
   return () => ipcRenderer.removeListener(channel, listener);
 };
 contextBridge.exposeInMainWorld('luma', {
+  listMedia: () => ipcRenderer.invoke('luma:list-media'),
+  importMedia: expectedId => ipcRenderer.invoke('luma:import-media', expectedId),
+  completeMedia: asset => ipcRenderer.invoke('luma:complete-media', asset),
+  onMediaChanged: callback => subscribe('luma:media-changed', callback),
   setAudioCapture: source => ipcRenderer.invoke('luma:audio-capture', source),
   updateAudioFrame: frame => ipcRenderer.send('luma:audio-frame', frame),
   onAudioFrame: callback => subscribe('luma:audio-frame', callback),

@@ -12,6 +12,31 @@
 
 On a computer with only one display, output starts in a separate preview window so the editor remains accessible. External displays open fullscreen. The output is letterboxed to preserve the canvas aspect ratio, so use a resolution matching your projector for edge-to-edge output. The native output prevents display sleep while open and closes if its display is disconnected.
 
+## Import animations
+
+In the desktop app, select an editable surface, then choose **Import animation** in the effects library. Pick an **MP4 video** or **animated GIF**. Luma checks decoding, creates a thumbnail, copies the file into its local library and applies it to the selected surface. If no editable surface is selected, the clip is still available in **Imported**. Click its card to use it on another shape. Search includes imported filenames; imported thumbnails are still previews.
+
+Use **MP4 encoded with H.264/AVC**, ideally 1920 × 1080 at 24 or 30 fps, for detailed scenes. Use GIF for short transparent characters or graphics. MP4 sound is always muted; the separate Music input remains opt-in. WebM, MOV, standalone images, After Effects projects and executable effect plugins are not supported.
+
+| Format | Import limits |
+| --- | --- |
+| MP4 | 512 MB, up to 4096 pixels per side, finite duration up to 24 hours; H.264 recommended |
+| GIF | 50 MB, up to 1,200 frames, up to 4096 pixels per side and 4,194,304 pixels total |
+
+The **Effect** inspector provides:
+
+- **Fill:** preserve the clip's aspect ratio and crop its edges to fill the shape. **Fit:** show the whole clip with transparent space around it. **Stretch:** fill the shape without preserving aspect ratio.
+- **Loop animation:** repeat the trimmed section, or turn it off to hold the final frame.
+- **Trim start / Trim end:** choose the source interval in seconds. Enter a value and leave the field or press Enter to apply it.
+- **Time offset:** advance the clip within the shared scene timeline. **Speed:** scale its playback rate; zero freezes it.
+- Existing content rotation, horizontal/vertical offsets, colour overlays, blend modes and shape cutouts remain available. Transparent GIF pixels reveal lower layers.
+
+Play, Pause and Restart use the same timeline in the editor and projector. Identical clips with matching speed, trim and offset share playback within each window. MP4 players correct drift against that timeline; this is not hardware frame lock or external timecode sync. GIF frames are selected by their stored delays, including disposal/transparency. Changing speed changes the clip's position relative to the shared scene clock. Use Restart when lining up a new clip. Imported videos do not automatically become linked character stories across tiles.
+
+Imports remain available when the original file is moved. Save creates a companion folder beside the project, for example **House.luma** and **House.luma.media**. Copy both together when moving computers or sharing. Only animations referenced by the saved project are copied; the built-in effects need no media files. Existing unused files in a companion folder are retained, so review that folder before distributing it.
+
+If media is missing, the shape remains editable and renders without its animation. Open **Effect → Locate original** and choose the exact original file; Luma verifies its content hash and keeps all mapping and timing settings. A different file should be imported and applied as a replacement. Opening a project restores available companion files into the local library. The library survives app restarts and project changes; removing a shape does not delete its source animation.
+
 ## Create a linked liquid loop
 
 For a ready-to-play scene, use **Open project** and select [Liquid cascade](../examples/Liquid-cascade.luma). It contains just the three linked reservoirs and their return flow.
@@ -81,6 +106,6 @@ Straight rectangles stretch their effect with a projective transform. Curved sha
 
 ## Projects and recovery
 
-The current project is saved automatically on this device after changes and recovered at the next start. The previous valid save is retained as a fallback; if the latest save is corrupt, the app restores that backup and tells you. Use **Save project** to create a named `.luma` file for backup or transfer. Switching scenes or opening a project is undoable. A file includes all shapes and effect settings, without any external asset dependencies. Playback, solo, blackout and calibration are session controls and are not stored in project files. View preferences are stored separately on this device.
+The current project is saved automatically on this device after changes and recovered at the next start. The previous valid save is retained as a fallback; if the latest save is corrupt, the app restores that backup and tells you. Use **Save project** to create a named `.luma` file for backup or transfer. Switching scenes or opening a project is undoable. A file includes all shapes and effect settings. Projects using imported animations also need their `.luma.media` companion folder when transferred. Playback, solo, blackout and calibration are session controls and are not stored in project files. View preferences are stored separately on this device.
 
 Import validates the version, effects, geometry, dimensions, limits and unique surface IDs before replacing the current project. Project files are limited to 2 MB. A corrupted recovery file will not prevent the editor from starting.

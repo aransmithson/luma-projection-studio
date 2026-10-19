@@ -1,7 +1,10 @@
-const { app, BrowserWindow, ipcMain, dialog, screen, powerSaveBlocker, clipboard } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, screen, powerSaveBlocker, clipboard, protocol } = require('electron');
 const path = require('node:path');
 const fs = require('node:fs/promises');
 const { configureAudio, copyAudioFrame } = require('./audio.cjs');
+const { createMediaLibrary } = require('./media.cjs');
+
+protocol.registerSchemesAsPrivileged([{ scheme: 'luma-media', privileges: { standard: true, secure: true, supportFetchAPI: true, stream: true, corsEnabled: true } }]);
 
 let editor = null;
 let output = null;
@@ -45,6 +48,23 @@ function checkState(state) {
 }
 
 if (ownsInstance) app.whenReady().then(async () => {
+  const media = createMediaLibrary(path.join(app.getPath('userData'), 'media'));
+  protocol.handle('luma-media', request => media.serve(request));
+  const notifyMedia = () => {
+    for (const win of [editor, output]) if (win && !win.isDestroyed()) win.webContents.send('luma:media-changed');
+  };
+  ipcMain.handle('luma:list-media', event => { requireEditor(event); return media.list(); });
+  ipcMain.handle('luma:import-media', async (event, expectedId) => {
+    requireEditor(event);
+    const result = await dialog.showOpenDialog(editor, { title: expectedId ? 'Locate the original animation' : 'Import animation', properties: ['openFile'], filters: [{ name: 'Animations (MP4 video or GIF)', extensions: ['mp4', 'gif'] }] });
+    if (result.canceled || !result.filePaths[0]) return { canceled: true };
+    try { return { canceled: false, asset: await media.importFile(result.filePaths[0], expectedId) }; }
+    catch (error) { return { canceled: false, error: error.message }; }
+  });
+  ipcMain.handle('luma:complete-media', async (event, asset) => {
+    requireEditor(event);
+    const result = await media.complete(asset); notifyMedia(); return result;
+  });
   ipcMain.on('luma:output-pointer', (event, point) => {
     requireEditor(event);
     if (point !== null && (!point || !Number.isFinite(point.x) || !Number.isFinite(point.y) || point.x < 0 || point.x > 1 || point.y < 0 || point.y > 1)) return;
@@ -137,7 +157,11 @@ if (ownsInstance) app.whenReady().then(async () => {
     const safeName = String(suggestedName || 'Luma project').replace(/[<>:"/\\|?*\x00-\x1F]/g, '_').slice(0, 100);
     const result = await dialog.showSaveDialog(editor, { title: 'Save Luma project', defaultPath: `${safeName}.luma`, filters: [{ name: 'Luma project', extensions: ['luma'] }] });
     if (result.canceled || !result.filePath) return { canceled: true };
-    try { await fs.writeFile(result.filePath, data, 'utf8'); return { canceled: false, path: result.filePath }; }
+    try {
+      const missing = await media.exportProject(data, result.filePath);
+      await fs.writeFile(result.filePath, data, 'utf8');
+      return { canceled: false, path: result.filePath, missing };
+    }
     catch (error) { return { canceled: false, error: `Could not save this project: ${error.message}` }; }
   });
   ipcMain.handle('luma:open-project', async event => {
@@ -147,7 +171,10 @@ if (ownsInstance) app.whenReady().then(async () => {
     try {
       const filePath = result.filePaths[0]; const stat = await fs.stat(filePath);
       if (stat.size > 2_000_000) return { canceled: false, error: 'Project files must be smaller than 2 MB.' };
-      return { canceled: false, data: await fs.readFile(filePath, 'utf8'), path: filePath };
+      const data = await fs.readFile(filePath, 'utf8');
+      const missing = await media.restoreProject(data, filePath);
+      notifyMedia();
+      return { canceled: false, data, path: filePath, missing };
     } catch (error) { return { canceled: false, error: `Could not open this project: ${error.message}` }; }
   });
   screen.on('display-removed', (_event, display) => { if (display.id === outputDisplayId) output?.close(); });

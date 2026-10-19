@@ -1,6 +1,6 @@
 # Developing Luma
 
-Use Windows, Node.js 24 and npm. The repository is private and retains its `UNLICENSED` status; access is not an open-source licence.
+Use Windows, Node.js 24 and npm. The repository is public and retains its `UNLICENSED` status; visibility is not an open-source licence.
 
 ## Setup
 
@@ -27,6 +27,7 @@ Choose native workflows that exercise the change. Run them sequentially with the
 | Shapes, curves or holes | `npm run test:placement`, `npm run test:cutouts` |
 | Layers or copy/paste | `npm run test:layers`, `npm run test:clipboard` |
 | Audio | `npm run test:audio`, `npm run test:audio-render` |
+| Imported media | `npm run test:media` and `npm run test:media -- --packaged` |
 | Effect rendering | `npm run test:effects` and the relevant collection workflow |
 
 Audio checks use generated input and a brief quiet loopback test tone. Clipboard tests restore the original clipboard unless the user has copied something new. Never point a test at the real profile or close an app the test did not launch.
@@ -37,8 +38,8 @@ Stop development servers and desktop tests before packaging. Build each version 
 
 ```powershell
 $env:ELECTRON_BUILDER_COMPRESSION_LEVEL='1'
-npm run package -- --config.directories.output=release/1.15.2
-$env:LUMA_RELEASE_DIR='release/1.15.2'
+npm run package -- --config.directories.output=release/1.16.0
+$env:LUMA_RELEASE_DIR='release/1.16.0'
 npm run test:startup -- unpacked --hidden --copy-saved-profile
 npm run test:startup -- portable
 npm run test:startup-recovery -- --packaged
@@ -59,6 +60,7 @@ Distribute the complete unpacked folder as a ZIP, or the portable executable. Do
 - [Effects](src/effects/) and [catalogue](src/catalog.ts): procedural artwork and effect metadata.
 - [Desktop process](electron/main.cjs) and [preload bridge](electron/preload.cjs): native windows, validated IPC and file dialogs.
 - [Audio analysis](src/audioAnalysis.ts) and [desktop permissions](electron/audio.cjs): shared music input.
+- [Media storage](electron/media.cjs), [timing](src/media.ts) and [playback](src/mediaPlayback.ts): native imports, portable companions, GIF decoding and shared video timing. The media workflow generates its own GIF and H.264 test footage in an isolated profile; it downloads no footage or codec tools.
 
 ## Brand assets
 

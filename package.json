@@ -1,6 +1,6 @@
 {
   "name": "luma-projection-studio",
-  "version": "1.15.2",
+  "version": "1.16.0",
   "private": true,
   "description": "Bring surfaces to life. Desktop projection mapping with flexible shapes, linked stories and music-reactive effects.",
   "author": "Aran Smithson",
@@ -48,7 +48,8 @@
     "test:content-portal": "node scripts/content-portal-check.mjs",
     "test:portals": "node scripts/portal-workflow.mjs",
     "test:audio": "node scripts/audio-workflow.mjs",
-    "test:audio-render": "node scripts/audio-render-check.mjs"
+    "test:audio-render": "node scripts/audio-render-check.mjs",
+    "test:media": "node scripts/media-workflow.mjs"
   },
   "dependencies": {
     "earcut": "^3.0.2",

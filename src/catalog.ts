@@ -796,3 +796,13 @@ export const effects: Effect[] = [
 export const effectById = Object.fromEntries(
   effects.map((e) => [e.id, e]),
 ) as Record<EffectId, Effect>;
+effectById["imported-media"] = {
+  id: "imported-media",
+  name: "Imported animation",
+  category: "Imported",
+  description:
+    "Local MP4 video or GIF. Follows the shared playback clock; video sound is muted.",
+  color: "#70e8ee",
+  tag: "Local media",
+  detail: 1920,
+};

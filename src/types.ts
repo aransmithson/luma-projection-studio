@@ -2,6 +2,7 @@ export type Point = { x: number; y: number };
 export type BezierEdge = { control1: Point; control2: Point };
 export type ShapeKind = "quad" | "triangle" | "ellipse" | "polygon";
 export type EffectCategory =
+  | "Imported"
   | "Music"
   | "Linked stories"
   | "Chase scenes"
@@ -20,6 +21,7 @@ export type EffectCategory =
   | "Space"
   | "Celebration";
 export type EffectId =
+  | "imported-media"
   | "eq-bars"
   | "eq-mirror"
   | "eq-halo"
@@ -174,6 +176,24 @@ export type EffectId =
   | "timber"
   | "slate"
   | "concrete";
+export type MediaAsset = {
+  id: string;
+  name: string;
+  format: "mp4" | "gif";
+  bytes: number;
+  width: number;
+  height: number;
+  duration: number;
+};
+export type LibraryMedia = MediaAsset & { thumbnail?: string };
+export type MediaBinding = {
+  asset: MediaAsset;
+  fit: "contain" | "cover" | "stretch";
+  loop: boolean;
+  trimStart: number;
+  trimEnd: number;
+  offset: number;
+};
 export type BlendMode =
   | "normal"
   | "add"
@@ -233,6 +253,7 @@ export type Surface = {
   effectSide?: "left" | "right";
   layerId?: string;
   contentTransform?: ContentTransform;
+  media?: MediaBinding;
 };
 export type ContentTransform = {
   rotation: number;
@@ -326,6 +347,16 @@ export type DisplayInfo = {
 };
 export type OutputStatus = { open: boolean; displayId: number | null };
 export type DesktopBridge = {
+  listMedia: () => Promise<LibraryMedia[]>;
+  importMedia: (
+    expectedId?: string,
+  ) => Promise<{
+    canceled: boolean;
+    asset?: Pick<MediaAsset, "id" | "name" | "format" | "bytes">;
+    error?: string;
+  }>;
+  completeMedia: (asset: LibraryMedia) => Promise<LibraryMedia>;
+  onMediaChanged: (callback: () => void) => () => void;
   setAudioCapture: (source: "system" | "microphone" | null) => Promise<void>;
   updateAudioFrame: (frame: AudioFrame | null) => void;
   onAudioFrame: (callback: (frame: AudioFrame | null) => void) => () => void;
@@ -345,12 +376,18 @@ export type DesktopBridge = {
   saveProject: (
     data: string,
     suggestedName: string,
-  ) => Promise<{ canceled: boolean; path?: string; error?: string }>;
+  ) => Promise<{
+    canceled: boolean;
+    path?: string;
+    error?: string;
+    missing?: string[];
+  }>;
   openProject: () => Promise<{
     canceled: boolean;
     data?: string;
     path?: string;
     error?: string;
+    missing?: string[];
   }>;
 };
 declare global {

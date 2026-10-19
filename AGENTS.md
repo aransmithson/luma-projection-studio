@@ -2,7 +2,7 @@
 
 ## Product and scope
 
-This is **Luma Projection Studio**, a local Windows desktop projection-mapping app for one projector. The user explicitly chose to keep the Luma name. The current release contains 154 effects/materials. Video, GIF and image imports are recommendations only; do not claim they exist.
+This is **Luma Projection Studio**, a local Windows desktop projection-mapping app for one projector. The user explicitly chose to keep the Luma name. The current release contains 154 built-in effects/materials plus desktop MP4/H.264 and animated GIF imports. WebM, MOV and standalone image imports are not supported. The owner explicitly made the repository public; its licence remains `UNLICENSED`.
 
 ## Compatibility
 
@@ -13,7 +13,7 @@ This is **Luma Projection Studio**, a local Windows desktop projection-mapping a
 
 ## Working on the code
 
-- Read the applicable [desktop instructions](.github/instructions/) before changing Electron, clipboard or audio behaviour.
+- Read the applicable [desktop instructions](.github/instructions/) before changing Electron, clipboard, media or audio behaviour.
 - Use the existing Canvas 2D/WebGL pipeline and shared playback clock. Pause, Restart, editor and projector output must agree.
 - Keep frontend and main-process dependencies separate. Main/preload currently use only Electron and Node built-ins.
 - Preserve changes already in the workspace and avoid unrelated refactors.

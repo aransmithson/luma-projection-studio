@@ -3886,3 +3886,92 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
 .layer-row.is-cutout .layer-select {
   padding-left: 24px;
 }
+.import-animation-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  border: 1px solid #3c686c;
+  background: #183136;
+  color: #9be8eb;
+  border-radius: 5px;
+  padding: 7px 10px;
+  font-size: 11px;
+}
+.import-animation-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.media-thumbnail {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  color: #87bdcc;
+  background: #141c25;
+}
+.media-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.media-controls .media-file-info,
+.media-help {
+  font-size: 10px;
+  line-height: 1.6;
+  color: #a5a7b3;
+}
+.media-status {
+  font-size: 10px;
+  line-height: 1.5;
+  color: #81c6ad;
+  overflow-wrap: anywhere;
+}
+.media-status.error {
+  color: #ffc198;
+}
+.media-loop {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  margin: 14px 0;
+}
+.media-loop input {
+  accent-color: #8ddce5;
+}
+.media-number {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 10px 0;
+  font-size: 11px;
+}
+.media-number > span:last-child {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.media-number input {
+  width: 84px;
+  padding: 6px;
+  border: 1px solid #3f4050;
+  border-radius: 4px;
+  color: #eee;
+  background: #191a22;
+  font-size: 11px;
+}
+.effect-description h3 {
+  overflow-wrap: anywhere;
+}
+.effect-card-info strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@media (max-width: 1320px) {
+  .library-heading .effect-target {
+    display: none;
+  }
+}

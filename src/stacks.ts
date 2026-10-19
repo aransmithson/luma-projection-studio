@@ -49,6 +49,7 @@ export function withStack(project: Project, stack: AnimationStack): Project {
       members.has(s.id)
         ? {
             ...s,
+            media: undefined,
             effectId:
               stack.kind === "chase"
                 ? stack.effectId

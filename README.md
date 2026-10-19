@@ -8,10 +8,10 @@ Luma runs locally with no account or network connection. Built with Electron, Re
 
 ## Download and run
 
-Get the Windows build from [GitHub Releases](https://github.com/aransmithson/luma-projection-studio/releases/latest). The repository and releases are private; sign in with an account that has access.
+Get the Windows build from [GitHub Releases](https://github.com/aransmithson/luma-projection-studio/releases/latest). The repository and downloads are public.
 
-- **Recommended:** download `Luma-Projection-Studio-1.15.2-win-x64.zip`, extract the whole folder, and open `Luma Projection Studio.exe`. Keep the executable beside its resources.
-- **Portable:** download `Luma-Projection-Studio-1.15.2.exe`. It extracts before opening; allow that first launch to finish.
+- **Recommended:** download `Luma-Projection-Studio-1.16.0-win-x64.zip`, extract the whole folder, and open `Luma Projection Studio.exe`. Keep the executable beside its resources.
+- **Portable:** download `Luma-Projection-Studio-1.16.0.exe`. It extracts before opening; allow that first launch to finish.
 - Close an older running copy before opening a new version. Luma restores the existing instance when opened again.
 
 Release builds are not code-signed. The Windows executable keeps Electron's original resources to preserve compatibility with Windows Code Integrity; Luma's own icon appears in the app window and interface.
@@ -24,6 +24,7 @@ Release builds are not code-signed. The Windows executable keeps Electron's orig
 | Placement | Projected wireframe/mesh, visible placement cursor, snapping, pixel nudging, calibration and solo view |
 | Compositing | Layers, copy/paste, ten blend modes, feathering, colour overlays and independent content rotation/offset |
 | Effects | 142 animations and 12 still materials, including Halloween, Christmas, space, creatures, shadow puppets, architectural illusions and stage lighting |
+| Imported animations | MP4/H.264 videos and animated GIFs, thumbnails, looping, trim, time offset, speed and fill/fit/stretch |
 | Linked stories | Synchronized liquid stacks, character chases and portal journeys across two to eight shapes |
 | Music | Six equaliser-style effects using computer audio, microphone/line-in or an explicit demo signal |
 | Playback | Shared Play, Pause and Restart, plus immediate output blackout |
@@ -44,6 +45,14 @@ Projects support **32 surfaces**, **64 vertices per polygon**, and **eight anima
 For music effects, choose **Music input**, select a source and press **Start audio**. Listening never starts automatically. Audio is analysed locally without recording or uploading it.
 
 Read the [user guide](docs/USER_GUIDE.md) for the complete effects catalogue, linked animations, geometry and recovery behaviour.
+
+## Import your own animations
+
+Select a shape, click **Import animation** in the effects library, then choose an **MP4 video** or **animated GIF**. The imported animation is applied to the selected editable shape and stays available in the **Imported** collection. Use the **Effect** inspector for fit, trim, looping, speed and time offset. Existing rotation, offsets, holes, overlays and blend modes work with imported clips.
+
+**Recommended:** 1080p H.264 MP4 at 24 or 30 fps for full scenes; small GIFs for transparent characters or short loops. Video sound is muted. All clips follow the shared Play, Pause and Restart controls.
+
+Luma copies imports into its local library. Saving a project copies the assets it uses into a companion folder, for example `House.luma.media` beside `House.luma`. **Move or share both together.** If an animation is missing, use **Effect → Locate original**. See the [media guide](docs/USER_GUIDE.md#import-animations) for limits and playback details.
 
 ## Run from source
 
@@ -67,7 +76,7 @@ After building, [Start Luma.cmd](Start%20Luma.cmd) is also a double-click launch
 
 ## Current scope
 
-Luma supports one projector. Media importing remains a proposed feature: MP4/H.264 for scenes, WebM with alpha for transparent characters, and GIF for small loops. **Video, GIF and image imports are not implemented in this release.** Project Open accepts `.luma` and compatible project JSON files.
+Luma supports one projector. The desktop app imports MP4 video and GIF animations. WebM, MOV, standalone images and After Effects projects are not supported. Project Open accepts `.luma` and compatible project JSON files; use **Import animation** for media. Browser preview cannot import or access the desktop media library.
 
 Timelines, BPM/timecode sync, multi-projector edge blending and automatic camera calibration are also outside the current release.
 
@@ -81,4 +90,4 @@ Timelines, BPM/timecode sync, multi-projector edge blending and automatic camera
 
 ## Licence
 
-This project retains its existing **UNLICENSED** status. No open-source licence is granted by publishing this private repository. Third-party dependencies retain their own licences. Example scenes use locally generated artwork; no stock footage is bundled.
+This public project retains its existing **UNLICENSED** status. Public visibility does not grant an open-source licence. Third-party dependencies retain their own licences. Example scenes use locally generated artwork; no stock footage is bundled.

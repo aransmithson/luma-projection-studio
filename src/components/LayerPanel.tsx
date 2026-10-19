@@ -264,7 +264,9 @@ export function LayerPanel(p: Props) {
                           <small>
                             {surface.cutoutOf
                               ? `Cutout · ${p.project.surfaces.find((s) => s.id === surface.cutoutOf)?.name}`
-                              : effectById[surface.effectId].name}
+                              : surface.effectId === "imported-media"
+                                ? surface.media?.asset.name
+                                : effectById[surface.effectId].name}
                           </small>
                         </span>
                       </button>

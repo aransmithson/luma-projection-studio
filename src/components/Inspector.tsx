@@ -38,6 +38,8 @@ import {
 } from "../geometry";
 import type { AnimationStack, Project, Surface } from "../types";
 import { EffectPreview } from "./EffectPreview";
+import { MediaControls, MediaThumbnail } from "./MediaControls";
+import type { LibraryMedia } from "../types";
 import { CutoutControls, type CutoutActions } from "./CutoutControls";
 import { editableOutline, smoothCorner } from "../shapePresets";
 import {
@@ -429,6 +431,9 @@ function ContentTransformControls({
 }
 
 type Props = CutoutActions & {
+  mediaLibrary: LibraryMedia[];
+  locateMedia: (id: string) => void;
+  importing: boolean;
   project: Project;
   surface?: Surface;
   update: (change: Partial<Surface>) => void;
@@ -450,6 +455,9 @@ type Props = CutoutActions & {
 };
 
 export function Inspector({
+  mediaLibrary,
+  locateMedia,
+  importing,
   project,
   surface,
   update,
@@ -489,6 +497,11 @@ export function Inspector({
     );
   const b = bounds(surface.points),
     effect = effectById[surface.effectId];
+  const imported = surface.effectId === "imported-media" && !!surface.media;
+  const mediaItem = imported
+    ? mediaLibrary.find((asset) => asset.id === surface.media?.asset.id)
+    : undefined;
+  const effectName = imported ? surface.media!.asset.name : effect.name;
   const layerLocked = layerFor(project, surface).locked;
   const peers = project.surfaces.filter(
     (s) =>
@@ -946,10 +959,14 @@ export function Inspector({
                     onClick={() => setTab("effect")}
                   >
                     <div className="assigned-thumb">
-                      <EffectPreview effect={effect} />
+                      {imported ? (
+                        <MediaThumbnail asset={mediaItem} />
+                      ) : (
+                        <EffectPreview effect={effect} />
+                      )}
                     </div>
                     <div>
-                      <strong>{effect.name}</strong>
+                      <strong>{effectName}</strong>
                       <small>{effect.category}</small>
                     </div>
                     <ChevronDown size={13} className="chevron-right" />
@@ -986,12 +1003,16 @@ export function Inspector({
         ) : (
           <>
             <div className="effect-inspector-preview">
-              <EffectPreview effect={effect} active />
+              {imported ? (
+                <MediaThumbnail asset={mediaItem} />
+              ) : (
+                <EffectPreview effect={effect} active />
+              )}
               <span>{effect.category}</span>
             </div>
             <section className="inspector-section effect-description">
               <h3>
-                {effect.name}
+                {effectName}
                 <Sparkles size={14} />
               </h3>
               <p>{effect.description}</p>
@@ -1013,6 +1034,14 @@ export function Inspector({
                 </div>
               )}
             </section>
+            {imported && (
+              <MediaControls
+                surface={surface}
+                update={update}
+                locate={locateMedia}
+                importing={importing}
+              />
+            )}
             <section className="inspector-section">
               <h3>Make it yours</h3>
               {stack && (
@@ -1109,66 +1138,74 @@ export function Inspector({
                       </button>
                     </>
                   )}
-                  <RangeControl
-                    label={
-                      surface.effectId === "single-eyeball"
-                        ? "Eye size"
-                        : surface.effectId === "edge-runner"
-                          ? "Light width"
-                          : surface.effectId === "toy-train"
-                            ? "Train size"
-                            : ["Chase scenes", "Linked stories"].includes(
-                                  effect.category,
-                                )
-                              ? "Character size"
-                              : effect.category === "Creatures"
-                                ? "Creature size"
-                                : effect.category === "Colour blocks"
-                                  ? "Block size"
-                                  : "Pattern scale"
-                    }
-                    value={effectScale}
-                    min={
-                      ["Creatures", "Chase scenes", "Linked stories"].includes(
-                        effect.category,
-                      )
-                        ? 0.45
-                        : surface.effectId === "toy-train"
-                          ? 0.5
-                          : 0.25
-                    }
-                    max={
-                      ["Creatures", "Chase scenes", "Linked stories"].includes(
-                        effect.category,
-                      )
-                        ? 1.55
-                        : surface.effectId === "toy-train"
-                          ? 1.7
-                          : 3
-                    }
-                    step={0.05}
-                    display={`${effectScale.toFixed(2)}×`}
-                    onChange={(scale) => update({ scale })}
-                    begin={begin}
-                    finish={finish}
-                  />
-                  <label className="color-field">
-                    <span>Accent colour</span>
-                    <span>
-                      <input
-                        type="color"
-                        aria-label="Accent colour"
-                        value={surface.color}
-                        onPointerDown={begin}
-                        onBlur={finish}
-                        onChange={(e) => {
-                          update({ color: e.target.value });
-                          finish();
-                        }}
+                  {!imported && (
+                    <>
+                      <RangeControl
+                        label={
+                          surface.effectId === "single-eyeball"
+                            ? "Eye size"
+                            : surface.effectId === "edge-runner"
+                              ? "Light width"
+                              : surface.effectId === "toy-train"
+                                ? "Train size"
+                                : ["Chase scenes", "Linked stories"].includes(
+                                      effect.category,
+                                    )
+                                  ? "Character size"
+                                  : effect.category === "Creatures"
+                                    ? "Creature size"
+                                    : effect.category === "Colour blocks"
+                                      ? "Block size"
+                                      : "Pattern scale"
+                        }
+                        value={effectScale}
+                        min={
+                          [
+                            "Creatures",
+                            "Chase scenes",
+                            "Linked stories",
+                          ].includes(effect.category)
+                            ? 0.45
+                            : surface.effectId === "toy-train"
+                              ? 0.5
+                              : 0.25
+                        }
+                        max={
+                          [
+                            "Creatures",
+                            "Chase scenes",
+                            "Linked stories",
+                          ].includes(effect.category)
+                            ? 1.55
+                            : surface.effectId === "toy-train"
+                              ? 1.7
+                              : 3
+                        }
+                        step={0.05}
+                        display={`${effectScale.toFixed(2)}×`}
+                        onChange={(scale) => update({ scale })}
+                        begin={begin}
+                        finish={finish}
                       />
-                      <code>{surface.color.toUpperCase()}</code>
-                    </span>
-                  </label>
+                      <label className="color-field">
+                        <span>Accent colour</span>
+                        <span>
+                          <input
+                            type="color"
+                            aria-label="Accent colour"
+                            value={surface.color}
+                            onPointerDown={begin}
+                            onBlur={finish}
+                            onChange={(e) => {
+                              update({ color: e.target.value });
+                              finish();
+                            }}
+                          />
+                          <code>{surface.color.toUpperCase()}</code>
+                        </span>
+                      </label>
+                    </>
+                  )}
                   {surface.effectId === "portal-hopper" && (
                     <>
                       <button
@@ -1216,14 +1253,16 @@ export function Inspector({
                   </span>
                 </button>
               )}
-              <button
-                className="text-button"
-                onClick={() =>
-                  update({ seed: Math.floor(Math.random() * 10000) })
-                }
-              >
-                Shuffle variation <Sparkles size={12} />
-              </button>
+              {!imported && (
+                <button
+                  className="text-button"
+                  onClick={() =>
+                    update({ seed: Math.floor(Math.random() * 10000) })
+                  }
+                >
+                  Shuffle variation <Sparkles size={12} />
+                </button>
+              )}
             </section>
             <ContentTransformControls
               surface={surface}

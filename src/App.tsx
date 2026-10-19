@@ -45,6 +45,8 @@ import {
 import type {
   AudioFrame,
   EffectId,
+  LibraryMedia,
+  MediaAsset,
   DisplayInfo,
   OutputStatus,
   Playback,
@@ -62,6 +64,8 @@ import {
   serializeProject,
 } from "./model";
 import { effectById } from "./catalog";
+import { bindMedia } from "./media";
+import { probeMedia, refreshMedia } from "./mediaPlayback";
 import { moveVertex, translate } from "./geometry";
 import {
   removeSurfaceCorner,
@@ -307,6 +311,9 @@ export default function App() {
     >(null);
   const [category, setCategory] = useState("All effects"),
     [expandedLibrary, setExpandedLibrary] = useState(false);
+  const [mediaLibrary, setMediaLibrary] = useState<LibraryMedia[]>([]);
+  const [importing, setImporting] = useState(false);
+  const importBusy = useRef(false);
   const [toast, setToast] = useState<{
       message: string;
       tone: "success" | "info" | "error";
@@ -386,6 +393,26 @@ export default function App() {
     [],
   );
   const closeModal = useCallback(() => setModal(null), []);
+  useEffect(() => {
+    let mounted = true;
+    const refresh = () => {
+      void window.luma
+        ?.listMedia()
+        .then((items) => {
+          if (mounted) setMediaLibrary(items);
+        })
+        .catch(() => {
+          if (mounted)
+            notify("Could not read the imported animations library.", "error");
+        });
+    };
+    refresh();
+    const unsubscribe = window.luma?.onMediaChanged(refresh);
+    return () => {
+      mounted = false;
+      unsubscribe?.();
+    };
+  }, [notify]);
   const markMapping = useCallback(() => {
     setMappingActive(true);
     clearTimeout(mappingTimer.current);
@@ -850,11 +877,70 @@ export default function App() {
     }
     updateSurface(selected.id, {
       effectId,
+      media: undefined,
       color: effectById[effectId].color,
       colorCycle: effectById[effectId].cycleByDefault ?? false,
     });
     setInspectorTab("effect");
     notify(`${effectById[effectId].name} applied to ${selected.name}.`);
+  }
+  function applyMedia(asset: MediaAsset, targetId = selectedId) {
+    const target = current.current.surfaces.find(
+      (surface) => surface.id === targetId,
+    );
+    if (!target || target.cutoutOf) {
+      notify(
+        "Animation added to Imported. Select a surface, then click its card to apply it.",
+      );
+      return;
+    }
+    if (target.locked || layerFor(current.current, target).locked) {
+      notify("Unlock the surface and its layer before changing the animation.");
+      return;
+    }
+    updateSurface(target.id, {
+      effectId: "imported-media",
+      media: bindMedia(asset),
+      speed: 1,
+      colorCycle: false,
+    });
+    setInspectorTab("effect");
+    notify(`${asset.name} applied to ${target.name}.`, "success");
+  }
+  async function importAnimation(expectedId?: string) {
+    if (!window.luma || importBusy.current) return;
+    const targetId = selectedId;
+    importBusy.current = true;
+    setImporting(true);
+    try {
+      const result = await window.luma.importMedia(expectedId);
+      if (result.error) throw new Error(result.error);
+      if (result.canceled || !result.asset) return;
+      notify("Checking animation and creating a preview...");
+      const item = await window.luma.completeMedia(
+        await probeMedia(result.asset),
+      );
+      refreshMedia();
+      setMediaLibrary(await window.luma.listMedia());
+      setCategory("Imported");
+      setPreferences((p) => ({ ...p, libraryCollapsed: false }));
+      if (expectedId)
+        notify(
+          "Original animation restored. Existing timing and mapping are preserved.",
+          "success",
+        );
+      else applyMedia(item, targetId);
+    } catch (error) {
+      notify(
+        error instanceof Error
+          ? error.message
+          : "Could not import this animation.",
+        "error",
+      );
+    } finally {
+      importBusy.current = false;
+      setImporting(false);
+    }
   }
   function togglePlayback() {
     const previous = latest.current.playback,
@@ -872,7 +958,17 @@ export default function App() {
           current.current.name,
         );
         if (result.error) throw new Error(result.error);
-        if (!result.canceled) notify("Project saved to file.", "success");
+        if (!result.canceled)
+          notify(
+            result.missing?.length
+              ? `Project saved, but ${result.missing.length} animation(s) are missing. Locate the originals before sharing.`
+              : current.current.surfaces.some(
+                    (s) => s.effectId === "imported-media",
+                  )
+                ? "Project saved to file. Keep its companion media folder with it."
+                : "Project saved to file.",
+            result.missing?.length ? "error" : "success",
+          );
       } else {
         const url = URL.createObjectURL(
           new Blob([data], { type: "application/json" }),
@@ -924,7 +1020,15 @@ export default function App() {
     try {
       const result = await window.luma.openProject();
       if (result.error) throw new Error(result.error);
-      if (result.data) loadProject(result.data);
+      if (result.data) {
+        refreshMedia();
+        loadProject(result.data);
+        if (result.missing?.length)
+          notify(
+            `Project opened. ${result.missing.length} animation(s) are missing; use Locate original in the Effect inspector.`,
+            "error",
+          );
+      }
     } catch (error) {
       notify(
         error instanceof Error ? error.message : "Unable to open this project.",
@@ -1697,6 +1801,9 @@ export default function App() {
           </div>
         </section>
         <Inspector
+          mediaLibrary={mediaLibrary}
+          locateMedia={(id) => void importAnimation(id)}
+          importing={importing}
           project={viewProject}
           surface={selected}
           update={(change) => selected && updateSurface(selected.id, change)}
@@ -1728,6 +1835,15 @@ export default function App() {
       </main>
 
       <EffectsLibrary
+        mediaLibrary={mediaLibrary}
+        selectedMediaId={
+          selected?.effectId === "imported-media"
+            ? selected.media?.asset.id
+            : undefined
+        }
+        applyMedia={applyMedia}
+        importMedia={() => void importAnimation()}
+        importing={importing}
         selectedEffect={selected?.cutoutOf ? undefined : selected?.effectId}
         selectedName={selected?.name}
         hasSelection={!!selected && !selected.cutoutOf}
