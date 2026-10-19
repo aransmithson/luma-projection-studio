@@ -1,0 +1,133 @@
+{
+  "version": 1,
+  "name": "Living treasure maps",
+  "width": 1200,
+  "height": 600,
+  "brightness": 1,
+  "surfaces": [
+    {
+      "id": "story-treasure-map-1",
+      "name": "Living treasure maps 1",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.055,
+          "y": 0.32
+        },
+        {
+          "x": 0.315,
+          "y": 0.32
+        },
+        {
+          "x": 0.315,
+          "y": 0.74
+        },
+        {
+          "x": 0.055,
+          "y": 0.74
+        }
+      ],
+      "effectId": "story-treasure-map",
+      "color": "#59beca",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "effectSide": "left"
+    },
+    {
+      "id": "story-treasure-map-2",
+      "name": "Living treasure maps 2",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.37,
+          "y": 0.32
+        },
+        {
+          "x": 0.63,
+          "y": 0.32
+        },
+        {
+          "x": 0.63,
+          "y": 0.74
+        },
+        {
+          "x": 0.37,
+          "y": 0.74
+        }
+      ],
+      "effectId": "story-treasure-map",
+      "color": "#59beca",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "effectSide": "left"
+    },
+    {
+      "id": "story-treasure-map-3",
+      "name": "Living treasure maps 3",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.685,
+          "y": 0.32
+        },
+        {
+          "x": 0.9450000000000001,
+          "y": 0.32
+        },
+        {
+          "x": 0.9450000000000001,
+          "y": 0.74
+        },
+        {
+          "x": 0.685,
+          "y": 0.74
+        }
+      ],
+      "effectId": "story-treasure-map",
+      "color": "#59beca",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "effectSide": "left"
+    }
+  ],
+  "stacks": [
+    {
+      "id": "story-treasure-map-route",
+      "kind": "story",
+      "name": "Living treasure maps",
+      "surfaceIds": [
+        "story-treasure-map-1",
+        "story-treasure-map-2",
+        "story-treasure-map-3"
+      ],
+      "duration": 24,
+      "color": "#59beca",
+      "links": false,
+      "effectId": "story-treasure-map",
+      "direction": "left",
+      "scale": 1,
+      "seed": 42
+    }
+  ]
+}

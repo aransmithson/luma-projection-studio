@@ -63,7 +63,7 @@ describe("portable projects", () => {
     expect(effects.filter((e) => e.category === "Halloween")).toHaveLength(12);
     expect(effects.filter((e) => e.category === "Christmas")).toHaveLength(4);
     expect(new Set(effects.map((e) => e.id)).size).toBe(effects.length);
-    expect(effects).toHaveLength(166);
+    expect(effects).toHaveLength(176);
     expect(effects.filter((e) => e.category === "Chase scenes")).toHaveLength(
       5,
     );

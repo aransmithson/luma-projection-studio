@@ -34,7 +34,7 @@ try {
   await expect(page.locator(".stage-overlay")).toBeVisible();
   await page.getByRole("button", { name: "New scene", exact: true }).click();
   await page.locator(".template-card.blank").click();
-  await expect(page.locator(".effect-card")).toHaveCount(166);
+  await expect(page.locator(".effect-card")).toHaveCount(176);
   await page.getByRole("button", { name: "3D illusions", exact: true }).click();
   await expect(page.locator(".effect-card")).toHaveCount(12);
   await page

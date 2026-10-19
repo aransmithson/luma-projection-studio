@@ -31,6 +31,7 @@ Choose native workflows that exercise the change. Run them sequentially with the
 | Scene Animator | `npm run test:scene` and `npm run test:scene -- --packaged`, plus the media workflows |
 | Effect rendering | `npm run test:effects` and the relevant collection workflow |
 | Boxed stick figures | `npm run test:sticks` and `npm run test:sticks -- --packaged` |
+| Imagination styles | `npm run test:imagination`, `npm run test:stories` and their `-- --packaged` variants |
 
 Audio checks use generated input and a brief quiet loopback test tone. Clipboard tests restore the original clipboard unless the user has copied something new. Never point a test at the real profile or close an app the test did not launch.
 
@@ -40,8 +41,8 @@ Stop development servers and desktop tests before packaging. Build each version 
 
 ```powershell
 $env:ELECTRON_BUILDER_COMPRESSION_LEVEL='1'
-npm run package -- --config.directories.output=release/1.20.0
-$env:LUMA_RELEASE_DIR='release/1.20.0'
+npm run package -- --config.directories.output=release/1.21.0
+$env:LUMA_RELEASE_DIR='release/1.21.0'
 node scripts/improvements.mjs --packaged
 npm run test:startup -- unpacked --hidden --copy-saved-profile
 npm run test:startup -- portable

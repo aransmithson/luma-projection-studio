@@ -89,7 +89,7 @@ try {
   const click = (name) =>
     page.getByRole("button", { name, exact: true }).click();
   await click("Open project");
-  await expect(page.locator(".effect-card")).toHaveCount(166);
+  await expect(page.locator(".effect-card")).toHaveCount(176);
   await click("Music");
   await expect(page.locator(".effect-card")).toHaveCount(6);
   await click("Select Spectrum towers");

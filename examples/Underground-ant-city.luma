@@ -1,0 +1,133 @@
+{
+  "version": 1,
+  "name": "Underground ant city",
+  "width": 1200,
+  "height": 600,
+  "brightness": 1,
+  "surfaces": [
+    {
+      "id": "story-ant-city-1",
+      "name": "Underground ant city 1",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.055,
+          "y": 0.32
+        },
+        {
+          "x": 0.315,
+          "y": 0.32
+        },
+        {
+          "x": 0.315,
+          "y": 0.74
+        },
+        {
+          "x": 0.055,
+          "y": 0.74
+        }
+      ],
+      "effectId": "story-ant-city",
+      "color": "#b9ed8c",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "effectSide": "left"
+    },
+    {
+      "id": "story-ant-city-2",
+      "name": "Underground ant city 2",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.37,
+          "y": 0.32
+        },
+        {
+          "x": 0.63,
+          "y": 0.32
+        },
+        {
+          "x": 0.63,
+          "y": 0.74
+        },
+        {
+          "x": 0.37,
+          "y": 0.74
+        }
+      ],
+      "effectId": "story-ant-city",
+      "color": "#b9ed8c",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "effectSide": "left"
+    },
+    {
+      "id": "story-ant-city-3",
+      "name": "Underground ant city 3",
+      "kind": "quad",
+      "points": [
+        {
+          "x": 0.685,
+          "y": 0.32
+        },
+        {
+          "x": 0.9450000000000001,
+          "y": 0.32
+        },
+        {
+          "x": 0.9450000000000001,
+          "y": 0.74
+        },
+        {
+          "x": 0.685,
+          "y": 0.74
+        }
+      ],
+      "effectId": "story-ant-city",
+      "color": "#b9ed8c",
+      "colorCycle": false,
+      "opacity": 1,
+      "speed": 1,
+      "scale": 1,
+      "feather": 0,
+      "visible": true,
+      "locked": false,
+      "blend": "normal",
+      "seed": 42,
+      "effectSide": "left"
+    }
+  ],
+  "stacks": [
+    {
+      "id": "story-ant-city-route",
+      "kind": "story",
+      "name": "Underground ant city",
+      "surfaceIds": [
+        "story-ant-city-1",
+        "story-ant-city-2",
+        "story-ant-city-3"
+      ],
+      "duration": 24,
+      "color": "#b9ed8c",
+      "links": false,
+      "effectId": "story-ant-city",
+      "direction": "left",
+      "scale": 1,
+      "seed": 42
+    }
+  ]
+}

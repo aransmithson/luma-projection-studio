@@ -2,7 +2,7 @@
 
 ![Nox - Bring surfaces to life](docs/assets/nox-banner.svg)
 
-**Bring surfaces to life.** A Windows desktop app for mapping animated light onto buildings, props and scenery with one projector. Draw and warp shapes, build linked stories, and react to music with **166 built-in effects and materials**.
+**Bring surfaces to life.** A Windows desktop app for mapping animated light onto buildings, props and scenery with one projector. Draw and warp shapes, build linked stories, and react to music with **176 built-in effects and materials**.
 
 Mapping, effects and imported playback run locally with no account. Optional **Scene Animator** generation connects your scene photo and prompt to Runway; it needs internet access and your own paid Runway API account. Built with Electron, React, TypeScript, Canvas 2D and WebGL.
 
@@ -12,8 +12,8 @@ Previously called **Luma**. Your existing `.luma` projects, imported library, pr
 
 Get the Windows build from [GitHub Releases](https://github.com/aransmithson/nox-projection-studio/releases/latest). The repository and downloads are public.
 
-- **Recommended:** download `Nox-Projection-Studio-1.20.0-win-x64.zip`, extract the whole folder, and open `Nox Projection Studio.exe`. Keep the executable beside its resources.
-- **Portable:** download `Nox-Projection-Studio-1.20.0.exe`. It extracts before opening; allow that first launch to finish.
+- **Recommended:** download `Nox-Projection-Studio-1.21.0-win-x64.zip`, extract the whole folder, and open `Nox Projection Studio.exe`. Keep the executable beside its resources.
+- **Portable:** download `Nox-Projection-Studio-1.21.0.exe`. It extracts before opening; allow that first launch to finish.
 - Close an older running copy before opening a new version. Nox restores the existing instance when opened again.
 
 Release builds are not code-signed. The Windows executable keeps Electron's original resources to preserve compatibility with Windows Code Integrity; Nox's own icon appears in the app window and interface.
@@ -26,10 +26,10 @@ Release builds are not code-signed. The Windows executable keeps Electron's orig
 | Placement | Projected wireframe/mesh, visible placement cursor, snapping, pixel nudging, calibration and solo view |
 | Workspace | Independently hide or restore Effects and Properties panels; your layout is remembered on this device |
 | Compositing | Layers, copy/paste, ten blend modes, feathering, colour overlays and independent content rotation/offset |
-| Effects | 154 animations and 12 still materials, including boxed stick figures, Halloween, Christmas, space, creatures, shadow puppets, architectural illusions and stage lighting |
+| Effects | 164 animations and 12 still materials, including boxed stick figures, Halloween, Christmas, space, creatures, shadow puppets, architectural illusions and stage lighting |
 | Imported animations | MP4/H.264 videos and animated GIFs, thumbnails, looping, trim, time offset, speed and fill/fit/stretch |
 | Scene Animator | JPG/PNG reference alignment, optional Runway generation, independent preview and one shared clip across selected props |
-| Linked stories | Six travelling stories with local reactions, plus synchronized liquid stacks, character chases and portal journeys across two to eight shapes |
+| Linked stories | Nine travelling stories with local reactions, plus synchronized liquid stacks, character chases and portal journeys across two to eight shapes |
 | Music | Six equaliser-style effects using computer audio, microphone/line-in or an explicit demo signal |
 | Playback | Shared Play, Pause and Restart, plus immediate output blackout |
 | Projects | `.luma` files, undo/redo, autosave and recovery of the previous valid save |
@@ -37,6 +37,16 @@ Release builds are not code-signed. The Windows executable keeps Electron's orig
 Projects support **32 surfaces**, **64 vertices per polygon**, and **eight animation stacks**. The stacked editor keeps settings and Save visible in a wide three-column layout.
 
 ![Nox mapping workspace with the effects library and surface inspector](docs/assets/workspace.png)
+
+## Ten new animation styles
+
+The **Imagination** collection adds **Living comic book**, **Claymation chaos**, **The yarn factory**, **Bubble-wrap creatures**, **Porcelain dreams**, **Living mosaic faces** and **Impossible rubber room**. Each has its own artwork, materials and repeating action.
+
+Three more styles are in **Linked stories**: **Underground ant city**, **Pneumatic parcel network** and **Living treasure maps**. Use them on one shape, or link two to eight shapes so ants, capsules and a sailing ship travel between your props. Their chambers, robots and treasure chests react to the shared arrival clock.
+
+![Ten new Imagination styles](docs/assets/imagination-collection.png)
+
+Choose **All effects** and search **creative** to see all ten together. Open the [Imagination collection example](examples/Imagination-collection.luma) for a ready-made gallery. Speed, scale, colour, overlays, Pause and Restart use the existing controls. These effects are generated locally and need no downloads or AI service.
 
 ## Stick figures trapped in boxes
 
@@ -60,11 +70,11 @@ One clip spans the selected shapes, so each prop reveals the appropriate part of
 
 ## New linked stories
 
-Send a star-carrying rocket, a ghost train, an emerald dragon, a pearl-guiding turtle, a clockwork marble or a glowing firefly through your mapped shapes. Each tile reacts as its traveller passes, and the last tile leads back to the first.
+Send a star-carrying rocket, a ghost train, an emerald dragon, a pearl-guiding turtle, a clockwork marble, a glowing firefly, leaf-carrying ants, a parcel capsule or a sailing ship through your mapped shapes. Each tile reacts as its traveller passes, and the last tile leads back to the first.
 
 Open **Stacked animations → Linked stories**, choose a **Story theme**, then **Create linked story** for three ready-to-place shapes. To use existing shapes, apply a story from the effects library and choose **Effect → Link this story across shapes**. Set the route order, direction, size, colour and loop duration together. All tiles share Play, Pause and Restart.
 
-![Six original linked story themes](docs/assets/linked-stories.png)
+![Nine original linked story themes](docs/assets/linked-stories.png)
 
 See the [linked-story guide and examples](docs/USER_GUIDE.md#create-a-linked-story) for ready-made projects and placement tips.
 

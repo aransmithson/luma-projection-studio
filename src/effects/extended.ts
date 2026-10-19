@@ -21,7 +21,9 @@ import { portalPainter } from "./portalScene";
 import { musicPainters } from "./music";
 import { storyPainters } from "./linkedStories";
 import { stickPainters } from "./stickBoxes";
+import { imaginationPainters } from "./imaginationScenes";
 export const extendedPainters: Partial<Record<EffectId, Painter>> = {
+  ...imaginationPainters,
   ...stickPainters,
   ...storyPainters,
   ...musicPainters,

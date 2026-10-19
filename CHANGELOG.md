@@ -2,6 +2,14 @@
 
 Nox Projection Studio keeps the existing Luma project format and application identity.
 
+## 1.21.0
+
+- Added all ten Imagination concepts. The new **Imagination** collection contains **Living comic book**, **Claymation chaos**, **The yarn factory**, **Bubble-wrap creatures**, **Porcelain dreams**, **Living mosaic faces** and **Impossible rubber room**, with original procedural artwork and repeating 12-second routines.
+- Added **Underground ant city**, **Pneumatic parcel network** and **Living treasure maps** to **Linked stories**. Ants, parcel capsules and a sailing ship cross two to eight selected shapes, with local nursery lights, robot inspections and opening treasure chests tied to the shared arrival clock. They also work independently on one shape.
+- Preserved shared timing, direction reversal, proportional traveller sizing, hidden route members, holes, layers, content transforms and version-1 saves. Applying an effect uses the selected shape; adding demonstration tiles remains an explicit action in the stack editor.
+- Added a [ten-effect gallery](./examples/Imagination-collection.luma) and three linked example projects. Choose **All effects** and search **creative** to find all ten together. The library now has **176 effects and materials: 164 animations and 12 still textures**.
+- Added timing and native workflow checks for the new collection, expanded linked-story rendering and projector tests to all nine themes, and verified the full effects catalogue.
+
 ## 1.20.0
 
 - Added a **Stick figures** collection with six original animations: **Glass-box mime**, **Wall pusher**, **Ceiling bonk**, **Corner climber**, **Gravity tumble** and **Box buddies**. Stick figures tap the glass, push walls, bump the ceiling, climb, tumble and help each other attempt an escape inside recessed boxes.

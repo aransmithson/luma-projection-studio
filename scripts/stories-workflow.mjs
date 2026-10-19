@@ -69,10 +69,10 @@ try {
       };
       const sheet = document.createElement("canvas");
       sheet.width = 1200;
-      sheet.height = 660;
+      sheet.height = Math.ceil(storyEffects.length / 3) * 330;
       const sc = sheet.getContext("2d");
       sc.fillStyle = "#11131d";
-      sc.fillRect(0, 0, 1200, 660);
+      sc.fillRect(0, 0, sheet.width, sheet.height);
       const canvas = document.createElement("canvas");
       canvas.width = 400;
       canvas.height = 280;
@@ -286,7 +286,7 @@ try {
         JSON.stringify(fixture.project, null, 2) + "\n",
       );
     check(
-      "Six original stories render, repeat exactly, reverse and cross the loop seam; GPU pause, hidden tiles, holes, transforms, mesh and blackout pass",
+      "All nine stories render, repeat exactly, reverse and cross the loop seam; GPU pause, hidden tiles, holes, transforms, mesh and blackout pass",
     );
   }
   const fixtures = [
@@ -296,6 +296,9 @@ try {
     "Reef-pearl-relay",
     "Clockwork-marble",
     "Firefly-garden",
+    "Underground-ant-city",
+    "Pneumatic-parcel-network",
+    "Living-treasure-maps",
   ];
   const example = JSON.parse(
     await readFile(`examples/${fixtures[0]}.luma`, "utf8"),
@@ -323,7 +326,7 @@ try {
   await page
     .getByRole("button", { name: "Linked stories", exact: true })
     .click();
-  await expect(page.locator(".effect-card")).toHaveCount(7);
+  await expect(page.locator(".effect-card")).toHaveCount(10);
   await click("Apply Cosmic courier");
   await click("Link this story across shapes");
   await expect(
@@ -450,6 +453,41 @@ try {
   check(
     "Projector follows shared Play, Pause, Restart, theme changes and Undo",
   );
+  for (const id of [
+    "story-ant-city",
+    "story-parcel-network",
+    "story-treasure-map",
+  ]) {
+    await click("Edit linked story");
+    await page.getByLabel("Story theme", { exact: true }).selectOption(id);
+    await modal
+      .getByLabel("Story direction", { exact: true })
+      .selectOption("left");
+    await click("Save stack");
+    await click("Close dialog");
+    await expect
+      .poll(async () =>
+        (await state()).project.surfaces.every((s) => s.effectId === id),
+      )
+      .toBe(true);
+    await click("Restart animation");
+    const forward = await snapshot();
+    await click("Play animation");
+    await expect.poll(async () => forward.equals(await snapshot())).toBe(false);
+    await click("Pause animation");
+    await click("Restart animation");
+    await expect.poll(async () => forward.equals(await snapshot())).toBe(true);
+    await click("Edit linked story");
+    await modal
+      .getByLabel("Story direction", { exact: true })
+      .selectOption("right");
+    await click("Save stack");
+    await click("Close dialog");
+    await expect.poll(async () => forward.equals(await snapshot())).toBe(false);
+  }
+  check(
+    "Ant, parcel and treasure themes apply to the existing route, animate, restart exactly and reverse on the projector",
+  );
   await page.evaluate(() => window.luma.closeOutput());
   await choose(savedPath);
   await click("Open project");
@@ -492,7 +530,7 @@ try {
     await click("Close dialog");
   }
   check(
-    "All six example projects reopen and each theme can create three new linked tiles",
+    "All nine example projects reopen and each theme can create three new linked tiles",
   );
   expect(errors).toEqual([]);
   await writeFile(

@@ -93,6 +93,9 @@ Open **Stacked animations → Linked stories**, choose a **Story theme**, then c
 | [Reef pearl relay](../examples/Reef-pearl-relay.luma) | A sea turtle guides a pearl through swaying coral and jellyfish; shells open as it passes. |
 | [Clockwork marble](../examples/Clockwork-marble.luma) | A polished energy marble rolls through brass machinery and illuminates inspection gates. |
 | [Firefly garden](../examples/Firefly-garden.luma) | A firefly carries glowing pollen over flowers that bloom, shimmer and close before its next visit. |
+| [Underground ant city](../examples/Underground-ant-city.luma) | Leaf-carrying ants pass through cutaway tunnels and illuminate each nursery chamber. |
+| [Pneumatic parcel network](../examples/Pneumatic-parcel-network.luma) | A capsule races through transparent pipes while a miniature robot scans each arrival. |
+| [Living treasure maps](../examples/Living-treasure-maps.luma) | A sailing ship travels across parchment maps; ink reveals islands and treasure chests open as it passes. |
 
 To link your own shapes, apply a story from the **Linked stories** effects collection, then choose **Effect → Link this story across shapes**. Select **two to eight** shapes, use the arrows to set **Route order**, and click **Save stack**. Reopen **Edit linked story** to change the theme, colour, traveller size, direction or **4–120 second** full-loop duration. Changing a theme keeps the mapped outlines and holes. **Create linked story** always adds a new three-tile scene; use **Save stack** to update the selected stack.
 
@@ -141,12 +144,13 @@ Projects support up to eight stacks within the 32-surface total. A surface belon
 
 ## Effects library
 
-All 166 effects and materials are generated locally: 154 animations and twelve still textures. Animation previews play on hover, or continuously when **Previews** is enabled. Still textures remain fixed unless an independent colour overlay is enabled. They do not require stock footage or external downloads.
+All 176 effects and materials are generated locally: 164 animations and twelve still textures. Animation previews play on hover, or continuously when **Previews** is enabled. Still textures remain fixed unless an independent colour overlay is enabled. They do not require stock footage or external downloads.
 
 | Collection | Effects |
 | --- | --- |
+| Imagination | Living comic book, Claymation chaos, The yarn factory, Bubble-wrap creatures, Porcelain dreams, Living mosaic faces, Impossible rubber room |
 | Music | Spectrum towers, Mirror pulse, Spectrum halo, Neon waveform, Bass reactor, Spectrum skyline |
-| Linked stories | Cosmic courier, Ghost train, Dragon lantern run, Reef pearl relay, Clockwork marble, Firefly garden, Portal gun journey (robot, alien and space cat explorers) |
+| Linked stories | Cosmic courier, Ghost train, Dragon lantern run, Reef pearl relay, Clockwork marble, Firefly garden, Underground ant city, Pneumatic parcel network, Living treasure maps, Portal gun journey (robot, alien and space cat explorers) |
 | Chase scenes | Cat & mouse chase, Fox & rabbit chase, Ghost & pumpkin chase, Robot & alien chase, Snowman & penguin chase |
 | Stick figures | Glass-box mime, Wall pusher, Ceiling bonk, Corner climber, Gravity tumble, Box buddies |
 | Stage & light | Marquee light wall, Prism LED flares, Stardust cascade, Hex relief wave, Photon runway, LED stage wings, Spectrum dot matrix, Pearl silk, Marquee alphabet, Crimson silk, LED cylinder hall, LED proscenium, Ribbon light stage, Canopy of lights, LED orb chamber, Recessed diamond lattice, Cubic tide, Turning tile wall, Triangular prism skin, Concentric relief rings, Sliding relief maze |
@@ -167,6 +171,14 @@ All 166 effects and materials are generated locally: 154 animations and twelve s
 The ten additional generic effects are Rain on glass, Bubble ballet, Cloud nine, Liquid ripples, Petal drift, Sunrise horizon, Confetti parade, Midnight fireworks, Electric currents and Soft bokeh. **Prism kaleidoscope**, **Chromatic orbits** and **Infinity cubes** start with colour cycling enabled; switch it off in the Effect tab for a fixed palette.
 
 Straight rectangles stretch their effect with a projective transform. Curved shapes and other polygons clip a bounding-box texture to their outline. Edge runner paints the actual perimeter directly for every shape. Toy train circuit follows an inset track along the actual outer contour. Ellipses use a 48-vertex outline and resize handles. A polygon or curved boundary cannot intersect itself. Draw polygons with clicks, finish using **Finish polygon**, Enter or the first corner, remove the last point with Backspace, and cancel with Escape. Add and remove corners after drawing using the inspector or midpoint handles. Inserting a corner on a Bézier edge preserves its curve; removing a corner straightens the merged edge. Rectangles retain four corners and triangles retain three until Make outline editable converts them to polygons. Surface labels and control handles appear only in the editor; output alignment guides are controlled separately.
+
+### Imagination styles
+
+The seven **Imagination** effects use comic ink, stepped clay motion, knitted stitches, glossy bubbles, glazed porcelain, flipping mosaic tiles and an elastic room. Choose **All effects**, then search **creative** to include the three new travelling stories as well. Applying a card changes the selected shape; it does not add objects.
+
+All ten loop every 12 seconds at normal speed when used on a single shape. **Effect → Speed**, **Pattern scale** (or **Character size** for a story), **Accent colour**, colour cycling and overlays work with the normal playback controls. **Shuffle variation** changes the seeded decoration or starting phase. For a linked story, use the stack's shared duration, traveller size and direction instead.
+
+Open [Imagination collection](../examples/Imagination-collection.luma) to see all ten on separate tiles. To carry ants, capsules or the ship between your own shapes, apply its **Linked stories** card and use **Link this story across shapes**, select two to eight shapes, arrange their route and **Save stack**. The three linked examples above are also ready to open.
 
 ### Stick figures in boxes
 

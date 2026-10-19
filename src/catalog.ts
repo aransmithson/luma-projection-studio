@@ -7,6 +7,7 @@ import { chaseEffects } from "./chaseCatalog";
 import { musicEffects } from "./musicCatalog";
 import { storyEffects } from "./storyCatalog";
 import { stickEffects } from "./stickCatalog";
+import { imaginationEffects } from "./imaginationCatalog";
 
 export type Effect = {
   id: EffectId;
@@ -24,6 +25,7 @@ export type Effect = {
   audioReactive?: boolean;
 };
 export const effectCategories: EffectCategory[] = [
+  "Imagination",
   "Music",
   "Linked stories",
   "Chase scenes",
@@ -44,6 +46,7 @@ export const effectCategories: EffectCategory[] = [
   "Christmas",
 ];
 export const effects: Effect[] = [
+  ...imaginationEffects,
   ...stickEffects,
   ...musicEffects,
   ...storyEffects,

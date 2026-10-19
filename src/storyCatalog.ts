@@ -50,6 +50,56 @@ export const storyEffects: (Effect & { id: StoryEffectId })[] = [
       "A friendly firefly carries a trail of golden pollen through a moonlit garden. Flowers unfold beneath its light, shimmer for a moment, then close before the next visit.",
     searchTerms: ["firefly", "flower", "garden", "nature", "pollen"],
   },
+  {
+    id: "story-ant-city",
+    name: "Underground ant city",
+    color: "#b9ed8c",
+    description:
+      "A cutaway ant colony glows with nurseries and winding tunnels. Leaf-carrying workers cross the main tunnel and light each chamber as they arrive. Link shapes to extend the colony.",
+    searchTerms: [
+      "imagination",
+      "creative",
+      "ant",
+      "colony",
+      "underground",
+      "tunnel",
+      "leaf",
+    ],
+  },
+  {
+    id: "story-parcel-network",
+    name: "Pneumatic parcel network",
+    color: "#70dfff",
+    description:
+      "Glass tubes carry a glowing parcel capsule between miniature sorting stations. A little inspection robot scans each arrival and sends it onward through the linked tiles.",
+    searchTerms: [
+      "imagination",
+      "creative",
+      "parcel",
+      "capsule",
+      "pneumatic",
+      "pipe",
+      "robot",
+      "post",
+    ],
+  },
+  {
+    id: "story-treasure-map",
+    name: "Living treasure maps",
+    color: "#59beca",
+    description:
+      "Ink reveals islands on aged parchment while a tiny sailing ship follows the river. Treasure chests open as it passes. Link your shapes into one continuous voyage.",
+    searchTerms: [
+      "imagination",
+      "creative",
+      "treasure",
+      "map",
+      "pirate",
+      "ship",
+      "parchment",
+      "island",
+    ],
+  },
 ].map((story) => ({
   ...story,
   id: story.id as StoryEffectId,

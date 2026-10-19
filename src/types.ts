@@ -10,6 +10,7 @@ export type StickEffectId =
   | "stick-box-buddies";
 export type EffectCategory =
   | "Imported"
+  | "Imagination"
   | "Music"
   | "Linked stories"
   | "Chase scenes"
@@ -30,6 +31,7 @@ export type EffectCategory =
   | "Celebration";
 export type EffectId =
   | StickEffectId
+  | ImaginationEffectId
   | "imported-media"
   | "eq-bars"
   | "eq-mirror"
@@ -44,6 +46,9 @@ export type EffectId =
   | "story-reef-relay"
   | "story-clockwork-marble"
   | "story-firefly-garden"
+  | "story-ant-city"
+  | "story-parcel-network"
+  | "story-treasure-map"
   | "chase-cat-mouse"
   | "chase-fox-rabbit"
   | "chase-ghost-pumpkin"
@@ -335,6 +340,14 @@ export type PortalStack = StackBase & {
   seed: number;
 };
 export type StoryEffectId = Extract<EffectId, `story-${string}`>;
+export type ImaginationEffectId =
+  | "living-comic"
+  | "claymation-chaos"
+  | "yarn-factory"
+  | "bubble-creatures"
+  | "porcelain-dreams"
+  | "mosaic-faces"
+  | "rubber-room";
 export type StoryStack = StackBase & {
   kind: "story";
   effectId: StoryEffectId;

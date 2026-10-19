@@ -4,6 +4,7 @@ import { storyIds } from "../storyCatalog";
 import { storyCopies, storyMotion, storyVisit } from "../storyMotion";
 import { gear, storyActor } from "./storyArt";
 import { velvet } from "./characterArt";
+import { drawImaginationJourney } from "./imaginationJourneys";
 import {
   glow,
   line,
@@ -458,6 +459,10 @@ export function drawLinkedStory(
   c.globalCompositeOperation = "source-over";
   c.save();
   c.scale(c.canvas.width / w, c.canvas.height / h);
+  if (drawImaginationJourney(c, stack, route, index, motion, reaction)) {
+    c.restore();
+    return;
+  }
   scenery(c, w, h, u, motion.phase, stack, index);
   station(c, w, h, u, motion.phase, stack, reaction, index);
   const floor =
