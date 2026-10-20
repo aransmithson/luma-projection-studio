@@ -40,7 +40,7 @@ try {
     });
   }, example);
   await page.getByRole("button", { name: "Open project", exact: true }).click();
-  await expect(page.locator(".effect-card")).toHaveCount(191);
+  await expect(page.locator(".effect-card")).toHaveCount(199);
   await page.getByRole("button", { name: "Halloween", exact: true }).click();
   await expect(page.locator(".effect-card")).toHaveCount(12);
   await page.getByLabel("Search effects", { exact: true }).fill("eye balls");

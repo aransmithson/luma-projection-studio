@@ -30,6 +30,7 @@ Choose native workflows that exercise the change. Run them sequentially with the
 | Imported media | `npm run test:media` and `npm run test:media -- --packaged` |
 | Scene Animator | `npm run test:scene` and `npm run test:scene -- --packaged`, plus the media workflows |
 | Effect rendering | `npm run test:effects` and the relevant collection workflow |
+| Psychedelic effects | `npm run test:psychedelic` and `npm run test:psychedelic -- --packaged` |
 | Boxed stick figures | `npm run test:sticks` and `npm run test:sticks -- --packaged` |
 | Corridors, hypnotic patterns, flowers or transparent cracks | `npm run test:dreamscape` and `npm run test:dreamscape -- --packaged`; `npm run test:compositing` and media workflows after source-alpha changes |
 | Imagination styles | `npm run test:imagination`, `npm run test:stories` and their `-- --packaged` variants |

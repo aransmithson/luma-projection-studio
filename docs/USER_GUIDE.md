@@ -144,10 +144,11 @@ Projects support up to eight stacks within the 32-surface total. A surface belon
 
 ## Effects library
 
-All 191 effects and materials are generated locally: 179 animations and twelve still textures. Animation previews play on hover, or continuously when **Previews** is enabled. Still textures remain fixed unless an independent colour overlay is enabled. They do not require stock footage or external downloads.
+All 199 effects and materials are generated locally: 187 animations and twelve still textures. Animation previews play on hover, or continuously when **Previews** is enabled. Still textures remain fixed unless an independent colour overlay is enabled. They do not require stock footage or external downloads.
 
 | Collection | Effects |
 | --- | --- |
+| Psychedelic | Fractal sanctuary, Jewel hyperspace, Lotus awakening, Astral eye, Neon mycelium, Liquid mosaic, Serpent ribbons, Dimensional lattice |
 | Hypnotic | Velvet spiral, Chromatic whirlpool, Checker vortex, Moire rosette, Liquid agate |
 | Overlays | Spreading glass cracks, Creeping stone fissures, Crystal frost cracks |
 | Imagination | Living comic book, Claymation chaos, The yarn factory, Bubble-wrap creatures, Porcelain dreams, Living mosaic faces, Impossible rubber room |
@@ -173,6 +174,12 @@ All 191 effects and materials are generated locally: 179 animations and twelve s
 The ten additional generic effects are Rain on glass, Bubble ballet, Cloud nine, Liquid ripples, Petal drift, Sunrise horizon, Confetti parade, Midnight fireworks, Electric currents and Soft bokeh. **Prism kaleidoscope**, **Chromatic orbits** and **Infinity cubes** start with colour cycling enabled; switch it off in the Effect tab for a fixed palette.
 
 Straight rectangles stretch their effect with a projective transform. Curved shapes and other polygons clip a bounding-box texture to their outline. Edge runner paints the actual perimeter directly for every shape. Toy train circuit follows an inset track along the actual outer contour. Ellipses use a 48-vertex outline and resize handles. A polygon or curved boundary cannot intersect itself. Draw polygons with clicks, finish using **Finish polygon**, Enter or the first corner, remove the last point with Backspace, and cancel with Escape. Add and remove corners after drawing using the inspector or midpoint handles. Inserting a corner on a Bézier edge preserves its curve; removing a corner straightens the merged edge. Rectangles retain four corners and triangles retain three until Make outline editable converts them to polygons. Surface labels and control handles appear only in the editor; output alignment guides are controlled separately.
+
+### Psychedelic visions
+
+Choose **Psychedelic** in the effects browser, or choose **All effects** and search **DMT**. Select an existing shape and click an effect to apply it. The eight DMT-inspired styles include recursive mandalas, a faceted gemstone tunnel, a breathing lotus, a slowly closing eye, luminous mycelium, flowing stained-glass cells, woven serpentine ribbons and nested rotating hypercubes.
+
+All eight use 24-second loops at normal speed. **Pattern scale** zooms the design within the shape; content rotation and offsets position it. **Speed**, **Accent colour**, **Shuffle variation**, optional colour cycling and overlays use the existing Effect controls. The artwork already contains multiple colours; colour cycling adds the app's independent palette rotation. **Play**, **Pause** and **Restart** remain shared by the editor and projector. Try the [eight-effect gallery](../examples/Psychedelic-collection.luma).
 
 ### Corridors, hypnotic swirls and sprouting flowers
 

@@ -2,6 +2,14 @@
 
 Nox Projection Studio keeps the existing Luma project format and application identity.
 
+## 1.23.0
+
+- Added eight original DMT-inspired animations in a new **Psychedelic** collection: **Fractal sanctuary**, **Jewel hyperspace**, **Lotus awakening**, **Astral eye**, **Neon mycelium**, **Liquid mosaic**, **Serpent ribbons** and **Dimensional lattice**. Search **DMT** to find the collection.
+- Added recursive filigree, faceted tunnel geometry, shaded petals, moving iris fibres, luminous branching caps, rippling enamel cells, overlapping scaled ribbons and translucent rotating hypercubes. Each effect has deterministic seeded variations and a seamless 24-second movement loop at normal speed.
+- Supports shared Play/Pause/Restart, speed, pattern scale, colour, colour overlays and content transforms. Applying an effect changes the selected shape without adding objects. Existing project and playback formats remain compatible.
+- Added an [eight-effect gallery](./examples/Psychedelic-collection.luma), contact sheets and native editor/projector verification. The library now contains **199 effects and materials: 187 animations and 12 still textures**.
+- Continues the verified Windows ZIP distribution with SHA-256 checksums.
+
 ## 1.22.0
 
 - Added four endless depth scenes: **Endless cathedral**, **Neon transit tunnel**, **Overgrown arcade** and **Prismatic mirror hall**, with receding frames, column details, floor lines and lighting.

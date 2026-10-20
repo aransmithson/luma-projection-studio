@@ -10,6 +10,7 @@ export type StickEffectId =
   | "stick-box-buddies";
 export type EffectCategory =
   | "Imported"
+  | "Psychedelic"
   | "Hypnotic"
   | "Overlays"
   | "Imagination"
@@ -35,6 +36,7 @@ export type EffectId =
   | StickEffectId
   | ImaginationEffectId
   | DreamEffectId
+  | PsychedelicEffectId
   | "imported-media"
   | "eq-bars"
   | "eq-mirror"
@@ -314,6 +316,15 @@ export type Layer = {
   visible: boolean;
   locked: boolean;
 };
+export type PsychedelicEffectId =
+  | "psy-fractal-sanctuary"
+  | "psy-jewel-hyperspace"
+  | "psy-lotus-awakening"
+  | "psy-astral-eye"
+  | "psy-neon-mycelium"
+  | "psy-liquid-mosaic"
+  | "psy-serpent-ribbons"
+  | "psy-dimensional-lattice";
 export type DreamEffectId =
   | "endless-cathedral"
   | "neon-transit"

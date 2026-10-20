@@ -47,7 +47,7 @@ try {
     name: "Effect results",
     exact: true,
   });
-  await expect(page.locator(".effect-card")).toHaveCount(191);
+  await expect(page.locator(".effect-card")).toHaveCount(199);
   const headingBefore = await page.locator(".library-heading").boundingBox();
   const geometryBefore = await page
     .locator(".selection-controls polygon")

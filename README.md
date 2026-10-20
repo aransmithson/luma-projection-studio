@@ -2,7 +2,7 @@
 
 ![Nox - Bring surfaces to life](docs/assets/nox-banner.svg)
 
-**Bring surfaces to life.** A Windows desktop app for mapping animated light onto buildings, props and scenery with one projector. Draw and warp shapes, build linked stories, and react to music with **191 built-in effects and materials**.
+**Bring surfaces to life.** A Windows desktop app for mapping animated light onto buildings, props and scenery with one projector. Draw and warp shapes, build linked stories, and react to music with **199 built-in effects and materials**.
 
 Mapping, effects and imported playback run locally with no account. Optional **Scene Animator** generation connects your scene photo and prompt to Runway; it needs internet access and your own paid Runway API account. Built with Electron, React, TypeScript, Canvas 2D and WebGL.
 
@@ -12,10 +12,10 @@ Previously called **Luma**. Your existing `.luma` projects, imported library, pr
 
 Get the Windows build from [GitHub Releases](https://github.com/aransmithson/nox-projection-studio/releases/latest). The repository and downloads are public.
 
-- **Recommended:** download `Nox-Projection-Studio-1.22.0-win-x64.zip`, extract the whole folder, and open `Nox Projection Studio.exe`. Keep the executable beside its resources.
+- **Recommended:** download `Nox-Projection-Studio-1.23.0-win-x64.zip`, extract the whole folder, and open `Nox Projection Studio.exe`. Keep the executable beside its resources.
 - Close an older running copy before opening a new version. Nox restores the existing instance when opened again.
 
-Version 1.22.0 is distributed as a ZIP. Its extracted editor passed native Windows startup checks. The single-file portable launcher was blocked by Windows Code Integrity on the test PC and is not included in this release.
+Version 1.23.0 uses the verified ZIP distribution. Its extracted editor passed native Windows startup checks. The separate single-file launcher is omitted following a Windows Code Integrity block during the 1.22.0 release checks.
 
 Release builds are not code-signed. The Windows executable keeps Electron's original resources to preserve compatibility with Windows Code Integrity; Nox's own icon appears in the app window and interface.
 
@@ -27,7 +27,7 @@ Release builds are not code-signed. The Windows executable keeps Electron's orig
 | Placement | Projected wireframe/mesh, visible placement cursor, snapping, pixel nudging, calibration and solo view |
 | Workspace | Independently hide or restore Effects and Properties panels; your layout is remembered on this device |
 | Compositing | Layers, copy/paste, ten blend modes, feathering, colour overlays and independent content rotation/offset |
-| Effects | 179 animations and 12 still materials, including boxed stick figures, Halloween, Christmas, space, creatures, shadow puppets, architectural illusions and stage lighting |
+| Effects | 187 animations and 12 still materials, including psychedelia, boxed stick figures, Halloween, Christmas, space, creatures, shadow puppets, architectural illusions and stage lighting |
 | Imported animations | MP4/H.264 videos and animated GIFs, thumbnails, looping, trim, time offset, speed and fill/fit/stretch |
 | Scene Animator | JPG/PNG reference alignment, optional Runway generation, independent preview and one shared clip across selected props |
 | Linked stories | Nine travelling stories with local reactions, plus synchronized liquid stacks, character chases and portal journeys across two to eight shapes |
@@ -38,6 +38,14 @@ Release builds are not code-signed. The Windows executable keeps Electron's orig
 Projects support **32 surfaces**, **64 vertices per polygon**, and **eight animation stacks**. The stacked editor keeps settings and Save visible in a wide three-column layout.
 
 ![Nox mapping workspace with the effects library and surface inspector](docs/assets/workspace.png)
+
+## Psychedelic visions
+
+Eight DMT-inspired animations have their own **Psychedelic** collection: **Fractal sanctuary**, **Jewel hyperspace**, **Lotus awakening**, **Astral eye**, **Neon mycelium**, **Liquid mosaic**, **Serpent ribbons** and **Dimensional lattice**. They combine recursive filigree, bevelled gems, breathing petals, an iridescent iris, glowing organic branches, liquid stained glass, woven scales and rotating four-dimensional geometry.
+
+![Eight psychedelic animations](docs/assets/psychedelic-collection.png)
+
+Select a shape and choose **Psychedelic**, or search **DMT** in **All effects**. Each animation loops every 24 seconds at normal speed and supports **Speed**, **Pattern scale**, **Accent colour**, optional colour cycling, **Shuffle variation** and the shared playback controls. Open the [Psychedelic gallery](examples/Psychedelic-collection.luma) to try all eight together. Everything is drawn locally; no footage downloads or AI service are required.
 
 ## Endless corridors, hypnotic swirls, flowers and cracks
 

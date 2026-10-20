@@ -194,7 +194,7 @@ try {
   await page
     .getByRole("button", { name: "Browse all effects", exact: true })
     .click();
-  await expect(page.locator(".effect-card")).toHaveCount(191);
+  await expect(page.locator(".effect-card")).toHaveCount(199);
   console.log(
     "PASS: idle previews stay still, hover previews animate, and empty filters have a reset",
   );

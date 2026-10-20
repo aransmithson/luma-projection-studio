@@ -1,6 +1,6 @@
 {
   "name": "luma-projection-studio",
-  "version": "1.22.0",
+  "version": "1.23.0",
   "private": true,
   "description": "Nox Projection Studio. Bring surfaces to life with flexible mapping, linked stories and music-reactive effects.",
   "author": "Aran Smithson",
@@ -54,7 +54,8 @@
     "test:audio-render": "node scripts/audio-render-check.mjs",
     "test:media": "node scripts/media-workflow.mjs",
     "test:scene": "node scripts/scene-workflow.mjs",
-    "test:dreamscape": "node scripts/dreamscape-workflow.mjs"
+    "test:dreamscape": "node scripts/dreamscape-workflow.mjs",
+    "test:psychedelic": "node scripts/psychedelic-workflow.mjs"
   },
   "dependencies": {
     "earcut": "^3.0.2",

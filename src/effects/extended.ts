@@ -26,7 +26,9 @@ import { corridorPainters } from "./dreamCorridors";
 import { hypnoticPainters } from "./dreamPatterns";
 import { flowerPainters } from "./dreamFlowers";
 import { crackPainters } from "./dreamCracks";
+import { psychedelicPainters } from "./psychedelicScenes";
 export const extendedPainters: Partial<Record<EffectId, Painter>> = {
+  ...psychedelicPainters,
   ...corridorPainters,
   ...hypnoticPainters,
   ...flowerPainters,

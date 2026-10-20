@@ -30,6 +30,16 @@ try {
     const architecturalIds = Object.keys(architecturalPainters);
     const reports = [],
       groups = {
+        psychedelic: effects.filter((e) => e.category === "Psychedelic"),
+        "psychedelic-motion": effects
+          .filter((e) => e.category === "Psychedelic")
+          .flatMap((effect) =>
+            [0, 6, 12, 18].map((previewTime) => ({
+              ...effect,
+              previewTime,
+              name: `${effect.name} · ${previewTime}s`,
+            })),
+          ),
         dreamscape: effects.filter((e) =>
           e.searchTerms?.includes("dreamscape"),
         ),

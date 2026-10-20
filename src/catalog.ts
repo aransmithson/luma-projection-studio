@@ -9,6 +9,7 @@ import { storyEffects } from "./storyCatalog";
 import { stickEffects } from "./stickCatalog";
 import { imaginationEffects } from "./imaginationCatalog";
 import { dreamEffects } from "./dreamCatalog";
+import { psychedelicEffects } from "./psychedelicCatalog";
 
 export type Effect = {
   id: EffectId;
@@ -27,6 +28,7 @@ export type Effect = {
   transparent?: boolean;
 };
 export const effectCategories: EffectCategory[] = [
+  "Psychedelic",
   "Hypnotic",
   "Overlays",
   "Imagination",
@@ -50,6 +52,7 @@ export const effectCategories: EffectCategory[] = [
   "Christmas",
 ];
 export const effects: Effect[] = [
+  ...psychedelicEffects,
   ...dreamEffects,
   ...imaginationEffects,
   ...stickEffects,
