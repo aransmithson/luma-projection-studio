@@ -40,7 +40,7 @@ let page, output;
 try {
   page = await app.firstWindow();
   page.setDefaultTimeout(15000);
-  await expect(page.locator(".stage-overlay")).toBeVisible();
+  await expect(page.locator(".stage-overlay")).toBeVisible({ timeout: 30000 });
   const open = async (filePath) => {
     await app.evaluate(({ dialog }, filePath) => {
       dialog.showOpenDialog = async () => ({

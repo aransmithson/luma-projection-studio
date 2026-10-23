@@ -1234,11 +1234,13 @@ fieldset.inspector-scroll {
   border-radius: 5px;
 }
 .canvas-toolbar {
-  height: 41px;
+  min-height: 41px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
+  padding: 6px 12px;
+  flex-wrap: wrap;
+  gap: 5px 8px;
   border-top: 1px solid #26262d;
   border-bottom: 1px solid #26262d;
   background: #17181c;
@@ -1270,19 +1272,46 @@ fieldset.inspector-scroll {
 }
 .zoom-value {
   font-size: 10px;
-  color: #9691a1;
-  width: 34px;
+  color: #c5bdd3;
+  width: 74px;
+  height: 27px;
+  padding: 2px 4px;
+  border: 1px solid #3b3545;
+  border-radius: 4px;
+  background: #202027;
+  font-variant-numeric: tabular-nums;
 }
-.stage-scroll {
+.zoom-fit {
+  height: 27px;
+  padding: 0 6px;
+  font-size: 10px;
+  color: #c5bdd3;
+  border-radius: 4px;
+}
+.zoom-fit:hover { background: #2b2834; }
+.canvas-zoom-controls { margin-left: auto; }
+.stage-area {
+  position: relative;
   flex: 1;
   min-height: 0;
-  display: flex;
-  position: relative;
-  overflow: auto;
+}
+.stage-scroll {
+  position: absolute;
+  inset: 0;
+  overflow: scroll;
+  overscroll-behavior: contain;
   background-color: #0e0f12;
   background-image: radial-gradient(#2a2b3377 0.6px, transparent 0.6px);
   background-size: 16px 16px;
 }
+.stage-content {
+  position: relative;
+  display: flex;
+  padding: 32px;
+  box-sizing: border-box;
+}
+.stage-scroll.pan-mode, .stage-scroll.pan-mode * { cursor: grab; }
+.stage-scroll.is-panning, .stage-scroll.is-panning .stage-overlay, .stage-scroll.is-panning * { cursor: grabbing; }
 .stage-board {
   position: relative;
   user-select: none;
@@ -1312,6 +1341,7 @@ fieldset.inspector-scroll {
   stroke: #ffffff15;
   stroke-width: 1;
 }
+.canvas-grid line { vector-effect: non-scaling-stroke; }
 .surface-outline {
   stroke: #c7baf740;
   stroke-width: 1;
@@ -3090,7 +3120,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
   stroke: #d8edf5;
 }
 .canvas-toolbar {
-  padding: 0 14px;
+  padding: 6px 14px;
 }
 .canvas-resolution {
   color: #b3a9c1;
@@ -3464,7 +3494,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
     display: none;
   }
   .canvas-toolbar {
-    padding: 0 10px;
+    padding: 6px 10px;
   }
   .canvas-heading {
     padding: 8px 14px;

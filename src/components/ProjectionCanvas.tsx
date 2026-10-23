@@ -2,15 +2,18 @@ import { useEffect, useRef, useState } from "react";
 import { ProjectionRenderer } from "../renderer";
 import type { RenderState } from "../types";
 import { getAudioFrame } from "../audioStore";
+import { editorPreviewSize } from "../canvasView";
 
 export function ProjectionCanvas({
   state,
   className = "",
   onFps,
+  editorPreview = false,
 }: {
   state: RenderState;
   className?: string;
   onFps?: (fps: number) => void;
+  editorPreview?: boolean;
 }) {
   const ref = useRef<HTMLCanvasElement>(null),
     latest = useRef(state),
@@ -53,10 +56,20 @@ export function ProjectionCanvas({
       if (time - last >= 1000 / 31) {
         last = time;
         try {
+          const pixelWidth = width * Math.min(devicePixelRatio, 2),
+            pixelHeight = height * Math.min(devicePixelRatio, 2);
+          const size = editorPreview
+            ? editorPreviewSize(
+                pixelWidth,
+                pixelHeight,
+                latest.current.project.width,
+                latest.current.project.height,
+              )
+            : { width: pixelWidth, height: pixelHeight };
           renderer.render(
             { ...latest.current, audio: getAudioFrame() },
-            width * Math.min(devicePixelRatio, 2),
-            height * Math.min(devicePixelRatio, 2),
+            size.width,
+            size.height,
           );
         } catch (e) {
           setError(

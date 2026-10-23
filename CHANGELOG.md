@@ -2,6 +2,14 @@
 
 Nox Projection Studio keeps the existing Luma project format and application identity.
 
+## 1.24.0
+
+- Increased canvas zoom from a 200% maximum to **25–1600%**, with presets, stepped +/− controls and continuous Ctrl+wheel/trackpad zoom anchored at the pointer.
+- Added a **hand tool (H)** and temporary **middle mouse drag** for panning, **Fit canvas (0)** and **Zoom to selection (F)**. Navigation preserves shape geometry, unfinished polygon points, the shared playback clock and projector output. The view keeps its centre when panels or window size change.
+- Kept corner handles, Bézier controls, grid strokes and corner labels readable at high zoom. Wrapped the toolbar at narrow workspace widths and kept drawing controls and canvas hints outside the scrolling artwork.
+- Bounded editor preview buffers to projector resolution and a maximum 4096-pixel side; magnifying the editor no longer requires a zoom-sized WebGL buffer. Output rendering retains its existing resolution.
+- Added navigation math and buffer-limit tests plus native source/packaged checks for cursor anchoring, pan, 1600% corner and curve edits, Undo, drawing, shortcuts and unchanged projection pixels. The existing 199-effect library and version-1 project format are preserved.
+
 ## 1.23.0
 
 - Added eight original DMT-inspired animations in a new **Psychedelic** collection: **Fractal sanctuary**, **Jewel hyperspace**, **Lotus awakening**, **Astral eye**, **Neon mycelium**, **Liquid mosaic**, **Serpent ribbons** and **Dimensional lattice**. Search **DMT** to find the collection.

@@ -23,6 +23,7 @@ Choose native workflows that exercise the change. Run them sequentially with the
 | Change | Relevant checks |
 | --- | --- |
 | General editor or output | `npm run test:desktop` |
+| Canvas navigation | `npm run test:zoom`, `npm run test:placement`, and `npm run test:zoom -- --packaged` |
 | Stacked animations | `npm run test:stories`, `npm run test:creative`, `npm run test:linked`, `npm run test:portals` |
 | Shapes, curves or holes | `npm run test:placement`, `npm run test:cutouts` |
 | Layers or copy/paste | `npm run test:layers`, `npm run test:clipboard` |
@@ -64,6 +65,7 @@ Distribute only formats that pass their native startup checks: the complete unpa
 - [Geometry](src/geometry.ts), [curves](src/curves.ts) and [cutouts](src/cutouts.ts): shape editing and masks.
 - [Stacks](src/stacks.ts), [chase routes](src/chaseRoute.ts), [story timing](src/storyMotion.ts) and [portal motion](src/portalMotion.ts): linked scenes. Follow the [linked-story instructions](.github/instructions/linked-stories.instructions.md) for new travellers and arrival reactions. `npm run test:stories` checks rendering, native editing, examples and output; `npm run test:stories -- --packaged` verifies a packaged build using `LUMA_RELEASE_DIR`.
 - [Effects](src/effects/) and [catalogue](src/catalog.ts): procedural artwork and effect metadata.
+- [Canvas navigation](src/useStageNavigation.ts) and [view calculations](src/canvasView.ts): editor zoom, pan and preview buffer limits. Follow the [canvas instructions](.github/instructions/canvas-navigation.instructions.md) when changing viewport geometry or pointer handling.
 - [Desktop process](electron/main.cjs) and [preload bridge](electron/preload.cjs): native windows, validated IPC and file dialogs.
 - [Audio analysis](src/audioAnalysis.ts) and [desktop permissions](electron/audio.cjs): shared music input.
 - [Media storage](electron/media.cjs), [timing](src/media.ts) and [playback](src/mediaPlayback.ts): native imports, portable companions, GIF decoding and shared video timing. The media workflow generates its own GIF and H.264 test footage in an isolated profile; it downloads no footage or codec tools.

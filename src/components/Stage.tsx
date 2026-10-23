@@ -1,4 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type Ref } from "react";
+import {
+  useStageNavigation,
+  type StageNavigation,
+} from "../useStageNavigation";
 import { Check, Crosshair, LockKeyhole, PenLine, Undo2, X } from "lucide-react";
 import {
   bounds,
@@ -41,6 +45,9 @@ type Props = {
   grid: boolean;
   snap: boolean;
   zoom: number;
+  onZoom: (zoom: number) => void;
+  navigationRef: Ref<StageNavigation>;
+  panMode: boolean;
   drawing: boolean;
   placing: ShapePreset | null;
   cancelPlacement: () => void;
@@ -76,6 +83,9 @@ export function Stage({
   grid,
   snap,
   zoom,
+  onZoom,
+  navigationRef,
+  panMode,
   drawing,
   placing,
   cancelPlacement,
@@ -93,11 +103,9 @@ export function Stage({
   onPointerPosition,
 }: Props) {
   const project = renderedProject(state.project);
-  const container = useRef<HTMLDivElement>(null),
-    svg = useRef<SVGSVGElement>(null),
+  const svg = useRef<SVGSVGElement>(null),
     drag = useRef<Drag | null>(null);
-  const [fitWidth, setFitWidth] = useState(800),
-    [draft, setDraft] = useState<Point[]>([]),
+  const [draft, setDraft] = useState<Point[]>([]),
     [cursor, setCursor] = useState<Point | null>(null),
     [invalidDrag, setInvalidDrag] = useState(false);
   const placementStart = useRef<Point | null>(null);
@@ -115,6 +123,17 @@ export function Stage({
       ? reference
       : project.surfaces.find((s) => s.id === selectedId);
   const soloId = effectiveSolo(project.surfaces, state.soloSurfaceId);
+  const { container, board, viewport, fitWidth, panning, panEvents } =
+    useStageNavigation({
+      zoom,
+      onZoom,
+      aspect,
+      selected,
+      navigationRef,
+      panMode,
+      isEditing: () => !!drag.current || !!placementStart.current,
+      clearPointer: () => onPointerPosition(null),
+    });
   useEffect(() => {
     if (
       placing &&
@@ -138,14 +157,6 @@ export function Stage({
     window.addEventListener("blur", cancel);
     return () => window.removeEventListener("blur", cancel);
   }, []);
-  useEffect(() => {
-    const observer = new ResizeObserver(([entry]) => {
-      const { width, height } = entry.contentRect;
-      setFitWidth(Math.max(200, Math.min(width - 64, (height - 64) * aspect)));
-    });
-    if (container.current) observer.observe(container.current);
-    return () => observer.disconnect();
-  }, [aspect]);
   useEffect(() => {
     const cancel = () => {
       if (drag.current) {
@@ -470,430 +481,471 @@ export function Stage({
           )}
         </div>
       )}
-      <div
-        className={`stage-scroll ${drawing || placing ? "is-drawing" : ""}`}
-        ref={container}
-      >
+      <div className="stage-area">
         <div
-          className="stage-board"
-          style={{ width: fitWidth * zoom, height: (fitWidth * zoom) / aspect }}
+          className={`stage-scroll ${drawing || placing ? "is-drawing" : ""} ${panMode ? "pan-mode" : ""} ${panning ? "is-panning" : ""}`}
+          ref={container}
+          {...panEvents}
         >
-          <div className="stage-coordinate coord-top-left">0, 0</div>
-          <div className="stage-coordinate coord-top-right">
-            {project.width}
-          </div>
-          <div className="stage-coordinate coord-bottom-left">
-            {project.height}
-          </div>
-          <ProjectionCanvas
-            state={{ ...state, scenePhoto: !!project.scene?.visible }}
-            onFps={onFps}
-          />
-          <svg
-            className="stage-overlay"
-            ref={svg}
-            viewBox={`0 0 ${project.width} ${project.height}`}
-            onPointerDown={backgroundDown}
-            onPointerDownCapture={trackPointer}
-            onPointerEnter={trackPointer}
-            onPointerLeave={() => onPointerPosition(null)}
-            onPointerMove={onMove}
-            onPointerUp={endDrag}
-            onPointerCancel={endDrag}
-            onLostPointerCapture={endDrag}
-            onContextMenu={(e) => e.preventDefault()}
-            onDragStart={(e) => e.preventDefault()}
-            aria-label="Surface mapping editor"
+          <div
+            className="stage-content"
+            style={{
+              width: Math.max(viewport.width, fitWidth * zoom + 64),
+              height: Math.max(
+                viewport.height,
+                (fitWidth * zoom) / aspect + 64,
+              ),
+            }}
           >
-            {grid && (
-              <g className="canvas-grid" pointerEvents="none">
-                {Array.from({ length: 15 }, (_, i) => (
-                  <line
-                    key={`x${i}`}
-                    x1={((i + 1) * project.width) / 16}
-                    x2={((i + 1) * project.width) / 16}
-                    y1="0"
-                    y2={project.height}
-                  />
-                ))}
-                {Array.from({ length: 8 }, (_, i) => (
-                  <line
-                    key={`y${i}`}
-                    y1={((i + 1) * project.height) / 9}
-                    y2={((i + 1) * project.height) / 9}
-                    x1="0"
-                    x2={project.width}
-                  />
-                ))}
-              </g>
-            )}
-            {selectedId !== SCENE_PHOTO_ID && referenceOutline}
-            {project.surfaces
-              .filter((s) => surfaceIsVisible(s, project.surfaces))
-              .sort((a, b) => Number(!!a.cutoutOf) - Number(!!b.cutoutOf))
-              .map((surface) => (
-                <path
-                  key={surface.id}
-                  data-surface-id={surface.id}
-                  d={surfacePath(surface, project.width, project.height)}
-                  className={`surface-outline ${surface.id === selectedId ? "selected" : ""} ${surface.locked ? "locked" : ""} ${surface.cutoutOf ? "cutout-outline" : ""} ${soloId && (surface.cutoutOf || surface.id) !== soloId ? "muted" : ""}`}
-                  fill="transparent"
-                  vectorEffect="non-scaling-stroke"
-                  pointerEvents={drawing || placing ? "none" : "all"}
-                  onPointerDown={(e) => startDrag(e, surface, "move")}
-                />
-              ))}
-            {labels &&
-              !drawing &&
-              !placing &&
-              project.surfaces
-                .filter(
-                  (s) =>
-                    surfaceIsVisible(s, project.surfaces) &&
-                    (!soloId || (s.cutoutOf || s.id) === soloId),
-                )
-                .map((surface) => {
-                  const b = bounds(surfaceOutline(surface)),
-                    name =
-                      surface.name.length > 22
-                        ? `${surface.name.slice(0, 20)}…`
-                        : surface.name;
-                  const width = name.length * 6.2 + 18,
-                    x = clamp(
-                      b.x * project.width,
-                      3 * pixel,
-                      project.width - (width + 3) * pixel,
-                    ),
-                    initialY = Math.max(
-                      3 * pixel,
-                      b.y * project.height - 25 * pixel,
-                    );
-                  let y = initialY;
-                  for (
-                    let attempt = 0;
-                    attempt < labelPositions.length;
-                    attempt++
-                  ) {
-                    const overlap = labelPositions.find(
-                      (label) =>
-                        x < label.x + (label.width + 4) * pixel &&
-                        x + (width + 4) * pixel > label.x &&
-                        y < label.y + 23 * pixel &&
-                        y + 23 * pixel > label.y,
-                    );
-                    if (!overlap) break;
-                    y = Math.min(
-                      project.height - 23 * pixel,
-                      overlap.y + 23 * pixel,
-                    );
-                  }
-                  labelPositions.push({ x, y, width });
-                  return (
-                    <g
-                      className={`surface-label ${surface.id === selectedId ? "active" : ""}`}
-                      key={surface.id}
-                      transform={`translate(${x},${y}) scale(${pixel})`}
-                      pointerEvents="none"
-                    >
-                      <rect width={width} height="20" rx="4" />
-                      <text x="9" y="13.5">
-                        {name}
-                      </text>
-                    </g>
-                  );
-                })}
-            {selectedId === SCENE_PHOTO_ID && referenceOutline}
-            {selected &&
-              surfaceIsVisible(selected, project.surfaces) &&
-              !drawing &&
-              !placing && (
-                <g className="selection-controls">
-                  <polygon
-                    points={coordinates(selected.points)}
-                    fill="none"
-                    stroke={hasCurves(selected) ? "none" : "#b29aff"}
-                    strokeWidth="1.5"
-                    vectorEffect="non-scaling-stroke"
-                    pointerEvents="none"
-                  />
-                  {hasCurves(selected) && (
-                    <path
-                      className="selected-curve"
-                      d={surfacePath(selected, project.width, project.height)}
-                      fill="none"
-                      stroke="#b29aff"
-                      strokeWidth="1.5"
-                      vectorEffect="non-scaling-stroke"
-                      pointerEvents="none"
-                    />
-                  )}
-                  {!selected.locked &&
-                    selectedPoint !== null &&
-                    selected.curves?.[selectedPoint] && (
-                      <g className="bezier-controls">
-                        {(["control1", "control2"] as const).map(
-                          (handle, i) => {
-                            const edge = selected.curves![selectedPoint]!,
-                              p = edge[handle],
-                              anchor =
-                                selected.points[
-                                  (selectedPoint + i) % selected.points.length
-                                ];
-                            return (
-                              <g key={handle}>
-                                <line
-                                  x1={anchor.x * project.width}
-                                  y1={anchor.y * project.height}
-                                  x2={p.x * project.width}
-                                  y2={p.y * project.height}
-                                  vectorEffect="non-scaling-stroke"
-                                />
-                                <circle
-                                  role="button"
-                                  tabIndex={0}
-                                  aria-label={`Bézier handle ${i + 1}`}
-                                  cx={p.x * project.width}
-                                  cy={p.y * project.height}
-                                  r={6 * pixel}
-                                  vectorEffect="non-scaling-stroke"
-                                  onPointerDown={(e) =>
-                                    startDrag(
-                                      e,
-                                      selected,
-                                      handle,
-                                      selectedPoint,
-                                    )
-                                  }
-                                  onKeyDown={(e) => {
-                                    if (!e.key.startsWith("Arrow")) return;
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    const step = e.shiftKey ? 10 : 1;
-                                    const position = {
-                                      x: clamp(
-                                        p.x +
-                                          (e.key === "ArrowRight"
-                                            ? step
-                                            : e.key === "ArrowLeft"
-                                              ? -step
-                                              : 0) /
-                                            project.width,
-                                      ),
-                                      y: clamp(
-                                        p.y +
-                                          (e.key === "ArrowDown"
-                                            ? step
-                                            : e.key === "ArrowUp"
-                                              ? -step
-                                              : 0) /
-                                            project.height,
-                                      ),
-                                    };
-                                    const curves = selected.curves!.map(
-                                      (c, edgeIndex) =>
-                                        edgeIndex === selectedPoint && c
-                                          ? { ...c, [handle]: position }
-                                          : c,
-                                    );
-                                    if (
-                                      validSurfaceGeometry({
-                                        ...selected,
-                                        curves,
-                                      })
-                                    )
-                                      updateSurface(selected.id, { curves });
-                                  }}
-                                />
-                              </g>
-                            );
-                          },
-                        )}
-                      </g>
-                    )}
-                  {!selected.locked &&
-                    handles?.map((p, i) => (
-                      <g key={i}>
-                        <circle
-                          data-vertex={i}
-                          role="button"
-                          aria-label={`Corner ${i + 1}`}
-                          aria-pressed={selectedPoint === i}
-                          tabIndex={0}
-                          cx={p.x * project.width}
-                          cy={p.y * project.height}
-                          r={handleRadius}
-                          fill={selectedPoint === i ? "#ad89ff" : "#ece5ff"}
-                          stroke={selectedPoint === i ? "#ffffff" : "#9674f5"}
-                          strokeWidth="2"
-                          vectorEffect="non-scaling-stroke"
-                          className="vertex-handle"
-                          onPointerDown={(e) =>
-                            startDrag(
-                              e,
-                              selected,
-                              selected.kind === "ellipse" ? "resize" : "point",
-                              i,
-                            )
-                          }
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter" || e.key === " ") {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              if (selected.kind !== "ellipse") selectPoint(i);
-                            }
-                          }}
-                        />
-                        {selected.kind !== "ellipse" && (
-                          <text
-                            className="corner-number"
-                            x={clamp(
-                              p.x * project.width + 11 * pixel,
-                              10 * pixel,
-                              project.width - 10 * pixel,
-                            )}
-                            y={clamp(
-                              p.y * project.height - 9 * pixel,
-                              12 * pixel,
-                              project.height - 8 * pixel,
-                            )}
-                            fontSize={10 * pixel}
-                            pointerEvents="none"
-                          >
-                            {i + 1}
-                          </text>
-                        )}
-                      </g>
+            <div
+              className="stage-board"
+              ref={board}
+              style={{
+                width: fitWidth * zoom,
+                height: (fitWidth * zoom) / aspect,
+              }}
+            >
+              <div className="stage-coordinate coord-top-left">0, 0</div>
+              <div className="stage-coordinate coord-top-right">
+                {project.width}
+              </div>
+              <div className="stage-coordinate coord-bottom-left">
+                {project.height}
+              </div>
+              <ProjectionCanvas
+                editorPreview
+                state={{ ...state, scenePhoto: !!project.scene?.visible }}
+                onFps={onFps}
+              />
+              <svg
+                className="stage-overlay"
+                ref={svg}
+                viewBox={`0 0 ${project.width} ${project.height}`}
+                onPointerDown={backgroundDown}
+                onPointerDownCapture={trackPointer}
+                onPointerEnter={trackPointer}
+                onPointerLeave={() => onPointerPosition(null)}
+                onPointerMove={onMove}
+                onPointerUp={endDrag}
+                onPointerCancel={endDrag}
+                onLostPointerCapture={endDrag}
+                onContextMenu={(e) => e.preventDefault()}
+                onDragStart={(e) => e.preventDefault()}
+                aria-label="Surface mapping editor"
+              >
+                {grid && (
+                  <g className="canvas-grid" pointerEvents="none">
+                    {Array.from({ length: 15 }, (_, i) => (
+                      <line
+                        key={`x${i}`}
+                        x1={((i + 1) * project.width) / 16}
+                        x2={((i + 1) * project.width) / 16}
+                        y1="0"
+                        y2={project.height}
+                      />
                     ))}
-                  {!selected.locked &&
-                    selected.kind === "polygon" &&
-                    selected.points.length < 64 &&
-                    selected.points.map((a, i) => {
-                      const b =
-                        selected.points[(i + 1) % selected.points.length];
-                      const insert = () => {
-                        const change = insertSurfaceCorner(selected, i);
-                        if (change) {
-                          updateSurface(selected.id, change);
-                          selectPoint(i + 1);
-                        }
-                      };
+                    {Array.from({ length: 8 }, (_, i) => (
+                      <line
+                        key={`y${i}`}
+                        y1={((i + 1) * project.height) / 9}
+                        y2={((i + 1) * project.height) / 9}
+                        x1="0"
+                        x2={project.width}
+                      />
+                    ))}
+                  </g>
+                )}
+                {selectedId !== SCENE_PHOTO_ID && referenceOutline}
+                {project.surfaces
+                  .filter((s) => surfaceIsVisible(s, project.surfaces))
+                  .sort((a, b) => Number(!!a.cutoutOf) - Number(!!b.cutoutOf))
+                  .map((surface) => (
+                    <path
+                      key={surface.id}
+                      data-surface-id={surface.id}
+                      d={surfacePath(surface, project.width, project.height)}
+                      className={`surface-outline ${surface.id === selectedId ? "selected" : ""} ${surface.locked ? "locked" : ""} ${surface.cutoutOf ? "cutout-outline" : ""} ${soloId && (surface.cutoutOf || surface.id) !== soloId ? "muted" : ""}`}
+                      fill="transparent"
+                      vectorEffect="non-scaling-stroke"
+                      pointerEvents={drawing || placing ? "none" : "all"}
+                      onPointerDown={(e) => startDrag(e, surface, "move")}
+                    />
+                  ))}
+                {labels &&
+                  !drawing &&
+                  !placing &&
+                  project.surfaces
+                    .filter(
+                      (s) =>
+                        surfaceIsVisible(s, project.surfaces) &&
+                        (!soloId || (s.cutoutOf || s.id) === soloId),
+                    )
+                    .map((surface) => {
+                      const b = bounds(surfaceOutline(surface)),
+                        name =
+                          surface.name.length > 22
+                            ? `${surface.name.slice(0, 20)}…`
+                            : surface.name;
+                      const width = name.length * 6.2 + 18,
+                        x = clamp(
+                          b.x * project.width,
+                          3 * pixel,
+                          project.width - (width + 3) * pixel,
+                        ),
+                        initialY = Math.max(
+                          3 * pixel,
+                          b.y * project.height - 25 * pixel,
+                        );
+                      let y = initialY;
+                      for (
+                        let attempt = 0;
+                        attempt < labelPositions.length;
+                        attempt++
+                      ) {
+                        const overlap = labelPositions.find(
+                          (label) =>
+                            x < label.x + (label.width + 4) * pixel &&
+                            x + (width + 4) * pixel > label.x &&
+                            y < label.y + 23 * pixel &&
+                            y + 23 * pixel > label.y,
+                        );
+                        if (!overlap) break;
+                        y = Math.min(
+                          project.height - 23 * pixel,
+                          overlap.y + 23 * pixel,
+                        );
+                      }
+                      labelPositions.push({ x, y, width });
                       return (
                         <g
-                          key={`edge${i}`}
-                          className="edge-handle"
-                          role="button"
-                          tabIndex={0}
-                          aria-label={`Add corner after ${i + 1}`}
-                          transform={`translate(${(selected.curves?.[i] ? cubicPoint(a, selected.curves[i]!, b, 0.5).x : (a.x + b.x) / 2) * project.width},${(selected.curves?.[i] ? cubicPoint(a, selected.curves[i]!, b, 0.5).y : (a.y + b.y) / 2) * project.height}) scale(${pixel})`}
-                          onPointerDown={(e) => {
-                            e.stopPropagation();
-                            insert();
-                          }}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter" || e.key === " ") {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              insert();
-                            }
-                          }}
+                          className={`surface-label ${surface.id === selectedId ? "active" : ""}`}
+                          key={surface.id}
+                          transform={`translate(${x},${y}) scale(${pixel})`}
+                          pointerEvents="none"
                         >
-                          <circle r="7" />
-                          <path d="M-3 0H3M0-3V3" />
+                          <rect width={width} height="20" rx="4" />
+                          <text x="9" y="13.5">
+                            {name}
+                          </text>
                         </g>
                       );
                     })}
-                </g>
-              )}
-            {placing &&
-              placementFrame &&
-              placementFrame.width > 0 &&
-              placementFrame.height > 0 && (
-                <g
-                  className="placement-draft"
-                  pointerEvents="none"
-                  fill="#a389ff1c"
-                  stroke="#d4bfff"
-                  strokeWidth="1.5"
-                  strokeDasharray="5 4"
-                >
-                  <path
-                    vectorEffect="non-scaling-stroke"
-                    d={surfacePath(
-                      presetGeometry(placing, placementFrame),
-                      project.width,
-                      project.height,
-                    )}
-                  />
-                  {placing === "ring" && (
-                    <path
-                      fill="none"
-                      vectorEffect="non-scaling-stroke"
-                      d={surfacePath(
-                        ringHoleGeometry(placementFrame),
-                        project.width,
-                        project.height,
+                {selectedId === SCENE_PHOTO_ID && referenceOutline}
+                {selected &&
+                  surfaceIsVisible(selected, project.surfaces) &&
+                  !drawing &&
+                  !placing && (
+                    <g className="selection-controls">
+                      <polygon
+                        points={coordinates(selected.points)}
+                        fill="none"
+                        stroke={hasCurves(selected) ? "none" : "#b29aff"}
+                        strokeWidth="1.5"
+                        vectorEffect="non-scaling-stroke"
+                        pointerEvents="none"
+                      />
+                      {hasCurves(selected) && (
+                        <path
+                          className="selected-curve"
+                          d={surfacePath(
+                            selected,
+                            project.width,
+                            project.height,
+                          )}
+                          fill="none"
+                          stroke="#b29aff"
+                          strokeWidth="1.5"
+                          vectorEffect="non-scaling-stroke"
+                          pointerEvents="none"
+                        />
                       )}
-                    />
+                      {!selected.locked &&
+                        selectedPoint !== null &&
+                        selected.curves?.[selectedPoint] && (
+                          <g className="bezier-controls">
+                            {(["control1", "control2"] as const).map(
+                              (handle, i) => {
+                                const edge = selected.curves![selectedPoint]!,
+                                  p = edge[handle],
+                                  anchor =
+                                    selected.points[
+                                      (selectedPoint + i) %
+                                        selected.points.length
+                                    ];
+                                return (
+                                  <g key={handle}>
+                                    <line
+                                      x1={anchor.x * project.width}
+                                      y1={anchor.y * project.height}
+                                      x2={p.x * project.width}
+                                      y2={p.y * project.height}
+                                      vectorEffect="non-scaling-stroke"
+                                    />
+                                    <circle
+                                      role="button"
+                                      tabIndex={0}
+                                      aria-label={`Bézier handle ${i + 1}`}
+                                      cx={p.x * project.width}
+                                      cy={p.y * project.height}
+                                      r={6 * pixel}
+                                      vectorEffect="non-scaling-stroke"
+                                      onPointerDown={(e) =>
+                                        startDrag(
+                                          e,
+                                          selected,
+                                          handle,
+                                          selectedPoint,
+                                        )
+                                      }
+                                      onKeyDown={(e) => {
+                                        if (!e.key.startsWith("Arrow")) return;
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        const step = e.shiftKey ? 10 : 1;
+                                        const position = {
+                                          x: clamp(
+                                            p.x +
+                                              (e.key === "ArrowRight"
+                                                ? step
+                                                : e.key === "ArrowLeft"
+                                                  ? -step
+                                                  : 0) /
+                                                project.width,
+                                          ),
+                                          y: clamp(
+                                            p.y +
+                                              (e.key === "ArrowDown"
+                                                ? step
+                                                : e.key === "ArrowUp"
+                                                  ? -step
+                                                  : 0) /
+                                                project.height,
+                                          ),
+                                        };
+                                        const curves = selected.curves!.map(
+                                          (c, edgeIndex) =>
+                                            edgeIndex === selectedPoint && c
+                                              ? { ...c, [handle]: position }
+                                              : c,
+                                        );
+                                        if (
+                                          validSurfaceGeometry({
+                                            ...selected,
+                                            curves,
+                                          })
+                                        )
+                                          updateSurface(selected.id, {
+                                            curves,
+                                          });
+                                      }}
+                                    />
+                                  </g>
+                                );
+                              },
+                            )}
+                          </g>
+                        )}
+                      {!selected.locked &&
+                        handles?.map((p, i) => (
+                          <g key={i}>
+                            <circle
+                              data-vertex={i}
+                              role="button"
+                              aria-label={`Corner ${i + 1}`}
+                              aria-pressed={selectedPoint === i}
+                              tabIndex={0}
+                              cx={p.x * project.width}
+                              cy={p.y * project.height}
+                              r={handleRadius}
+                              fill={selectedPoint === i ? "#ad89ff" : "#ece5ff"}
+                              stroke={
+                                selectedPoint === i ? "#ffffff" : "#9674f5"
+                              }
+                              strokeWidth="2"
+                              vectorEffect="non-scaling-stroke"
+                              className="vertex-handle"
+                              onPointerDown={(e) =>
+                                startDrag(
+                                  e,
+                                  selected,
+                                  selected.kind === "ellipse"
+                                    ? "resize"
+                                    : "point",
+                                  i,
+                                )
+                              }
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter" || e.key === " ") {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  if (selected.kind !== "ellipse")
+                                    selectPoint(i);
+                                }
+                              }}
+                            />
+                            {selected.kind !== "ellipse" && (
+                              <text
+                                className="corner-number"
+                                x={clamp(
+                                  p.x * project.width + 11 * pixel,
+                                  10 * pixel,
+                                  project.width - 10 * pixel,
+                                )}
+                                y={clamp(
+                                  p.y * project.height - 9 * pixel,
+                                  12 * pixel,
+                                  project.height - 8 * pixel,
+                                )}
+                                fontSize={10 * pixel}
+                                vectorEffect="non-scaling-stroke"
+                                pointerEvents="none"
+                              >
+                                {i + 1}
+                              </text>
+                            )}
+                          </g>
+                        ))}
+                      {!selected.locked &&
+                        selected.kind === "polygon" &&
+                        selected.points.length < 64 &&
+                        selected.points.map((a, i) => {
+                          const b =
+                            selected.points[(i + 1) % selected.points.length];
+                          const insert = () => {
+                            const change = insertSurfaceCorner(selected, i);
+                            if (change) {
+                              updateSurface(selected.id, change);
+                              selectPoint(i + 1);
+                            }
+                          };
+                          return (
+                            <g
+                              key={`edge${i}`}
+                              className="edge-handle"
+                              role="button"
+                              tabIndex={0}
+                              aria-label={`Add corner after ${i + 1}`}
+                              transform={`translate(${(selected.curves?.[i] ? cubicPoint(a, selected.curves[i]!, b, 0.5).x : (a.x + b.x) / 2) * project.width},${(selected.curves?.[i] ? cubicPoint(a, selected.curves[i]!, b, 0.5).y : (a.y + b.y) / 2) * project.height}) scale(${pixel})`}
+                              onPointerDown={(e) => {
+                                e.stopPropagation();
+                                insert();
+                              }}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter" || e.key === " ") {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  insert();
+                                }
+                              }}
+                            >
+                              <circle r="7" />
+                              <path d="M-3 0H3M0-3V3" />
+                            </g>
+                          );
+                        })}
+                    </g>
                   )}
-                  <text
-                    x={
-                      (placementFrame.x + placementFrame.width / 2) *
-                      project.width
-                    }
-                    y={Math.max(
-                      18 * pixel,
-                      placementFrame.y * project.height - 10 * pixel,
-                    )}
-                    textAnchor="middle"
-                    fill="#eee8ff"
-                    stroke="none"
-                    fontSize={12 * pixel}
-                  >
-                    {Math.round(placementFrame.width * project.width)} ×{" "}
-                    {Math.round(placementFrame.height * project.height)} px
-                  </text>
-                </g>
+                {placing &&
+                  placementFrame &&
+                  placementFrame.width > 0 &&
+                  placementFrame.height > 0 && (
+                    <g
+                      className="placement-draft"
+                      pointerEvents="none"
+                      fill="#a389ff1c"
+                      stroke="#d4bfff"
+                      strokeWidth="1.5"
+                      strokeDasharray="5 4"
+                      vectorEffect="non-scaling-stroke"
+                    >
+                      <path
+                        vectorEffect="non-scaling-stroke"
+                        d={surfacePath(
+                          presetGeometry(placing, placementFrame),
+                          project.width,
+                          project.height,
+                        )}
+                      />
+                      {placing === "ring" && (
+                        <path
+                          fill="none"
+                          vectorEffect="non-scaling-stroke"
+                          d={surfacePath(
+                            ringHoleGeometry(placementFrame),
+                            project.width,
+                            project.height,
+                          )}
+                        />
+                      )}
+                      <text
+                        x={
+                          (placementFrame.x + placementFrame.width / 2) *
+                          project.width
+                        }
+                        y={Math.max(
+                          18 * pixel,
+                          placementFrame.y * project.height - 10 * pixel,
+                        )}
+                        textAnchor="middle"
+                        fill="#eee8ff"
+                        stroke="none"
+                        fontSize={12 * pixel}
+                      >
+                        {Math.round(placementFrame.width * project.width)} ×{" "}
+                        {Math.round(placementFrame.height * project.height)} px
+                      </text>
+                    </g>
+                  )}
+                {drawing && draft.length > 0 && (
+                  <g pointerEvents="none">
+                    <polyline
+                      points={coordinates([
+                        ...draft,
+                        ...(cursor ? [cursor] : []),
+                      ])}
+                      fill="#a389ff1c"
+                      stroke="#b6a1ff"
+                      strokeWidth="1.5"
+                      vectorEffect="non-scaling-stroke"
+                      strokeDasharray="5 4"
+                    />
+                    {draft.map((p, i) => (
+                      <circle
+                        key={i}
+                        cx={p.x * project.width}
+                        cy={p.y * project.height}
+                        r={handleRadius}
+                        fill={i === 0 ? "#b4f5b4" : "#eee5ff"}
+                      />
+                    ))}
+                  </g>
+                )}
+              </svg>
+              {state.blackout && (
+                <div className="blackout-label" aria-hidden="true">
+                  OUTPUT BLACKED OUT
+                </div>
               )}
-            {drawing && draft.length > 0 && (
-              <g pointerEvents="none">
-                <polyline
-                  points={coordinates([...draft, ...(cursor ? [cursor] : [])])}
-                  fill="#a389ff1c"
-                  stroke="#b6a1ff"
-                  strokeWidth="1.5"
-                  vectorEffect="non-scaling-stroke"
-                  strokeDasharray="5 4"
-                />
-                {draft.map((p, i) => (
-                  <circle
-                    key={i}
-                    cx={p.x * project.width}
-                    cy={p.y * project.height}
-                    r={handleRadius}
-                    fill={i === 0 ? "#b4f5b4" : "#eee5ff"}
-                  />
-                ))}
-              </g>
-            )}
-          </svg>
-          {state.blackout && (
-            <div className="blackout-label" aria-hidden="true">
-              OUTPUT BLACKED OUT
+              {project.surfaces.length === 0 && !drawing && !placing && (
+                <div className="empty-canvas">
+                  <Crosshair size={30} />
+                  <strong>Your canvas is ready</strong>
+                  <span>Add a surface to start mapping.</span>
+                </div>
+              )}
             </div>
-          )}
-          {project.surfaces.length === 0 && !drawing && !placing && (
-            <div className="empty-canvas">
-              <Crosshair size={30} />
-              <strong>Your canvas is ready</strong>
-              <span>Add a surface to start mapping.</span>
-            </div>
-          )}
+          </div>
         </div>
         {!placing && !drawing && (
           <div
             className={`canvas-instruction ${invalidDrag ? "geometry-error" : ""}`}
           >
-            {invalidDrag ? (
+            {panMode ? (
+              <span>
+                Drag to pan · Ctrl + scroll to zoom · Fit to see the whole
+                canvas
+              </span>
+            ) : invalidDrag ? (
               <span>Corners must stay inside the canvas without crossing.</span>
             ) : selected?.locked ? (
               <>

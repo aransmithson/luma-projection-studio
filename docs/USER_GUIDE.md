@@ -18,6 +18,16 @@ Use **Effects** and **Properties** above the canvas to hide or show the effects 
 
 Nox remembers these choices on this device, including after restarting. Hiding a panel keeps your selected shape and effect search, and leaves projector playback running. The library's down-arrow also hides it; **Change effect** in the inspector opens it again. **View all** and **Compact view** still resize the effects browser while it is visible.
 
+## Zoom and pan the canvas
+
+- Choose **25–1600%** in the canvas toolbar or click the **− / +** buttons. Keyboard **− / +** also steps between zoom levels. **100%** means the canvas fitted to the available workspace, rather than one screen pixel per projector pixel.
+- Hold **Ctrl** and scroll over the canvas to zoom around the point under the cursor. Trackpad pinch works through the same control. Ordinary scrolling moves around the enlarged canvas; Shift+scroll moves horizontally.
+- Choose the **hand tool**, or press **H**, and drag to pan without moving any shapes. **Middle mouse drag** pans temporarily from any drawing tool, preserving unfinished polygon points. Choose **Select & move** or press H again to return to editing.
+- Click **Fit** or press **0** to see the whole canvas. Click **Zoom to selection** or press **F** to centre and enlarge the selected shape or reference photo. Fitting a curved shape includes its visible curved outline.
+- Zooming and panning change only the editor view. Shape coordinates, effect scale, projector output and playback stay unchanged. Corner and Bézier handles keep a constant screen size. The animation preview renders up to projector resolution with a 4096-pixel side limit, so very high zoom magnifies the preview pixels while the mapping outlines remain sharp.
+
+Navigation shortcuts are inactive while typing in a text or numeric field. The existing **Space** shortcut still controls playback. Hide **Effects** and **Properties** for more room; the view keeps its centre as the workspace resizes.
+
 ## Import animations
 
 In the desktop app, select an editable surface, then choose **Import animation** in the effects library. Pick an **MP4 video** or **animated GIF**. Nox checks decoding, creates a thumbnail, copies the file into its local library and applies it to the selected surface. If no editable surface is selected, the clip is still available in **Imported**. Click its card to use it on another shape. Search includes imported filenames; imported thumbnails are still previews.

@@ -12,10 +12,10 @@ Previously called **Luma**. Your existing `.luma` projects, imported library, pr
 
 Get the Windows build from [GitHub Releases](https://github.com/aransmithson/nox-projection-studio/releases/latest). The repository and downloads are public.
 
-- **Recommended:** download `Nox-Projection-Studio-1.23.0-win-x64.zip`, extract the whole folder, and open `Nox Projection Studio.exe`. Keep the executable beside its resources.
+- **Recommended:** download `Nox-Projection-Studio-1.24.0-win-x64.zip`, extract the whole folder, and open `Nox Projection Studio.exe`. Keep the executable beside its resources.
 - Close an older running copy before opening a new version. Nox restores the existing instance when opened again.
 
-Version 1.23.0 uses the verified ZIP distribution. Its extracted editor passed native Windows startup checks. The separate single-file launcher is omitted following a Windows Code Integrity block during the 1.22.0 release checks.
+Version 1.24.0 uses the verified ZIP distribution. Its extracted editor passed native Windows startup checks. The separate single-file launcher is omitted following a Windows Code Integrity block during the 1.22.0 release checks.
 
 Release builds are not code-signed. The Windows executable keeps Electron's original resources to preserve compatibility with Windows Code Integrity; Nox's own icon appears in the app window and interface.
 
@@ -25,7 +25,7 @@ Release builds are not code-signed. The Windows executable keeps Electron's orig
 | --- | --- |
 | Shape mapping | Rectangles, triangles, ellipses, polygons, Bezier curves, precise corner editing, perspective warping and editable cutout holes |
 | Placement | Projected wireframe/mesh, visible placement cursor, snapping, pixel nudging, calibration and solo view |
-| Workspace | Independently hide or restore Effects and Properties panels; your layout is remembered on this device |
+| Workspace | 25–1600% canvas zoom, cursor-centred Ctrl+wheel zoom, hand/middle-button panning, Fit and Zoom to selection; independently hide Effects and Properties |
 | Compositing | Layers, copy/paste, ten blend modes, feathering, colour overlays and independent content rotation/offset |
 | Effects | 187 animations and 12 still materials, including psychedelia, boxed stick figures, Halloween, Christmas, space, creatures, shadow puppets, architectural illusions and stage lighting |
 | Imported animations | MP4/H.264 videos and animated GIFs, thumbnails, looping, trim, time offset, speed and fill/fit/stretch |
@@ -38,6 +38,12 @@ Release builds are not code-signed. The Windows executable keeps Electron's orig
 Projects support **32 surfaces**, **64 vertices per polygon**, and **eight animation stacks**. The stacked editor keeps settings and Save visible in a wide three-column layout.
 
 ![Nox mapping workspace with the effects library and surface inspector](docs/assets/workspace.png)
+
+## Zoom in for precise mapping
+
+The canvas now zooms up to **1600%**, eight times the previous maximum magnification. Choose a percentage above the canvas, use **+ / −**, or hold **Ctrl** while scrolling to zoom around the pointer. Percentages are relative to the fitted canvas.
+
+Use the **hand tool (H)** or **middle mouse drag** to pan. **Fit (0)** shows the whole canvas; **Zoom to selection (F)** centres and enlarges the selected shape, including curved outlines. Corners, curve handles and labels stay readable at high zoom. Zoom and pan affect the editor view only; the projector, saved geometry and playback stay unchanged. See the [navigation guide](docs/USER_GUIDE.md#zoom-and-pan-the-canvas).
 
 ## Psychedelic visions
 

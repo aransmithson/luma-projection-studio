@@ -12,6 +12,8 @@ import {
   FilePlus2,
   FolderOpen,
   Ghost,
+  Hand,
+  Focus,
   Grid2X2,
   Info,
   Layers,
@@ -91,6 +93,12 @@ import {
 } from "./layers";
 import { LayerPanel } from "./components/LayerPanel";
 import { Stage } from "./components/Stage";
+import type { StageNavigation } from "./useStageNavigation";
+import {
+  CANVAS_ZOOM_STEPS,
+  MIN_CANVAS_ZOOM,
+  MAX_CANVAS_ZOOM,
+} from "./canvasView";
 import { Inspector, RangeControl } from "./components/Inspector";
 import {
   changeSurface,
@@ -318,6 +326,8 @@ export default function App() {
   const mappingTimer = useRef<ReturnType<typeof setTimeout> | undefined>(
     undefined,
   );
+  const stageNavigation = useRef<StageNavigation>(null);
+  const [panMode, setPanMode] = useState(false);
   const [zoom, setZoom] = useState(1),
     [drawing, setDrawing] = useState(false);
   const [placing, setPlacing] = useState<ShapePreset | null>(null);
@@ -670,6 +680,7 @@ export default function App() {
     }));
   };
   function addSurface(kind: ShapeKind, points?: Point[]) {
+    setPanMode(false);
     if (activeLayer.locked) {
       notify("Unlock the active layer or select another layer first.");
       return;
@@ -700,6 +711,7 @@ export default function App() {
     setShapeMenu(false);
   }
   function addPreset(preset: ShapePreset, frame?: ShapeFrame) {
+    setPanMode(false);
     if (activeLayer.locked) {
       notify("Unlock the active layer or select another layer first.");
       return;
@@ -1069,6 +1081,8 @@ export default function App() {
       setDrawing(false);
       setPlacing(null);
       setZoom(1);
+      setPanMode(false);
+      stageNavigation.current?.fit();
       notify(`Opened “${loaded.name}”.`);
     } catch (error) {
       notify(
@@ -1164,6 +1178,8 @@ export default function App() {
     setSoloSurfaceId(null);
     setInspectorTab("surface");
     setZoom(1);
+    setPanMode(false);
+    stageNavigation.current?.fit();
     setDrawing(false);
     setPlacing(null);
     setTestPattern(false);
@@ -1193,6 +1209,22 @@ export default function App() {
         return;
       }
       if (modal) return;
+      if (!e.ctrlKey && !e.metaKey && !e.altKey) {
+        if (["+", "=", "-", "0", "f", "F", "h", "H"].includes(e.key)) {
+          e.preventDefault();
+          if (e.key === "+" || e.key === "=") stageNavigation.current?.step(1);
+          else if (e.key === "-") stageNavigation.current?.step(-1);
+          else if (e.key === "0") stageNavigation.current?.fit();
+          else if (e.key.toLowerCase() === "f")
+            stageNavigation.current?.fitSelection();
+          else if (!e.repeat) {
+            setDrawing(false);
+            setPlacing(null);
+            setPanMode((value) => !value);
+          }
+          return;
+        }
+      }
       const control = e.ctrlKey || e.metaKey;
       if (control) {
         if (e.key.toLowerCase() === "z") {
@@ -1693,15 +1725,29 @@ export default function App() {
           <div className="canvas-toolbar">
             <div className="tool-group">
               <button
-                className={`tool-button ${!drawing && !placing ? "active" : ""}`}
+                className={`tool-button ${!drawing && !placing && !panMode ? "active" : ""}`}
                 title="Select & move"
                 aria-label="Select & move"
                 onClick={() => {
+                  setPanMode(false);
                   setDrawing(false);
                   setPlacing(null);
                 }}
               >
                 <MousePointer2 size={16} />
+              </button>
+              <button
+                className={`tool-button ${panMode ? "active" : ""}`}
+                aria-label="Pan canvas"
+                aria-pressed={panMode}
+                title="Pan canvas · H · Middle mouse drag also pans"
+                onClick={() => {
+                  setDrawing(false);
+                  setPlacing(null);
+                  setPanMode((value) => !value);
+                }}
+              >
+                <Hand size={16} />
               </button>
               <button
                 className={`tool-button ${drawing ? "active" : ""}`}
@@ -1776,30 +1822,64 @@ export default function App() {
                 <Magnet size={15} />
               </button>
               <span className="tool-divider" />
+            </div>
+            <div
+              className="tool-group canvas-zoom-controls"
+              role="group"
+              aria-label="Canvas view"
+            >
               <button
                 className="tool-button"
                 aria-label="Zoom out"
-                title="Zoom out"
-                disabled={zoom <= 0.5}
-                onClick={() => setZoom((v) => Math.max(0.5, v - 0.25))}
+                title="Zoom out · −"
+                disabled={zoom <= MIN_CANVAS_ZOOM}
+                onClick={() => stageNavigation.current?.step(-1)}
               >
                 <ZoomOut size={15} />
               </button>
-              <button
+              <select
                 className="zoom-value"
-                title="Fit canvas"
-                onClick={() => setZoom(1)}
+                aria-label="Canvas zoom"
+                title="Canvas zoom relative to Fit · Ctrl + scroll zooms at the pointer"
+                value={zoom}
+                onChange={(event) =>
+                  stageNavigation.current?.zoomTo(Number(event.target.value))
+                }
               >
-                {zoom === 1 ? "Fit" : `${Math.round(zoom * 100)}%`}
-              </button>
+                {!CANVAS_ZOOM_STEPS.includes(zoom) && (
+                  <option value={zoom}>{Math.round(zoom * 100)}%</option>
+                )}
+                {CANVAS_ZOOM_STEPS.map((value) => (
+                  <option key={value} value={value}>
+                    {Math.round(value * 100)}%
+                  </option>
+                ))}
+              </select>
               <button
                 className="tool-button"
                 aria-label="Zoom in"
-                title="Zoom in"
-                disabled={zoom >= 2}
-                onClick={() => setZoom((v) => Math.min(2, v + 0.25))}
+                title="Zoom in · +"
+                disabled={zoom >= MAX_CANVAS_ZOOM}
+                onClick={() => stageNavigation.current?.step(1)}
               >
                 <ZoomIn size={15} />
+              </button>
+              <button
+                className="zoom-fit"
+                title="Fit canvas · 0"
+                aria-label="Fit canvas"
+                onClick={() => stageNavigation.current?.fit()}
+              >
+                Fit
+              </button>
+              <button
+                className="tool-button"
+                title="Zoom to selected shape · F"
+                aria-label="Zoom to selection"
+                disabled={!selected && !editingPhoto}
+                onClick={() => stageNavigation.current?.fitSelection()}
+              >
+                <Focus size={16} />
               </button>
             </div>
           </div>
@@ -1816,6 +1896,9 @@ export default function App() {
             grid={grid}
             snap={snap}
             zoom={zoom}
+            onZoom={setZoom}
+            navigationRef={stageNavigation}
+            panMode={panMode && !drawing && !placing}
             drawing={drawing}
             setDrawing={setDrawing}
             placing={placing}
@@ -2459,6 +2542,10 @@ export default function App() {
             <div>
               {[
                 ["Space", "Play / pause"],
+                ["+ / −", "Zoom canvas in / out (25–1600%)"],
+                ["Ctrl + scroll", "Zoom canvas at the pointer"],
+                ["H / middle drag", "Pan canvas without moving shapes"],
+                ["0 / F", "Fit canvas / zoom to selected shape"],
                 ["B", "Blackout"],
                 ["M", "Placement mesh / animations (editor or output)"],
                 ["R / T / E", "Add a shape"],

@@ -110,7 +110,7 @@ try {
   await expect(
     drawingTools.getByRole("button", { name: "Cancel", exact: true }),
   ).toBeInViewport();
-  await page.getByRole("button", { name: "200%", exact: true }).click();
+  await page.getByRole("button", { name: "Fit canvas", exact: true }).click();
   await page.waitForTimeout(150);
   const stage = await page.locator(".stage-overlay").boundingBox();
   for (const [x, y] of [
