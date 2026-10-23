@@ -82,5 +82,6 @@ export function useProject() {
     recovered: initial.recovered,
     canUndo: past.current.length > 0,
     canRedo: future.current.length > 0,
+    isEditing: () => transaction.current !== null,
   };
 }

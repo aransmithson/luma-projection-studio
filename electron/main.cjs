@@ -5,6 +5,7 @@ const { configureAudio, copyAudioFrame } = require('./audio.cjs');
 const { createMediaLibrary } = require('./media.cjs');
 const { createPhotoLibrary } = require('./scene-photos.cjs');
 const { createSceneAi } = require('./scene-ai.cjs');
+const { createRemoteServer } = require('./remote.cjs');
 
 protocol.registerSchemesAsPrivileged([{ scheme: 'luma-media', privileges: { standard: true, secure: true, supportFetchAPI: true, stream: true, corsEnabled: true } }]);
 
@@ -109,6 +110,34 @@ if (ownsInstance) app.whenReady().then(async () => {
   app.setAppUserModelId('studio.luma.projection');
   editor = new BrowserWindow({ width: 1560, height: 1000, minWidth: 1120, minHeight: 760, title: `Nox · Projection Studio ${app.getVersion()}`, icon: path.join(__dirname, 'icon.png'), backgroundColor: '#101114', autoHideMenuBar: true, webPreferences: preferences() });
   secureWindow(editor);
+  const remote = createRemoteServer({
+    assetRoot: path.join(__dirname, '../dist'),
+    onCommand: request => {
+      if (!editor || editor.isDestroyed()) throw Error('Editor unavailable.');
+      editor.webContents.send('luma:remote-command', request);
+    },
+    onStatus: status => {
+      if (editor && !editor.isDestroyed()) editor.webContents.send('luma:remote-status', status);
+    },
+  });
+  const remoteEditor = event => !!editor && event.sender === editor.webContents && event.senderFrame === editor.webContents.mainFrame;
+  const requireRemoteEditor = event => { if (!remoteEditor(event)) throw Error('Only the desktop editor can manage phone access.'); };
+  ipcMain.handle('luma:remote-status', event => { requireRemoteEditor(event); return remote.status(); });
+  ipcMain.handle('luma:remote-start', event => { requireRemoteEditor(event); return remote.start(); });
+  ipcMain.handle('luma:remote-stop', event => { requireRemoteEditor(event); return remote.stop(); });
+  ipcMain.handle('luma:remote-disconnect', event => { requireRemoteEditor(event); return remote.disconnect(); });
+  ipcMain.on('luma:remote-state', (event, state) => {
+    if (!remoteEditor(event)) return;
+    try { remote.update(state); } catch { /* Reject malformed public editing snapshots. */ }
+  });
+  ipcMain.on('luma:remote-reply', (event, reply) => {
+    if (remoteEditor(event)) remote.reply(reply);
+  });
+  // Reload, crash and close all revoke pairing. Remote control never auto-starts.
+  editor.webContents.on('did-start-navigation', (_event, _url, _inPlace, mainFrame) => { if (mainFrame) void remote.stop(); });
+  editor.webContents.on('render-process-gone', () => { void remote.stop(); });
+  editor.on('closed', () => { void remote.stop(); });
+  app.on('before-quit', () => { void remote.stop(); });
   const setAudioCapture = configureAudio(editor.webContents.session, () => editor);
   const publishAudio = frame => {
     audioFrame = frame;

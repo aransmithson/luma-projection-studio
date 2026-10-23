@@ -4543,3 +4543,23 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
     display: none;
   }
 }
+
+/* Desktop pairing panel */
+.phone-remote-button { position: relative; }
+.phone-remote-button.active { color: #a9e8cf; }
+.phone-remote-button i { position: absolute; width: 5px; height: 5px; background: #8fdaba; border-radius: 50%; right: 4px; top: 4px; }
+.remote-panel { display: grid; gap: 18px; color: #cdc6da; padding: 20px 24px 24px; }
+.remote-panel p { line-height: 1.6; }
+.remote-intro { display: flex; align-items: center; gap: 16px; }
+.remote-intro svg { color: #bba5f8; flex-shrink: 0; }
+.remote-intro h3 { color: #f1ecfa; margin: 0 0 5px; font-size: 20px; }
+.remote-panel ol { margin: 0; padding-left: 22px; display: grid; gap: 10px; line-height: 1.6; }
+.remote-panel .primary-button, .remote-panel .secondary-button { justify-self: start; min-height: 42px; }
+.remote-pair-grid { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 24px; align-items: center; }
+.remote-qr { width: 180px; height: 180px; image-rendering: pixelated; border-radius: 10px; }
+.remote-code { display: block; font-size: 38px; letter-spacing: .15em; font-variant-numeric: tabular-nums; color: #d4c1ff; margin: 8px 0; }
+.remote-muted { color: #a29aac; font-size: 12px; }
+.remote-address { display: grid; gap: 8px; }
+.remote-address input, .remote-address select { width: 100%; padding: 10px; border: 1px solid #40394c; border-radius: 6px; background: #14151a; color: #e2d8ef; }
+.remote-error { color: #f5a4af; }
+.remote-paired { display: grid; gap: 10px; color: #b9ead7; }

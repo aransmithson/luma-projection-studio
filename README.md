@@ -12,10 +12,10 @@ Previously called **Luma**. Your existing `.luma` projects, imported library, pr
 
 Get the Windows build from [GitHub Releases](https://github.com/aransmithson/nox-projection-studio/releases/latest). The repository and downloads are public.
 
-- **Recommended:** download `Nox-Projection-Studio-1.24.0-win-x64.zip`, extract the whole folder, and open `Nox Projection Studio.exe`. Keep the executable beside its resources.
+- **Recommended:** download `Nox-Projection-Studio-1.25.0-win-x64.zip`, extract the whole folder, and open `Nox Projection Studio.exe`. Keep the executable beside its resources.
 - Close an older running copy before opening a new version. Nox restores the existing instance when opened again.
 
-Version 1.24.0 uses the verified ZIP distribution. Its extracted editor passed native Windows startup checks. The separate single-file launcher is omitted following a Windows Code Integrity block during the 1.22.0 release checks.
+Version 1.25.0 uses the verified ZIP distribution. Its extracted editor passed native Windows startup checks. The separate single-file launcher is omitted following a Windows Code Integrity block during the 1.22.0 release checks.
 
 Release builds are not code-signed. The Windows executable keeps Electron's original resources to preserve compatibility with Windows Code Integrity; Nox's own icon appears in the app window and interface.
 
@@ -26,6 +26,7 @@ Release builds are not code-signed. The Windows executable keeps Electron's orig
 | Shape mapping | Rectangles, triangles, ellipses, polygons, Bezier curves, precise corner editing, perspective warping and editable cutout holes |
 | Placement | Projected wireframe/mesh, visible placement cursor, snapping, pixel nudging, calibration and solo view |
 | Workspace | 25–1600% canvas zoom, cursor-centred Ctrl+wheel zoom, hand/middle-button panning, Fit and Zoom to selection; independently hide Effects and Properties |
+| Phone remote | Pair a phone browser on the same trusted Wi-Fi for touch mapping, effect controls, layer visibility, brightness, transport and shared Undo |
 | Compositing | Layers, copy/paste, ten blend modes, feathering, colour overlays and independent content rotation/offset |
 | Effects | 187 animations and 12 still materials, including psychedelia, boxed stick figures, Halloween, Christmas, space, creatures, shadow puppets, architectural illusions and stage lighting |
 | Imported animations | MP4/H.264 videos and animated GIFs, thumbnails, looping, trim, time offset, speed and fill/fit/stretch |
@@ -38,6 +39,12 @@ Release builds are not code-signed. The Windows executable keeps Electron's orig
 Projects support **32 surfaces**, **64 vertices per polygon**, and **eight animation stacks**. The stacked editor keeps settings and Save visible in a wide three-column layout.
 
 ![Nox mapping workspace with the effects library and surface inspector](docs/assets/workspace.png)
+
+## Edit from your phone
+
+Click **Phone remote** in the header, choose **Start phone remote**, then scan the QR code and enter the pairing code on your phone. Select and position shapes, adjust corners and curves, choose built-in or already imported effects, and control brightness, playback, mesh and blackout while watching the projector. Changes use the desktop scene and Undo history.
+
+The remote works over local HTTP on the same trusted Wi-Fi, with one paired phone at a time. It stops when Nox closes or reloads. The phone shows the shape layout; animation playback stays on the PC/projector. Imports, project files, photos, AI generation and audio capture remain desktop operations. See the [phone remote guide](docs/PHONE_REMOTE.md) for controls, connection help and limitations.
 
 ## Zoom in for precise mapping
 

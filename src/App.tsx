@@ -34,6 +34,7 @@ import {
   ShieldCheck,
   Snowflake,
   Sparkles,
+  Smartphone,
   Square,
   Tags,
   Sun,
@@ -121,6 +122,9 @@ import {
 } from "./scene";
 import { AudioPanel } from "./components/AudioPanel";
 import { useAudioInput } from "./useAudioInput";
+import { useRemoteControl } from './useRemoteControl';
+import { editRemoteProject, remoteView } from './remoteModel';
+import { RemotePanel } from './components/RemotePanel';
 import { getAudioFrame } from "./audioStore";
 import {
   extraPresets,
@@ -275,6 +279,7 @@ export default function App() {
     canUndo,
     canRedo,
     recovered,
+    isEditing,
   } = useProject();
   const [selectedId, setSelectedId] = useState<string | null>(
     project.surfaces[1]?.id || project.surfaces[0]?.id || null,
@@ -341,6 +346,7 @@ export default function App() {
       | "liquid-stacks"
       | "audio"
       | "scene"
+      | "remote"
       | null
     >(null);
   const [category, setCategory] = useState("All effects"),
@@ -1354,6 +1360,35 @@ export default function App() {
     setPreferences((p) => ({ ...p, libraryCollapsed: false }));
   };
 
+  const remoteBusy = isEditing() || mappingDragging || drawing || !!placing || importing || saving || (!!modal && modal !== 'remote');
+  const remoteProject = useMemo(() => remoteView(project), [project]);
+  const remoteStatus = useRemoteControl({
+    project: remoteProject, selectedId, playing: playback.playing, blackout, mesh: placementMesh,
+    outputOpen: outputStatus.open, canUndo, canRedo, busy: remoteBusy,
+    media: mediaLibrary.map(({ id, name }) => ({ id, name })),
+  }, command => {
+    if (command.type === 'play') {
+      const previous = latest.current.playback;
+      if (previous.playing !== command.value) setPlayback({ playing: command.value, offset: playbackTime(previous) * 1000, startedAt: Date.now() });
+      return;
+    }
+    if (command.type === 'restart') { setPlayback(p => ({ ...p, offset: 0, startedAt: Date.now() })); return; }
+    if (command.type === 'blackout') { setBlackout(command.value); return; }
+    if (command.type === 'mesh') { setPlacementMesh(command.value); setTestPattern(false); return; }
+    if (remoteBusy || isEditing()) throw Error('Finish the current desktop edit or close its dialog first.');
+    if (current.current !== project) throw Error('The scene just changed. Refresh and try your edit again.');
+    if (command.type === 'undo') { undo(); return; }
+    if (command.type === 'redo') { redo(); return; }
+    const result = editRemoteProject(current.current, command, mediaLibrary);
+    if (result.project !== current.current) update(result.project);
+    if (result.select !== undefined) {
+      selectSurface(result.select);
+      const surface = result.project.surfaces.find(s => s.id === result.select);
+      if (surface) setActiveLayerId(layerIdFor(result.project, surface));
+    }
+    if (command.type === 'geometry' || command.type === 'nudge') markMapping();
+  });
+
   return (
     <div
       className={`app ${expandedLibrary && !libraryCollapsed ? "library-is-expanded" : ""} ${libraryCollapsed ? "library-is-collapsed" : ""}`}
@@ -1397,6 +1432,9 @@ export default function App() {
           </span>
         </div>
         <div className="header-actions">
+          <button className={`icon-button phone-remote-button ${remoteStatus.running ? 'active' : ''}`} aria-label="Phone remote" title={remoteStatus.connected ? `Phone remote · ${remoteStatus.device} paired` : 'Phone remote'} disabled={!window.luma} onClick={() => setModal('remote')}>
+            <Smartphone size={18} />{remoteStatus.running && <i aria-hidden="true" />}
+          </button>
           <button
             className={`secondary-button music-input-button ${audioInput.status.state}`}
             aria-label="Music input"
@@ -2141,6 +2179,7 @@ export default function App() {
         }}
       />
 
+      {modal === 'remote' && <Modal title="Phone remote" subtitle="A little distance. A better view." onClose={closeModal}><RemotePanel status={remoteStatus} /></Modal>}
       {modal === "audio" && (
         <Modal
           title="Music input"

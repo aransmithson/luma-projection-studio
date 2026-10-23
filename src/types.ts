@@ -445,6 +445,14 @@ export type DisplayInfo = {
 };
 export type OutputStatus = { open: boolean; displayId: number | null };
 export type DesktopBridge = {
+  remoteStatus: () => Promise<import('./remoteModel').RemoteStatus>;
+  startRemote: () => Promise<import('./remoteModel').RemoteStatus>;
+  stopRemote: () => Promise<import('./remoteModel').RemoteStatus>;
+  disconnectRemote: () => Promise<import('./remoteModel').RemoteStatus>;
+  updateRemote: (state: import('./remoteModel').RemoteSnapshot) => void;
+  replyRemote: (reply: { id: string; ok: boolean; error?: string }) => void;
+  onRemoteCommand: (callback: (request: { id: string; revision: number; command: unknown }) => void) => () => void;
+  onRemoteStatus: (callback: (status: import('./remoteModel').RemoteStatus) => void) => () => void;
   openSceneLink: (kind: "account" | "pricing") => Promise<void>;
   importScenePhoto: (
     expectedId?: string,

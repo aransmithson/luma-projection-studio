@@ -24,6 +24,7 @@ Choose native workflows that exercise the change. Run them sequentially with the
 | --- | --- |
 | General editor or output | `npm run test:desktop` |
 | Canvas navigation | `npm run test:zoom`, `npm run test:placement`, and `npm run test:zoom -- --packaged` |
+| Phone remote | `npm run test:remote` and `npm run test:remote -- --packaged`; uses isolated Edge and Electron profiles |
 | Stacked animations | `npm run test:stories`, `npm run test:creative`, `npm run test:linked`, `npm run test:portals` |
 | Shapes, curves or holes | `npm run test:placement`, `npm run test:cutouts` |
 | Layers or copy/paste | `npm run test:layers`, `npm run test:clipboard` |
@@ -67,6 +68,7 @@ Distribute only formats that pass their native startup checks: the complete unpa
 - [Effects](src/effects/) and [catalogue](src/catalog.ts): procedural artwork and effect metadata.
 - [Canvas navigation](src/useStageNavigation.ts) and [view calculations](src/canvasView.ts): editor zoom, pan and preview buffer limits. Follow the [canvas instructions](.github/instructions/canvas-navigation.instructions.md) when changing viewport geometry or pointer handling.
 - [Desktop process](electron/main.cjs) and [preload bridge](electron/preload.cjs): native windows, validated IPC and file dialogs.
+- [Phone server](electron/remote.cjs), [remote editing model](src/remoteModel.ts) and [phone UI](src/remote/): explicitly paired local control. Read the [remote instructions](.github/instructions/phone-remote.instructions.md) and [guide](docs/PHONE_REMOTE.md) before extending commands or network access.
 - [Audio analysis](src/audioAnalysis.ts) and [desktop permissions](electron/audio.cjs): shared music input.
 - [Media storage](electron/media.cjs), [timing](src/media.ts) and [playback](src/mediaPlayback.ts): native imports, portable companions, GIF decoding and shared video timing. The media workflow generates its own GIF and H.264 test footage in an isolated profile; it downloads no footage or codec tools.
 - [Scene Animator](src/components/SceneAnimator.tsx), [scene mapping](src/scene.ts), [reference photos](electron/scene-photos.cjs) and [Runway jobs](electron/scene-ai.cjs): photo alignment, optional generation and full-scene clips shared across prop masks. The scene workflow intercepts transport only in its isolated Electron process and returns a locally recorded H.264 fixture. It exercises the real IPC, storage and renderer without uploading photos or spending credits. Unit tests cover ambiguous submissions, cancellation, unsafe output URLs, download limits, recovery and credential exclusion. A successful simulated test is not evidence of live provider output quality.

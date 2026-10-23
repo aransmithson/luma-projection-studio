@@ -5,6 +5,14 @@ const subscribe = (channel, callback) => {
   return () => ipcRenderer.removeListener(channel, listener);
 };
 contextBridge.exposeInMainWorld('luma', {
+  remoteStatus: () => ipcRenderer.invoke('luma:remote-status'),
+  startRemote: () => ipcRenderer.invoke('luma:remote-start'),
+  stopRemote: () => ipcRenderer.invoke('luma:remote-stop'),
+  disconnectRemote: () => ipcRenderer.invoke('luma:remote-disconnect'),
+  updateRemote: state => ipcRenderer.send('luma:remote-state', state),
+  replyRemote: reply => ipcRenderer.send('luma:remote-reply', reply),
+  onRemoteCommand: callback => subscribe('luma:remote-command', callback),
+  onRemoteStatus: callback => subscribe('luma:remote-status', callback),
   openSceneLink: kind => ipcRenderer.invoke('luma:scene-link', kind),
   importScenePhoto: expectedId => ipcRenderer.invoke('luma:import-scene-photo', expectedId),
   sceneAiStatus: () => ipcRenderer.invoke('luma:scene-ai-status'),

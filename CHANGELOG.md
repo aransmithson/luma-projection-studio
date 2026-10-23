@@ -2,6 +2,13 @@
 
 Nox Projection Studio keeps the existing Luma project format and application identity.
 
+## 1.25.0
+
+- Added an explicitly paired **Phone remote** for editing the open scene from a browser on the same trusted Wi-Fi. Start it on the desktop, scan the address QR and enter the six-digit code. One phone connects at a time; Stop, disconnect, desktop reload/close and session expiry revoke access.
+- Added touch shape placement, corners and existing Bézier handles, pan/zoom/focus, precise pixel nudges, resizing, adding/duplicating/deleting shapes, layer visibility and shared Undo/Redo. Gestures apply once on release; locks and concurrent desktop edits remain protected.
+- Browse built-in effects and already imported animations, adjust appearance and content transforms, and control playback, placement mesh, blackout and brightness. The phone shows the scene layout; animation continues on the projector with its existing shared clock.
+- Added bounded local HTTP serving, pairing and command validation, revision checks and isolated native mobile-browser workflows. Local files, photos, AI credentials, prompts and audio are not exposed. Imports, custom polygon creation, linked-stack setup and Scene Animator remain desktop operations. See the [phone guide](docs/PHONE_REMOTE.md).
+
 ## 1.24.0
 
 - Increased canvas zoom from a 200% maximum to **25–1600%**, with presets, stepped +/− controls and continuous Ctrl+wheel/trackpad zoom anchored at the pointer.
