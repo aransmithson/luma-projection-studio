@@ -438,7 +438,7 @@ type Props = CutoutActions & {
   importing: boolean;
   project: Project;
   surface?: Surface;
-  update: (change: Partial<Surface>) => void;
+  update: (change: Partial<Surface>, transformCutouts?: boolean) => void;
   begin: () => void;
   finish: () => void;
   duplicate: () => void;
@@ -536,7 +536,7 @@ export function Inspector({
       ...point,
       [axis]: value / (axis === "x" ? project.width : project.height),
     });
-    if (points) update({ points });
+    if (points) update({ points }, false);
     else
       notify(
         "That corner would cross another edge. The shape has been kept unchanged.",
@@ -931,7 +931,7 @@ export function Inspector({
               </section>
             )}
             <CutoutControls
-              key={surface.id}
+              key={surface.cutoutOf || surface.id}
               project={project}
               surface={surface}
               addCutout={addCutout}

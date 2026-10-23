@@ -294,6 +294,24 @@ try {
         surface.colorOverlay = undefined;
         await settle(0.5, 1);
         report.masksTransformsAndOverlay = true;
+        const originalBinding = surface.media;
+        const keeper = {
+          ...surface,
+          id: "paused-gif-keeper",
+          points: full.map((p) => ({ x: p.x * 0.1, y: p.y * 0.1 })),
+        };
+        state.project.surfaces = [surface, keeper];
+        await settle(0.1, 0);
+        surface.media = { ...originalBinding, offset: 0.4 };
+        await settle(0.1, 1);
+        surface.media = originalBinding;
+        await settle(0.1, 0);
+        surface.effectId = "cracks-glass";
+        pixel();
+        surface.effectId = "imported-media";
+        await settle(0.1, 0);
+        report.pausedReassignment = true;
+        state.project.surfaces = [surface];
         surface.media = bindMedia(assets.find((a) => a.format === "mp4"));
         surface.points = [
           { x: 0, y: 0 },

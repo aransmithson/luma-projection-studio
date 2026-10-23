@@ -283,6 +283,7 @@ class MediaPlayer {
     binding: MediaBinding,
     elapsed: number,
     playing: boolean,
+    force = false,
   ) {
     const target = mediaTime(binding, elapsed, this.speed);
     let source: CanvasImageSource | undefined;
@@ -338,7 +339,7 @@ class MediaPlayer {
       source = this.frame;
     }
     const paintKey = `${this.revision}:${binding.fit}:${ctx.canvas.width}:${ctx.canvas.height}`;
-    if (this.painted.get(ctx) === paintKey) return false;
+    if (!force && this.painted.get(ctx) === paintKey) return false;
     this.painted.set(ctx, paintKey);
     ctx.resetTransform();
     ctx.globalAlpha = 1;
@@ -394,6 +395,7 @@ export class MediaPlayers {
     elapsed: number,
     speed: number,
     playing: boolean,
+    force = false,
   ) {
     const key = JSON.stringify([
       binding.asset.id,
@@ -409,7 +411,7 @@ export class MediaPlayers {
       player = new MediaPlayer(binding, speed);
       this.players.set(key, player);
     }
-    return player.draw(ctx, binding, elapsed, playing);
+    return player.draw(ctx, binding, elapsed, playing, force);
   }
   end() {
     for (const [key, player] of this.players)

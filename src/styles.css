@@ -4382,6 +4382,10 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
   width: 100%;
   min-width: 0;
 }
+.cutout-list {
+  max-height: 180px;
+  overflow-y: auto;
+}
 .cutout-item {
   display: flex;
   border-bottom: 1px solid #2c333d;
@@ -4397,6 +4401,10 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
   flex: 1;
   color: #f4b58c;
   font-size: 11px;
+}
+.cutout-item button[aria-pressed="true"] {
+  color: #ffd9bf;
+  background: #3b2e29;
 }
 .cutout-item span {
   overflow: hidden;

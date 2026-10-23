@@ -128,6 +128,7 @@ function createSceneAi(
             ? { error: j.error.slice(0, 300) }
             : {}),
         }));
+      await cleanupDownloads();
     } catch {
       /* A missing or invalid history must not block local mapping. */
     }
@@ -253,6 +254,23 @@ function createSceneAi(
       .catch(() => {});
     return next;
   }
+  async function cleanupDownloads() {
+    for (const id of lastPoll.keys()) {
+      if (!jobs.some((job) => job.id === id)) lastPoll.delete(id);
+    }
+    const entries = await fs.readdir(root, { withFileTypes: true }).catch(() => []);
+    for (const entry of entries) {
+      const match = /^job-([a-zA-Z0-9_-]{1,128})\.mp4$/.exec(entry.name);
+      if (!entry.isFile() || !match || jobs.some((job) => job.id === match[1])) continue;
+      const id = match[1];
+      // Wait for any import to finish before removing its source. Only managed
+      // downloads are pruned; library copies and project companions stay intact.
+      await exclusive(id, async () => {
+        if (jobs.some((job) => job.id === id)) return;
+        await fs.rm(fileFor(id), { force: true });
+      }).catch(() => { /* Retry cleanup on the next generation or startup. */ });
+    }
+  }
   return {
     async status() {
       await ready;
@@ -325,6 +343,7 @@ function createSceneAi(
             `Generation ${job.id} started, but its history could not be saved. Keep Nox open and check the generation; do not resubmit it.`,
           );
         }
+        await cleanupDownloads();
         return { ...job };
       } finally {
         creating = false;
@@ -391,19 +410,21 @@ function createSceneAi(
     async load(id) {
       await ready;
       const job = find(id);
-      if (job.status !== "READY")
-        throw Error("This generation is not ready to preview.");
-      const file = fileFor(id),
-        stat = await fs.lstat(file).catch(() => null);
-      if (!stat?.isFile() || stat.isSymbolicLink()) {
-        job.status = "RUNNING";
-        await persist();
-        throw Error(
-          "The local clip is missing. Connect Runway and check this generation to download it again.",
-        );
-      }
-      const asset = await media.importFile(file);
-      return { ...asset, name: `Scene - ${job.prompt.slice(0, 80)}` };
+      return exclusive(id, async () => {
+        if (job.status !== "READY")
+          throw Error("This generation is not ready to preview.");
+        const file = fileFor(id),
+          stat = await fs.lstat(file).catch(() => null);
+        if (!stat?.isFile() || stat.isSymbolicLink()) {
+          job.status = "RUNNING";
+          await persist();
+          throw Error(
+            "The local clip is missing. Connect Runway and check this generation to download it again.",
+          );
+        }
+        const asset = await media.importFile(file);
+        return { ...asset, name: `Scene - ${job.prompt.slice(0, 80)}` };
+      });
     },
   };
 }

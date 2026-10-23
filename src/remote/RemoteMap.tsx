@@ -85,7 +85,7 @@ export function RemoteMap({ state, selected, disabled, send, corner, setCorner }
     drag.current = null;
     if (svg.current?.hasPointerCapture(event.pointerId)) svg.current.releasePointerCapture(event.pointerId);
     setDraft(null); setMessage('');
-    if (!canceled && d.draft) void send({ type: 'geometry', id: d.draft.id, points: d.draft.points, curves: d.draft.curves }, d.revision);
+    if (!canceled && d.draft) void send({ type: 'geometry', id: d.draft.id, points: d.draft.points, curves: d.draft.curves, transformCutouts: d.corner === undefined }, d.revision);
   }
   function zoom(factor: number) {
     setCamera(c => {
@@ -93,7 +93,7 @@ export function RemoteMap({ state, selected, disabled, send, corner, setCorner }
       return { x: c.x + (c.width - w) / 2, y: c.y + (c.height - h) / 2, width: w, height: h };
     });
   }
-  const shown = draft ? changeSurface(surfaces, draft.id, { points: draft.points, curves: draft.curves }) : surfaces;
+  const shown = draft ? changeSurface(surfaces, draft.id, { points: draft.points, curves: draft.curves }, drag.current?.corner === undefined) : surfaces;
   const active = draft || selected;
   const edge = corner !== undefined ? active?.curves?.[corner] : null;
   return <section className="phone-map-section" aria-label="Touch mapping canvas">

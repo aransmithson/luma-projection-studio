@@ -162,8 +162,8 @@ try {
       page.getByRole("tab", { name: "Surface", exact: true }),
     ).toHaveAttribute("aria-selected", "true");
   };
+  await select("Facade");
   for (const id of ["window", "round", "overlap"]) {
-    await select("Facade");
     await page.getByLabel("Shape to subtract").selectOption(id);
     await page
       .getByRole("button", { name: "Subtract shape", exact: true })
@@ -296,26 +296,110 @@ try {
     "PASS: curves, placement mesh, blending, group moves, duplicate, parent deletion and restore-as-surface all preserve editable cutouts and undo.",
   );
 
-  const savePath = path.join(artifacts, "cutouts-saved.luma");
+  // Keep adding while a cutout is selected, without returning to its parent.
+  await page.getByRole("button", { name: "Solo Facade", exact: true }).click();
+  await select("Window cutter");
+  await blackAt(0.35, 0.36);
+  const beforePresets = (await getState()).project;
+  const beforePixels = await snapshot();
+  const presetHoles = [];
+  for (const name of ["Rectangle hole", "Ellipse hole", "Rectangle hole"]) {
+    await page.getByRole("button", { name, exact: true }).click();
+    await expect
+      .poll(async () => (await getState()).project.surfaces.length)
+      .toBe(beforePresets.surfaces.length + presetHoles.length + 1);
+    const hole = (await getState()).project.surfaces.at(-1);
+    expect(hole.cutoutOf).toBe("facade");
+    expect(presetHoles.every((other) => other.name !== hole.name)).toBe(true);
+    presetHoles.push(hole);
+    await expect(page.locator(".cutout-item")).toHaveCount(3 + presetHoles.length);
+    await expect(
+      page.getByRole("button", { name: `Edit cutout ${hole.name}`, exact: true }),
+    ).toHaveAttribute("aria-pressed", "true");
+    const xs = hole.points.map((p) => p.x),
+      ys = hole.points.map((p) => p.y);
+    const x = (Math.min(...xs) + Math.max(...xs)) / 2;
+    const y = (Math.min(...ys) + Math.max(...ys)) / 2;
+    expect(Math.max(...pixel(beforePixels, x, y))).toBeGreaterThan(30);
+    await blackAt(x, y);
+  }
+  const sixHoles = (await getState()).project;
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await expect
+    .poll(async () => (await getState()).project.surfaces.length)
+    .toBe(7);
+  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  await expect
+    .poll(async () => (await getState()).project.surfaces)
+    .toEqual(sixHoles.surfaces);
+  const firstHole = presetHoles[0];
+  await page
+    .getByRole("button", { name: `Edit cutout ${firstHole.name}`, exact: true })
+    .click();
+  const movedX =
+    Math.round(Math.min(...firstHole.points.map((p) => p.x)) * fixture.width) + 4;
+  await page.getByLabel("X", { exact: true }).fill(String(movedX));
+  await page.getByLabel("X", { exact: true }).press("Tab");
+  await expect
+    .poll(async () =>
+      (await getState()).project.surfaces.find((s) => s.id === firstHole.id).points,
+    )
+    .not.toEqual(firstHole.points);
+  expect(
+    (await getState()).project.surfaces.filter((s) => s.id !== firstHole.id),
+  ).toEqual(sixHoles.surfaces.filter((s) => s.id !== firstHole.id));
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await expect
+    .poll(async () => (await getState()).project.surfaces)
+    .toEqual(sixHoles.surfaces);
+  await page
+    .getByRole("button", { name: "Delete selected surface", exact: true })
+    .click();
+  await expect
+    .poll(async () => (await getState()).project.surfaces)
+    .toEqual(sixHoles.surfaces.filter((s) => s.id !== firstHole.id));
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await expect
+    .poll(async () => (await getState()).project.surfaces)
+    .toEqual(sixHoles.surfaces);
+  await select(presetHoles[1].name);
+  await page.getByRole("button", { name: "Lock Facade", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "Rectangle hole", exact: true }),
+  ).toBeDisabled();
+  await expect(
+    page.getByRole("button", { name: "Ellipse hole", exact: true }),
+  ).toBeDisabled();
+  await expect(page.getByLabel("Shape to subtract")).toBeDisabled();
+  await page.getByRole("button", { name: "Unlock Facade", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "Rectangle hole", exact: true }),
+  ).toBeEnabled();
+  console.log(
+    "PASS: repeated preset holes and subtraction target the same parent; six independent cutouts render, edit, delete, undo/redo and respect parent locks.",
+  );
+
+  const savePath = path.join(profile, "cutouts-saved.luma");
   await app.evaluate(({ dialog }, filePath) => {
     dialog.showSaveDialog = async () => ({ canceled: false, filePath });
   }, savePath);
   await page.getByRole("button", { name: "Save project", exact: true }).click();
   await expect(page.getByRole("status")).toContainText("Project saved");
-  expect(
-    JSON.parse(await readFile(savePath, "utf8")).surfaces.filter(
-      (s) => s.cutoutOf,
-    ),
-  ).toHaveLength(3);
-  await select("Facade");
-  await page.getByRole("button", { name: "Ellipse hole", exact: true }).click();
+  const saved = JSON.parse(await readFile(savePath, "utf8"));
+  expect(saved.surfaces.filter((s) => s.cutoutOf)).toHaveLength(6);
+  await page
+    .getByRole("button", { name: "Delete selected surface", exact: true })
+    .click();
+  await app.evaluate(({ dialog }, filePath) => {
+    dialog.showOpenDialog = async () => ({
+      canceled: false,
+      filePaths: [filePath],
+    });
+  }, savePath);
+  await page.getByRole("button", { name: "Open project", exact: true }).click();
   await expect
-    .poll(
-      async () =>
-        (await getState()).project.surfaces.filter((s) => s.cutoutOf).length,
-    )
-    .toBe(4);
-  await page.getByRole("button", { name: "Undo", exact: true }).click();
+    .poll(async () => (await getState()).project.surfaces)
+    .toEqual(saved.surfaces);
   await select("Facade");
   await page.getByRole("button", { name: "Creatures", exact: true }).click();
   await expect(page.locator(".effect-card")).toHaveCount(6);
@@ -353,7 +437,7 @@ try {
   });
   expect(errors).toEqual([]);
   console.log(
-    "PASS: native save, preset holes, creature direction, the expanded still-material library and the compact desktop layout.",
+    "PASS: native save/reopen preserves all six cutouts; creature direction, the still-material library and compact desktop layout remain intact.",
   );
   await app.evaluate(({ dialog }, filePath) => {
     dialog.showOpenDialog = async () => ({
@@ -390,6 +474,68 @@ try {
   console.log(
     "PASS: bundled facade example opens with two creature windows and an editable arched doorway.",
   );
+
+  const triangle = {
+    ...surface("triangle", "Triangle", [
+      { x: 0.2, y: 0.2 }, { x: 0.8, y: 0.2 }, { x: 0.2, y: 0.8 },
+    ], "limestone", "#65b5a1", "triangle"),
+    layerId: "foreground",
+  };
+  const triangleHole = {
+    ...surface("triangle-hole", "Triangle hole", rect(0.3, 0.3, 0.1, 0.1), "limestone", "#65b5a1"),
+    cutoutOf: triangle.id,
+  };
+  const trianglePath = path.join(profile, "triangle.luma");
+  await writeFile(trianglePath, JSON.stringify({
+    ...fixture,
+    layers: [
+      { id: "background", name: "Background", visible: true, locked: false },
+      { id: "foreground", name: "Foreground", visible: true, locked: false },
+    ],
+    surfaces: [triangle, triangleHole],
+  }));
+  await app.evaluate(({ dialog }, filePath) => {
+    dialog.showOpenDialog = async () => ({ canceled: false, filePaths: [filePath] });
+  }, trianglePath);
+  await page.getByRole("button", { name: "Open project", exact: true }).click();
+  await select("Triangle");
+  const triangleState = () => getState().then((state) => state.project.surfaces);
+  await expect.poll(triangleState).toEqual([triangle, triangleHole]);
+  const corner = page.getByRole("button", { name: "Corner 1", exact: true });
+  for (const edit of ["numeric", "keyboard", "drag"]) {
+    await corner.click();
+    if (edit === "numeric") {
+      await page.getByLabel("Corner X", { exact: true }).fill("272");
+      await page.getByLabel("Corner X", { exact: true }).press("Tab");
+    } else if (edit === "keyboard") await page.keyboard.press("ArrowRight");
+    else {
+      const box = await corner.boundingBox();
+      await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+      await page.mouse.down();
+      await page.mouse.move(box.x + box.width / 2 + 12, box.y + box.height / 2 + 5);
+      await page.mouse.up();
+    }
+    await expect.poll(async () => (await triangleState())[0].points).not.toEqual(triangle.points);
+    expect((await triangleState())[1]).toEqual(triangleHole);
+    await page.getByRole("button", { name: "Undo", exact: true }).click();
+    await expect.poll(triangleState).toEqual([triangle, triangleHole]);
+  }
+  await page.getByRole("button", { name: "Lock Triangle hole", exact: true }).click();
+  await select("Triangle");
+  const locked = [triangle, { ...triangleHole, locked: true }];
+  await expect.poll(triangleState).toEqual(locked);
+  await page.getByLabel("X", { exact: true }).fill("280");
+  await page.getByLabel("X", { exact: true }).press("Tab");
+  await page.getByRole("button", { name: "Delete selected surface", exact: true }).click();
+  await expect(page.getByRole("status")).toContainText("Unlock the cutout holes");
+  expect(await triangleState()).toEqual(locked);
+  await page.getByRole("button", { name: "Unlock Triangle hole", exact: true }).click();
+  await select("Triangle hole");
+  await page.getByRole("button", { name: "Restore as surface", exact: true }).click();
+  await expect.poll(async () => (await triangleState())[1].cutoutOf).toBeUndefined();
+  expect((await triangleState())[1].layerId).toBe("foreground");
+  expect(errors).toEqual([]);
+  console.log("PASS: triangle corner inputs, nudges and drags keep holes fixed; locked holes protect parent moves/deletion and restored holes keep their layer.");
 } catch (error) {
   if (page)
     await page

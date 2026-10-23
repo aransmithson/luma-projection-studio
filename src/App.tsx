@@ -107,6 +107,7 @@ import {
   defaultHole,
   duplicateSurfaceGroup,
   effectiveSolo,
+  restoreCutout,
   subtractSurface,
 } from "./cutouts";
 import { EffectsLibrary } from "./components/EffectsLibrary";
@@ -359,6 +360,9 @@ export default function App() {
   }, [project.scene?.photo.id]);
   const [importing, setImporting] = useState(false);
   const importBusy = useRef(false);
+  const [openingProject, setOpeningProject] = useState(false);
+  const projectOpenBusy = useRef(false);
+  const projectSaveBusy = useRef(false);
   const [toast, setToast] = useState<{
       message: string;
       tone: "success" | "info" | "error";
@@ -669,7 +673,11 @@ export default function App() {
     }
     update((p) => updatePhotoReference(p, change));
   };
-  const updateSurface = (id: string, change: Partial<Surface>) => {
+  const updateSurface = (
+    id: string,
+    change: Partial<Surface>,
+    transformCutouts = true,
+  ) => {
     if (id === SCENE_PHOTO_ID) {
       updatePhoto(change);
       return;
@@ -682,7 +690,7 @@ export default function App() {
     if (change.points || "curves" in change) markMapping();
     update((p) => ({
       ...p,
-      surfaces: changeSurface(p.surfaces, id, change),
+      surfaces: changeSurface(p.surfaces, id, change, transformCutouts),
     }));
   };
   function addSurface(kind: ShapeKind, points?: Point[]) {
@@ -875,6 +883,10 @@ export default function App() {
       notify("Unlock this surface before deleting it.");
       return;
     }
+    if (cutoutsFor(project.surfaces, selected.id).some((s) => s.locked)) {
+      notify("Unlock the cutout holes before deleting their parent surface.");
+      return;
+    }
     update((p) => ({
       ...p,
       surfaces: p.surfaces.filter(
@@ -900,7 +912,10 @@ export default function App() {
     setSelectedPoint(Math.min(selectedPoint, change.points!.length - 1));
   }
   function addCutout(kind: "quad" | "ellipse") {
-    if (!selected || selected.cutoutOf || selected.locked) return;
+    const parent = selected?.cutoutOf
+      ? viewProject.surfaces.find((s) => s.id === selected.cutoutOf)
+      : selected;
+    if (!parent || parent.locked) return;
     if (project.surfaces.length >= MAX_SURFACES) {
       notify(
         `A project supports up to ${MAX_SURFACES} surfaces, including cutouts.`,
@@ -910,7 +925,7 @@ export default function App() {
     const hole = createSurface(
       kind,
       project.surfaces.length + 1,
-      defaultHole(selected, kind),
+      defaultHole(parent, kind, cutoutsFor(project.surfaces, parent.id)),
     );
     if (!validSurfaceGeometry(hole)) {
       notify(
@@ -918,9 +933,13 @@ export default function App() {
       );
       return;
     }
-    hole.cutoutOf = selected.id;
-    hole.layerId = project.surfaces.find((s) => s.id === selected.id)?.layerId;
-    hole.name = `${selected.name.slice(0, 55)} cutout ${cutoutsFor(project.surfaces, selected.id).length + 1}`;
+    hole.cutoutOf = parent.id;
+    hole.layerId = project.surfaces.find((s) => s.id === parent.id)?.layerId;
+    const names = new Set(project.surfaces.map((s) => s.name));
+    let number = 1;
+    do {
+      hole.name = `${parent.name.slice(0, 55)} cutout ${number++}`;
+    } while (names.has(hole.name));
     update((p) => ({ ...p, surfaces: [...p.surfaces, hole] }));
     selectSurface(hole.id);
     setInspectorTab("surface");
@@ -929,7 +948,13 @@ export default function App() {
   }
   function subtract(cutterId: string) {
     if (!selected) return;
-    update((p) => subtractSurface(p, selected.id, cutterId));
+    const next = subtractSurface(
+      project,
+      selected.cutoutOf || selected.id,
+      cutterId,
+    );
+    if (next === project) return;
+    update(next);
     selectSurface(cutterId);
     setInspectorTab("surface");
     markMapping();
@@ -1031,6 +1056,8 @@ export default function App() {
     setPlayback({ playing: !previous.playing, offset, startedAt: Date.now() });
   }
   async function saveProject() {
+    if (projectSaveBusy.current) return;
+    projectSaveBusy.current = true;
     setSaving(true);
     try {
       const data = serializeProject(current.current);
@@ -1068,6 +1095,7 @@ export default function App() {
         "error",
       );
     } finally {
+      projectSaveBusy.current = false;
       setSaving(false);
     }
   }
@@ -1098,10 +1126,13 @@ export default function App() {
     }
   }
   async function openProject() {
+    if (projectOpenBusy.current) return;
     if (!window.luma) {
       fileInput.current?.click();
       return;
     }
+    projectOpenBusy.current = true;
+    setOpeningProject(true);
     try {
       const result = await window.luma.openProject();
       if (result.error) throw new Error(result.error);
@@ -1119,6 +1150,9 @@ export default function App() {
         error instanceof Error ? error.message : "Unable to open this project.",
         "error",
       );
+    } finally {
+      projectOpenBusy.current = false;
+      setOpeningProject(false);
     }
   }
   async function openOutput() {
@@ -1324,7 +1358,7 @@ export default function App() {
                   project.height,
             },
           );
-          if (points) updateSurface(movable.id, { points });
+          if (points) updateSurface(movable.id, { points }, false);
           return;
         }
         updateSurface(movable.id, {
@@ -1360,7 +1394,7 @@ export default function App() {
     setPreferences((p) => ({ ...p, libraryCollapsed: false }));
   };
 
-  const remoteBusy = isEditing() || mappingDragging || drawing || !!placing || importing || saving || (!!modal && modal !== 'remote');
+  const remoteBusy = isEditing() || mappingDragging || drawing || !!placing || importing || saving || openingProject || (!!modal && modal !== 'remote');
   const remoteProject = useMemo(() => remoteView(project), [project]);
   const remoteStatus = useRemoteControl({
     project: remoteProject, selectedId, playing: playback.playing, blackout, mesh: placementMesh,
@@ -1457,6 +1491,7 @@ export default function App() {
             className="icon-button"
             aria-label="Open project"
             title="Open project · Ctrl+O"
+            disabled={openingProject}
             onClick={() => void openProject()}
           >
             <FolderOpen size={17} />
@@ -2052,7 +2087,9 @@ export default function App() {
             importing={importing}
             project={viewProject}
             surface={selected}
-            update={(change) => selected && updateSurface(selected.id, change)}
+            update={(change, transformCutouts) =>
+              selected && updateSurface(selected.id, change, transformCutouts)
+            }
             begin={begin}
             finish={finish}
             duplicate={duplicate}
@@ -2074,7 +2111,7 @@ export default function App() {
             subtract={subtract}
             selectSurface={selectSurface}
             restoreCutout={(id) => {
-              updateSurface(id, { cutoutOf: undefined });
+              update((p) => restoreCutout(p, id));
               markMapping();
             }}
           />
@@ -2530,9 +2567,11 @@ export default function App() {
                 projector as you edit; pin them using the wireframe button.
                 Click Placement mesh or press M to replace animations with a
                 static mesh while aligning shapes. Press M again to return. In
-                Surface → Cutouts &amp; holes, add a rectangle or ellipse hole,
-                or subtract an existing shape. Edit its orange outline just like
-                any other shape, including curved edges. Smooth corner aligns
+                Surface → Cutouts &amp; holes, add multiple rectangle or ellipse
+                holes, or subtract existing shapes. Keep adding while a cutout
+                is selected; each new hole belongs to the same parent surface.
+                Select any cutout in the list and edit its orange outline,
+                including curved edges. Smooth corner aligns
                 its curve handles; Straighten all edges removes curves. Rotate
                 by accepts precise angles. Make outline editable adds corner
                 editing to ellipses and frees rectangles and triangles from

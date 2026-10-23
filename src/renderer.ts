@@ -110,6 +110,7 @@ type SurfaceResource = {
   edgeCount: number;
   outline: Point[];
   effectKey: string;
+  mediaKey: string;
   textureWidth: number;
   textureHeight: number;
 };
@@ -259,6 +260,7 @@ export class ProjectionRenderer {
         edgeCount: 0,
         outline: [],
         effectKey: "",
+        mediaKey: "",
         textureWidth: 0,
         textureHeight: 0,
       };
@@ -486,6 +488,9 @@ export class ProjectionRenderer {
         !placementMesh &&
         surface.effectId === "imported-media" &&
         !!surface.media;
+      const mediaKey = imported
+        ? JSON.stringify([surface.media, surface.speed])
+        : "";
       let changed = imported || effectKey !== r.effectKey;
       if (changed) {
         if (placementMesh) drawPlacementMesh(r.ctx);
@@ -496,6 +501,7 @@ export class ProjectionRenderer {
             time,
             surface.speed,
             state.playback.playing,
+            mediaKey !== r.mediaKey,
           );
         else if (isMusicEffect(surface.effectId))
           drawMusicEffect(
@@ -561,6 +567,7 @@ export class ProjectionRenderer {
             surface.effectSide,
           );
         r.effectKey = effectKey;
+        r.mediaKey = mediaKey;
       }
       this.drawSurface(
         placementMesh

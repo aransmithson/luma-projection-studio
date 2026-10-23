@@ -2,6 +2,15 @@
 
 Nox Projection Studio keeps the existing Luma project format and application identity.
 
+## Unreleased
+
+- Keep adding rectangle and ellipse cutouts or subtracting existing shapes while a cutout is selected. Each new hole belongs to the same parent, and the inspector lists all its cutouts with the current selection highlighted.
+- Place new preset holes away from existing cutouts where space permits. Multiple holes retain independent editing, Undo, group transforms and version-1 project save/open support.
+- Protect locked holes during parent transforms and deletion, keep triangle holes fixed during individual corner edits on desktop and phone, and preserve the layer when restoring a cutout as a surface.
+- Save projects through a flushed temporary file so an interrupted write preserves the previous project. Refresh paused media after reassignment, including shared GIF players and transparent effects.
+- Remove expired generated downloads when their bounded local history is pruned, preserving in-progress imports, library copies and project companions.
+- Pause phone edits while Open project is pending and prevent duplicate open dialogs; cancellation or failure restores editing.
+
 ## 1.25.0
 
 - Added an explicitly paired **Phone remote** for editing the open scene from a browser on the same trusted Wi-Fi. Start it on the desktop, scan the address QR and enter the six-digit code. One phone connects at a time; Stop, disconnect, desktop reload/close and session expiry revoke access.

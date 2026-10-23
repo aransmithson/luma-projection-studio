@@ -50,6 +50,48 @@ try {
   await click('Close dialog');
   const remoteState = () => phone.evaluate(async () => (await fetch('/api/state', { headers: { 'X-Nox-Remote': '1' } })).json());
   const target = () => outputState().then(s => s.project.surfaces.find(s => s.id === 'phone-shape-0'));
+  await app.evaluate(({ dialog }) => {
+    globalThis.projectOpenTestCalls = 0;
+    dialog.showOpenDialog = () => {
+      globalThis.projectOpenTestCalls++;
+      return new Promise(resolve => { globalThis.finishProjectOpenTest = resolve; });
+    };
+  });
+  await click('Open project');
+  await expect.poll(async () => (await remoteState()).busy).toBe(true);
+  await page.keyboard.press('Control+o');
+  expect(await app.evaluate(() => globalThis.projectOpenTestCalls)).toBe(1);
+  const blocked = await phone.evaluate(async () => {
+    const state = await (await fetch('/api/state', { headers: { 'X-Nox-Remote': '1' } })).json();
+    const response = await fetch('/api/command', { method: 'POST', headers: { 'X-Nox-Remote': '1', 'Content-Type': 'application/json' }, body: JSON.stringify({ requestId: 'open-project-edit-12345', revision: state.revision, command: { type: 'brightness', value: .1 } }) });
+    return response.status;
+  });
+  expect(blocked).toBe(409);
+  expect((await outputState()).project.brightness).toBe(1);
+  await app.evaluate(() => {
+    globalThis.finishProjectOpenTest({ canceled: true, filePaths: [] });
+    delete globalThis.finishProjectOpenTest;
+    delete globalThis.projectOpenTestCalls;
+  });
+  await expect.poll(async () => (await remoteState()).busy).toBe(false);
+  pass('Opening a project blocks phone edits until the native operation finishes; cancellation restores editing without changing the scene.');
+  await app.evaluate(({ dialog }) => {
+    globalThis.projectSaveTestCalls = 0;
+    dialog.showSaveDialog = () => {
+      globalThis.projectSaveTestCalls++;
+      return new Promise(resolve => { globalThis.finishProjectSaveTest = resolve; });
+    };
+  });
+  await click('Save project');
+  await expect.poll(async () => (await remoteState()).busy).toBe(true);
+  await page.keyboard.press('Control+s');
+  expect(await app.evaluate(() => globalThis.projectSaveTestCalls)).toBe(1);
+  await app.evaluate(() => {
+    globalThis.finishProjectSaveTest({ canceled: true });
+    delete globalThis.finishProjectSaveTest;
+    delete globalThis.projectSaveTestCalls;
+  });
+  await expect.poll(async () => (await remoteState()).busy).toBe(false);
   await phone.getByLabel('Selected shape', { exact: true }).selectOption('phone-shape-0');
   await expect.poll(async () => (await remoteState()).selectedId).toBe('phone-shape-0');
   const before = await target();
@@ -125,6 +167,27 @@ try {
   await phone.reload(); await expect(phone.locator('.phone-connection')).toHaveText('Connected');
   expect((await remoteState()).project.surfaces).toHaveLength(4);
   pass('Desktop changes reject stale phone edits, locks remain enforced, and add/duplicate/delete/Undo plus browser reconnect preserve the scene.');
+
+  const triangle = { ...fixture.surfaces[0], kind: 'triangle', curves: undefined, points: [{ x: .2, y: .2 }, { x: .8, y: .2 }, { x: .2, y: .8 }] };
+  const triangleHole = { ...fixture.surfaces[1], id: 'phone-hole', name: 'Phone hole', cutoutOf: triangle.id, points: [{ x: .3, y: .3 }, { x: .4, y: .3 }, { x: .4, y: .4 }, { x: .3, y: .4 }] };
+  const trianglePath = path.join(artifacts, 'triangle.luma');
+  await writeFile(trianglePath, JSON.stringify({ ...fixture, surfaces: [triangle, triangleHole] }));
+  await app.evaluate(({ dialog }, file) => { dialog.showOpenDialog = async () => ({ canceled: false, filePaths: [file] }); }, trianglePath);
+  await click('Open project');
+  await expect.poll(async () => (await target()).kind).toBe('triangle');
+  await phoneClick('Map');
+  await phone.getByLabel('Selected shape', { exact: true }).selectOption(triangle.id);
+  await expect(phone.getByLabel('Selected shape', { exact: true })).toHaveValue(triangle.id);
+  await phoneClick('Fit map');
+  await touchDrag(corner, 8, 6);
+  await expect.poll(async () => (await target()).points).not.toEqual(triangle.points);
+  expect((await outputState()).project.surfaces[1]).toEqual(triangleHole);
+  await phoneClick('Undo'); await expect.poll(async () => (await target()).points).toEqual(triangle.points);
+  await phone.getByLabel('Nudge target').selectOption('0');
+  await phoneClick('Nudge right');
+  await expect.poll(async () => (await target()).points[0].x).toBeCloseTo(.2 + 1 / fixture.width, 8);
+  expect((await outputState()).project.surfaces[1]).toEqual(triangleHole);
+  pass('Triangle corner touch edits and pixel nudges keep locked child holes fixed and remain undoable.');
 
   await phone.setViewportSize({ width: 320, height: 740 });
   expect(await phone.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);

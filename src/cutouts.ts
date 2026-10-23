@@ -5,7 +5,7 @@ import {
   validSurfaceGeometry,
 } from "./curves";
 import type { Point, Project, Surface } from "./types";
-import { renderedProject } from "./layers";
+import { layerFor, layerIdFor, renderedProject } from "./layers";
 
 export const cutoutsFor = (surfaces: Surface[], parentId: string) =>
   surfaces.filter((s) => s.cutoutOf === parentId);
@@ -64,6 +64,23 @@ export function subtractSurface(
   };
 }
 
+export function restoreCutout(project: Project, id: string): Project {
+  const hole = project.surfaces.find((s) => s.id === id);
+  const parent = project.surfaces.find((s) => s.id === hole?.cutoutOf);
+  if (
+    !hole || !parent || hole.locked || parent.locked ||
+    layerFor(project, hole).locked
+  )
+    return project;
+  const layerId = project.layers ? layerIdFor(project, hole) : undefined;
+  return {
+    ...project,
+    surfaces: project.surfaces.map((s) =>
+      s.id === id ? { ...s, cutoutOf: undefined, layerId } : s,
+    ),
+  };
+}
+
 // Whole-surface moves, resizes and rotations carry their cutouts with them.
 // Individual corner edits keep each cutout independently aligned to the real object.
 function affineMap(
@@ -111,6 +128,8 @@ export function changeSurface(
   surfaces: Surface[],
   id: string,
   change: Partial<Surface>,
+  // A triangle's corner edit is affine too, so callers specify the edit intent.
+  transformCutouts = true,
 ): Surface[] {
   const before = surfaces.find((s) => s.id === id);
   if (!before) return surfaces;
@@ -118,7 +137,13 @@ export function changeSurface(
   if (change.points && !("curves" in change))
     after.curves = transformCurves(before.points, change.points, before.curves);
   if (!validSurfaceGeometry(after)) return surfaces;
-  const map = change.points ? affineMap(before.points, after.points) : null;
+  const anchorsMoved = change.points?.some((p, i) =>
+    p.x !== before.points[i]?.x || p.y !== before.points[i]?.y,
+  );
+  const map = anchorsMoved && transformCutouts
+    ? affineMap(before.points, after.points)
+    : null;
+  if (map && surfaces.some((s) => s.cutoutOf === id && s.locked)) return surfaces;
   const result = surfaces.map((s) =>
     s.id === id ? after : map && s.cutoutOf === id ? mapSurface(s, map) : s,
   );
@@ -151,9 +176,11 @@ export function duplicateSurfaceGroup(
 export function defaultHole(
   parent: Surface,
   kind: "quad" | "ellipse",
+  holes: Surface[] = [],
 ): Point[] {
   const b = bounds(parent.points),
-    outline = surfaceOutline(parent);
+    outline = surfaceOutline(parent),
+    occupied = holes.map((hole) => bounds(surfaceOutline(hole)));
   const centers = [
     { x: b.x + b.width / 2, y: b.y + b.height / 2 },
     ...Array.from({ length: 25 }, (_, i) => ({
@@ -162,6 +189,7 @@ export function defaultHole(
     })),
   ];
   let fallback: Point[] = [];
+  let insideFallback: Point[] | undefined;
   for (let attempt = 0; attempt < 7; attempt++)
     for (const center of centers) {
       const rx = b.width * 0.18 * 0.72 ** attempt,
@@ -187,7 +215,25 @@ export function defaultHole(
           y: a.y + ((points[(i + 1) % points.length].y - a.y) * j) / 4,
         })),
       );
-      if (samples.every((p) => contains(outline, p))) return points;
+      if (
+        !samples.every((p) => contains(outline, p)) ||
+        !validSurfaceGeometry({ kind, points })
+      )
+        continue;
+      insideFallback ??= points;
+      // Prefer a visible gap between new holes. Overlapping cutouts remain
+      // valid, so use the first inside position when the surface is full.
+      const gap = Math.min(b.width, b.height) * 0.02;
+      if (
+        occupied.every(
+          (other) =>
+            cx + rx + gap <= other.x ||
+            cx - rx - gap >= other.x + other.width ||
+            cy + ry + gap <= other.y ||
+            cy - ry - gap >= other.y + other.height,
+        )
+      )
+        return points;
     }
-  return fallback;
+  return insideFallback ?? fallback;
 }

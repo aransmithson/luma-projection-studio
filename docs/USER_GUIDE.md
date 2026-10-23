@@ -28,6 +28,16 @@ Nox remembers these choices on this device, including after restarting. Hiding a
 
 Navigation shortcuts are inactive while typing in a text or numeric field. The existing **Space** shortcut still controls playback. Hide **Effects** and **Properties** for more room; the view keeps its centre as the workspace resizes.
 
+## Add multiple cutouts to a shape
+
+Select the shape, then open **Surface → Cutouts & holes**. Click **Rectangle hole** or **Ellipse hole** to add a cutout. The new cutout is selected for editing, and the same buttons stay available: click again to add more holes to the same parent shape. New holes use free space where possible; drag or reshape their orange outlines to place them precisely.
+
+The cutout list shows every hole on that parent and highlights the selected one. Click a cutout to edit its corners, curves, position or size independently, or choose **Edit parent surface** to return to the main shape. To use a custom outline, add a polygon or other shape, then choose it under **Subtract existing shape**. You can keep subtracting shapes while a cutout is selected.
+
+Hide a cutout in the object list to fill that hole temporarily, delete the selected cutout to remove it, or choose **Restore as surface** to make it a regular shape again. Cutouts affect only their parent; overlaps stay transparent. Moving, resizing or rotating the parent carries all its holes with it. Undo and saved projects retain the complete set. The project limit is **32 shapes, including cutouts**.
+
+Individual parent-corner edits leave the holes in place. Locking a hole prevents moving, resizing, rotating or deleting its parent until the hole is unlocked. Restoring a hole as a surface keeps it on the same layer.
+
 ## Import animations
 
 In the desktop app, select an editable surface, then choose **Import animation** in the effects library. Pick an **MP4 video** or **animated GIF**. Nox checks decoding, creates a thumbnail, copies the file into its local library and applies it to the selected surface. If no editable surface is selected, the clip is still available in **Imported**. Click its card to use it on another shape. Search includes imported filenames; imported thumbnails are still previews.
@@ -89,7 +99,7 @@ The preview has an independent clock with Play/Pause and Restart. **Show full sc
 
 Applied media stores an alignment snapshot, so later reference-photo adjustments do not silently move live content. Reapply from Scene Animator to use an updated alignment. The Effect inspector identifies scene-aligned content and offers **Fit clip to this shape instead** to return that shape to independent fill/fit/stretch mapping.
 
-Save copies the reference PNG and any applied animations beside the `.luma` file in its `.luma.media` folder. The project stores the prompt, photo metadata and alignment, plus applied clip settings; credentials and original source paths are excluded. Unapplied variations stay in the local generation history/library. Keep the companion folder with the project when moving computers. If the reference is missing, use **Locate original photo** in Scene Animator; animation recovery remains **Effect → Locate original**. Review the actual photo, prompt and companion files before sharing.
+Save copies the reference PNG and any applied animations beside the `.luma` file in its `.luma.media` folder. The project stores the prompt, photo metadata and alignment, plus applied clip settings; credentials and original source paths are excluded. Generation history keeps up to 100 jobs; older downloaded variations are removed as history is pruned. Clips already loaded into the media library and saved project companions are preserved. Keep the companion folder with the project when moving computers. If the reference is missing, use **Locate original photo** in Scene Animator; animation recovery remains **Effect → Locate original**. Review the actual photo, prompt and companion files before sharing.
 
 ## Create a linked story
 

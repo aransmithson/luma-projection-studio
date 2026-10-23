@@ -143,6 +143,70 @@ describe("native scene photo storage", () => {
   });
 });
 describe("Runway scene job lifecycle", () => {
+  async function retainedHistory(root: string) {
+    const jobs = Array.from({ length: 100 }, (_, i) => ({
+      id: `old-${i}`, photoId: photo.id, prompt: input.prompt,
+      duration: 5, created: i, status: "READY",
+    }));
+    await writeFile(path.join(root, "jobs.json"), JSON.stringify(jobs));
+    await Promise.all(jobs.map((job) => writeFile(path.join(root, `job-${job.id}.mp4`), mp4)));
+    return jobs;
+  }
+  it("prunes old downloads after saving history and waits for a pending import", async () => {
+    const { root, fetch, dependencies, media } = await setup();
+    const jobs = await retainedHistory(root);
+    const ai = createSceneAi(root, dependencies);
+    await ai.status();
+    ai.setKey(secret);
+    let release!: () => void;
+    const barrier = new Promise<void>((resolve) => { release = resolve; });
+    media.importFile.mockImplementationOnce(async (file: string) => {
+      await barrier;
+      expect(await readFile(file)).toEqual(mp4);
+      return { id: "a".repeat(64), name: "task.mp4", format: "mp4", bytes: mp4.length };
+    });
+    const loading = ai.load(jobs[0].id);
+    await vi.waitFor(() => expect(media.importFile).toHaveBeenCalledTimes(1));
+    fetch.mockResolvedValueOnce(json({ id: "new-job" }));
+    const generating = ai.generate(input);
+    await vi.waitFor(async () => expect(await readFile(path.join(root, "jobs.json"), "utf8")).toContain("new-job"));
+    expect(await readFile(path.join(root, `job-${jobs[0].id}.mp4`))).toEqual(mp4);
+    release();
+    await loading;
+    await generating;
+    const retained = (await ai.status()).jobs;
+    const downloads = (await readdir(root)).filter((name) => name.endsWith(".mp4"));
+    expect(downloads).toHaveLength(97);
+    expect(downloads.every((name) => retained.some((job: { id: string }) => name === `job-${job.id}.mp4`))).toBe(true);
+    expect(fetch).toHaveBeenCalledTimes(1);
+  });
+  it("cleans managed orphans at startup but preserves other files and retained clips", async () => {
+    const { root, dependencies } = await setup();
+    await retainedHistory(root);
+    await writeFile(path.join(root, "job-orphan.mp4"), mp4);
+    await writeFile(path.join(root, "imported.mp4"), mp4);
+    await mkdir(path.join(root, "job-folder.mp4"));
+    const ai = createSceneAi(root, dependencies);
+    expect((await ai.status()).jobs).toHaveLength(100);
+    const names = await readdir(root);
+    expect(names).not.toContain("job-orphan.mp4");
+    expect(names).toContain("imported.mp4");
+    expect(names).toContain("job-folder.mp4");
+    expect(await readFile(path.join(root, "job-old-0.mp4"))).toEqual(mp4);
+  });
+  it("preserves downloads if the new history cannot be saved and never resubmits", async () => {
+    const { root, fetch, dependencies } = await setup();
+    await retainedHistory(root);
+    const ai = createSceneAi(root, dependencies);
+    await ai.status();
+    ai.setKey(secret);
+    await rename(path.join(root, "jobs.json"), path.join(root, "last-history.json"));
+    await mkdir(path.join(root, "jobs.json"));
+    fetch.mockResolvedValueOnce(json({ id: "started-task" }));
+    await expect(ai.generate(input)).rejects.toThrow("do not resubmit");
+    expect((await readdir(root)).filter((name) => name.endsWith(".mp4"))).toHaveLength(100);
+    expect(fetch).toHaveBeenCalledTimes(1);
+  });
   it("submits once, resumes after restart and downloads without disclosing the key", async () => {
     const { root, ai, fetch, dependencies, advance } = await setup();
     fetch.mockResolvedValueOnce(json({ id: "task-one" }));

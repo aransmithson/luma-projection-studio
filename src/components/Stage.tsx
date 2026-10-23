@@ -39,7 +39,11 @@ type Props = {
   state: RenderState;
   selectedId: string | null;
   select: (id: string | null) => void;
-  updateSurface: (id: string, change: Partial<Surface>) => void;
+  updateSurface: (
+    id: string,
+    change: Partial<Surface>,
+    transformCutouts?: boolean,
+  ) => void;
   begin: () => void;
   finish: () => void;
   grid: boolean;
@@ -324,7 +328,7 @@ export function Stage({
     const curves = transformCurves(d.original, points, d.curves);
     const valid = validSurfaceGeometry({ ...surface, points, curves });
     setInvalidDrag(!valid);
-    if (valid) updateSurface(d.id, { points, curves });
+    if (valid) updateSurface(d.id, { points, curves }, d.kind !== "point");
   }
   function endDrag(e: React.PointerEvent) {
     if (placementStart.current) {

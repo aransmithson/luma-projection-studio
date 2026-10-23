@@ -12,11 +12,14 @@ import {
   defaultHole,
   duplicateSurfaceGroup,
   effectiveSolo,
+  restoreCutout,
   subtractSurface,
   surfaceIsVisible,
 } from "./cutouts";
 import { bounds, contains, resize, rotate, translate } from "./geometry";
-import { edgeCurve } from "./curves";
+import { edgeCurve, surfaceOutline, validSurfaceGeometry } from "./curves";
+import type { Surface } from "./types";
+import { layerIdFor } from "./layers";
 
 function fixture() {
   const project = createProject("blank"),
@@ -33,6 +36,47 @@ function fixture() {
   return { project, parent, cutter };
 }
 describe("editable subtractive shapes", () => {
+  it("places successive preset holes separately inside the same parent", () => {
+    const { project, parent } = fixture();
+    const holes: Surface[] = [];
+    for (const kind of ["quad", "ellipse", "quad", "ellipse"] as const) {
+      const hole = {
+        ...createSurface(
+          kind,
+          holes.length + 2,
+          defaultHole(parent, kind, holes),
+        ),
+        cutoutOf: parent.id,
+      };
+      expect(validSurfaceGeometry(hole)).toBe(true);
+      expect(hole.points.every((p) => contains(parent.points, p))).toBe(true);
+      const b = bounds(hole.points);
+      for (const previous of holes) {
+        const other = bounds(surfaceOutline(previous));
+        expect(
+          b.x + b.width < other.x ||
+            b.x > other.x + other.width ||
+            b.y + b.height < other.y ||
+            b.y > other.y + other.height,
+        ).toBe(true);
+      }
+      holes.push(hole);
+    }
+    const result = { ...project, surfaces: [parent, ...holes] };
+    expect(parseProject(serializeProject(result))).toEqual(result);
+    const copies = duplicateSurfaceGroup(result.surfaces, parent.id);
+    expect(copies).toHaveLength(5);
+    expect(copies.slice(1).every((s) => s.cutoutOf === copies[0].id)).toBe(true);
+  });
+  it("keeps a valid inside placement when existing holes fill the parent", () => {
+    const { parent } = fixture();
+    const filled = { ...parent, id: "filled", cutoutOf: parent.id };
+    for (const kind of ["quad", "ellipse"] as const) {
+      const points = defaultHole(parent, kind, [filled]);
+      expect(points).toEqual(defaultHole(parent, kind));
+      expect(validSurfaceGeometry({ kind, points })).toBe(true);
+    }
+  });
   it("places preset holes inside a concave parent even when its center lies outside", () => {
     const parent = createSurface("polygon", 1, [
       { x: 0.1, y: 0.1 },
@@ -42,15 +86,18 @@ describe("editable subtractive shapes", () => {
       { x: 0.3, y: 0.9 },
       { x: 0.1, y: 0.9 },
     ]);
-    for (const kind of ["quad", "ellipse"] as const) {
-      const points = defaultHole(parent, kind);
+    const holes: Surface[] = [];
+    for (const kind of ["quad", "ellipse", "quad"] as const) {
+      const points = defaultHole(parent, kind, holes);
       expect(points.every((p) => contains(parent.points, p))).toBe(true);
       const hole = createSurface(kind, 2, points);
+      for (const previous of holes) expect(points).not.toEqual(previous.points);
+      holes.push({ ...hole, cutoutOf: parent.id });
       expect(
         parseProject(
           serializeProject({
             ...createProject("blank"),
-            surfaces: [parent, { ...hole, cutoutOf: parent.id }],
+            surfaces: [parent, ...holes],
           }),
         ),
       ).toBeTruthy();
@@ -63,6 +110,25 @@ describe("editable subtractive shapes", () => {
     expect(result.surfaces[1]).toEqual({ ...cutter, cutoutOf: parent.id });
     expect(project.surfaces[1].cutoutOf).toBeUndefined();
     expect(parseProject(serializeProject(result))).toEqual(result);
+  });
+  it("restores an inherited cutout to its parent's layer", () => {
+    const { project, parent, cutter } = fixture();
+    project.layers = [
+      { id: "background", name: "Background", visible: true, locked: false },
+      { id: "foreground", name: "Foreground", visible: true, locked: false },
+    ];
+    parent.layerId = "foreground";
+    cutter.cutoutOf = parent.id;
+    const next = restoreCutout(project, cutter.id);
+    expect(next.surfaces[1].cutoutOf).toBeUndefined();
+    expect(layerIdFor(next, next.surfaces[1])).toBe("foreground");
+    expect(next.surfaces[1].points).toBe(cutter.points);
+    expect(parseProject(serializeProject(next))).toEqual(next);
+    for (const locked of [parent, cutter, project.layers[1]]) {
+      locked.locked = true;
+      expect(restoreCutout(project, cutter.id)).toBe(project);
+      locked.locked = false;
+    }
   });
   it("rejects missing targets, self-reference and nested or cyclic cutouts on import", () => {
     const { project, parent, cutter } = fixture();
@@ -136,6 +202,36 @@ describe("editable subtractive shapes", () => {
         points: translate(parent.points, 0.15, 0),
       }),
     ).toBe(surfaces);
+  });
+  it("rejects parent transforms when any child cutout is locked", () => {
+    const { project, parent, cutter } = fixture();
+    const surfaces = subtractSurface(project, parent.id, cutter.id).surfaces;
+    surfaces[1] = { ...surfaces[1], locked: true };
+    for (const points of [
+      translate(parent.points, 0.03, 0),
+      resize(parent.points, 0.5, 0.5),
+      rotate(parent.points, 10, 1),
+    ]) expect(changeSurface(surfaces, parent.id, { points })).toBe(surfaces);
+    const editable = changeSurface(surfaces, parent.id, {
+      kind: "polygon", points: parent.points,
+    });
+    expect(editable[0].kind).toBe("polygon");
+    expect(editable[1]).toBe(surfaces[1]);
+  });
+  it("distinguishes a triangle corner edit from a whole-shape resize", () => {
+    const { project, parent, cutter } = fixture();
+    parent.kind = "triangle";
+    parent.points = [parent.points[0], parent.points[1], parent.points[3]];
+    const surfaces = subtractSurface(project, parent.id, cutter.id).surfaces;
+    // Both operations move only the rightmost anchor of this triangle.
+    const points = resize(parent.points, 0.5, 0.6);
+    const corner = changeSurface(surfaces, parent.id, { points }, false);
+    expect(corner[0].points).toEqual(points);
+    expect(corner[1]).toBe(surfaces[1]);
+    const resized = changeSurface(surfaces, parent.id, { points });
+    expect(bounds(resized[1].points).width).toBeCloseTo(bounds(cutter.points).width * 5 / 6);
+    surfaces[1] = { ...surfaces[1], locked: true };
+    expect(changeSurface(surfaces, parent.id, { points }, false)[1]).toBe(surfaces[1]);
   });
   it("duplicates a parent and all holes with independent IDs and links", () => {
     const { project, parent, cutter } = fixture();

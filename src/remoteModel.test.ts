@@ -63,6 +63,19 @@ describe('phone editing contracts', () => {
     expect(() => apply(p, { type: 'nudge', id: s.id, point: 60, dx: 1, dy: 1 })).toThrow('corner');
     expect(() => apply(p, { type: 'geometry', id: s.id, points: s.points.slice(0, 3) })).toThrow('number of corners');
   });
+  it('keeps triangle holes fixed during corner drags and nudges, including locked holes', () => {
+    const p = createProject('blank');
+    const s = p.surfaces[0] = { ...p.surfaces[0], ...presetGeometry('triangle', { x: .2, y: .2, width: .5, height: .5 }) };
+    p.surfaces.push({ ...hole(s), locked: true });
+    const points = s.points.map((point, index) => index ? point : { ...point, x: point.x + .01 });
+    const dragged = apply(p, { type: 'geometry', id: s.id, points, transformCutouts: false }).project;
+    expect(dragged.surfaces[0].points).toEqual(points);
+    expect(dragged.surfaces[1]).toBe(p.surfaces[1]);
+    const nudged = apply(p, { type: 'nudge', id: s.id, point: 0, dx: 1, dy: 0 }).project;
+    expect(nudged.surfaces[0].points[0].x).toBeCloseTo(s.points[0].x + 1 / p.width);
+    expect(nudged.surfaces[1]).toBe(p.surfaces[1]);
+    expect(() => apply(p, { type: 'nudge', id: s.id, dx: 1, dy: 0 })).toThrow('cutout');
+  });
   it('preserves linked membership and shared timing for normal edits', () => {
     const p = createProject('blank'), a = p.surfaces[0], b = createSurface('quad', 2);
     a.effectId = b.effectId = 'stacked-liquid'; p.surfaces.push(b);

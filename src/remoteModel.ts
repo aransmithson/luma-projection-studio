@@ -51,7 +51,7 @@ const patch = z.object({
 export const remoteCommandSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('select'), id: id.nullable() }).strict(),
   z.object({ type: z.literal('surface'), id, patch }).strict(),
-  z.object({ type: z.literal('geometry'), id, points: z.array(point).min(3).max(64), curves: z.array(z.object({ control1: point, control2: point }).strict().nullable()).max(64).optional() }).strict(),
+  z.object({ type: z.literal('geometry'), id, points: z.array(point).min(3).max(64), curves: z.array(z.object({ control1: point, control2: point }).strict().nullable()).max(64).optional(), transformCutouts: z.boolean().optional() }).strict(),
   z.object({ type: z.literal('nudge'), id, dx: z.number().int().min(-100).max(100), dy: z.number().int().min(-100).max(100), point: z.number().int().min(0).max(63).optional() }).strict(),
   z.object({ type: z.literal('effect'), id, effectId: z.string().min(1).max(100) }).strict(),
   z.object({ type: z.literal('media'), id, mediaId: z.string().regex(/^[a-f0-9]{64}$/) }).strict(),
@@ -96,7 +96,8 @@ export function editRemoteProject(project: Project, command: RemoteCommand, libr
     if (command.type === 'select') return { project, select: surface.id };
     if (surface.locked || layerFor(project, surface).locked) throw Error('Unlock this shape and its layer on the desktop first.');
     const children = project.surfaces.filter(s => s.cutoutOf === surface.id);
-    if (['geometry', 'nudge', 'duplicate', 'delete'].includes(command.type) && children.some(s => s.locked)) throw Error('Unlock the cutout holes on the desktop first.');
+    const transformCutouts = command.type === 'geometry' ? command.transformCutouts !== false : command.type !== 'nudge' || command.point === undefined;
+    if (transformCutouts && ['geometry', 'nudge', 'duplicate', 'delete'].includes(command.type) && children.some(s => s.locked)) throw Error('Unlock the cutout holes on the desktop first.');
     const stacked = project.stacks.some(s => s.surfaceIds.includes(surface.id));
     let change: Partial<Surface> | undefined;
     if (command.type === 'surface') {
@@ -132,7 +133,7 @@ export function editRemoteProject(project: Project, command: RemoteCommand, libr
       next = { ...project, surfaces: project.surfaces.filter(s => s.id !== surface.id && s.cutoutOf !== surface.id) }; select = null;
     }
     if (change) {
-      const surfaces = changeSurface(project.surfaces, surface.id, change);
+      const surfaces = changeSurface(project.surfaces, surface.id, change, transformCutouts);
       if (surfaces === project.surfaces && (change.points || change.curves)) throw Error('Keep corners and curves inside the canvas without crossing edges.');
       if (!surfaces.every(validSurfaceGeometry)) throw Error('Invalid shape geometry.');
       next = { ...project, surfaces };

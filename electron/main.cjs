@@ -6,6 +6,7 @@ const { createMediaLibrary } = require('./media.cjs');
 const { createPhotoLibrary } = require('./scene-photos.cjs');
 const { createSceneAi } = require('./scene-ai.cjs');
 const { createRemoteServer } = require('./remote.cjs');
+const { writeProjectFile } = require('./project-files.cjs');
 
 protocol.registerSchemesAsPrivileged([{ scheme: 'luma-media', privileges: { standard: true, secure: true, supportFetchAPI: true, stream: true, corsEnabled: true } }]);
 
@@ -212,7 +213,7 @@ if (ownsInstance) app.whenReady().then(async () => {
     if (result.canceled || !result.filePath) return { canceled: true };
     try {
       const missing = [...await media.exportProject(data, result.filePath), ...await photos.exportProject(data, result.filePath)];
-      await fs.writeFile(result.filePath, data, 'utf8');
+      await writeProjectFile(result.filePath, data);
       return { canceled: false, path: result.filePath, missing };
     }
     catch (error) { return { canceled: false, error: `Could not save this project: ${error.message}` }; }
