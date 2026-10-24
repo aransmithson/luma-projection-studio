@@ -684,7 +684,7 @@ export const effects: Effect[] = [
     name: "Sunrise horizon",
     category: "Nature",
     description:
-      "A warm sun rises behind layered mountain silhouettes and a shimmering lake.",
+      "A warm sun rises behind layered mountains and a shimmering lake as a murmuration of birds curls across the sky.",
     color: "#ffbb72",
     tag: "Landscape",
   },

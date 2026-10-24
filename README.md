@@ -12,10 +12,10 @@ Previously called **Luma**. Your existing `.luma` projects, imported library, pr
 
 Get the Windows build from [GitHub Releases](https://github.com/aransmithson/nox-projection-studio/releases/latest). The repository and downloads are public.
 
-- **Recommended:** download `Nox-Projection-Studio-1.25.0-win-x64.zip`, extract the whole folder, and open `Nox Projection Studio.exe`. Keep the executable beside its resources.
+- **Recommended:** download `Nox-Projection-Studio-1.26.0-win-x64.zip`, extract the whole folder, and open `Nox Projection Studio.exe`. Keep the executable beside its resources.
 - Close an older running copy before opening a new version. Nox restores the existing instance when opened again.
 
-Version 1.25.0 uses the verified ZIP distribution. Its extracted editor passed native Windows startup checks. The separate single-file launcher is omitted following a Windows Code Integrity block during the 1.22.0 release checks.
+Version 1.26.0 uses the verified ZIP distribution. Its extracted editor passed native Windows startup checks. The separate single-file launcher is omitted following a Windows Code Integrity block during the 1.22.0 release checks.
 
 Release builds are not code-signed. The Windows executable keeps Electron's original resources to preserve compatibility with Windows Code Integrity; Nox's own icon appears in the app window and interface.
 

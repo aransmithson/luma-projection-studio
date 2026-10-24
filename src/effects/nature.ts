@@ -387,12 +387,57 @@ const ripples: Painter = (ctx, t, w, h, color, seed) => {
     }
   }
 };
+// Analytic flock motion keeps seeking, pause and separate output canvases identical.
+// A shared travelling ribbon supplies cohesion; seeded offsets avoid a rigid lattice.
+function murmuration(ctx: CanvasRenderingContext2D, t: number, w: number, h: number, seed: number) {
+  const u = Math.min(w, h);
+  ctx.save();
+  for (let i = 0; i < 144; i++) {
+    const phase = random(i + 400, seed) * TAU;
+    const radius = Math.sqrt(random(i + 600, seed));
+    const lane = (random(i + 800, seed) - 0.5) * 2;
+    const depth = 0.5 + 0.5 * Math.sin(phase + t * 0.27);
+    // Neighbours follow the same curling flow with a small delay through the flock.
+    const flow = t * 0.32 + lane * 0.65;
+    const curl = phase + t * 0.38;
+    const x = w * (0.5 + 0.23 * Math.sin(flow * 0.63)
+      + lane * 0.14 * Math.cos(flow) + Math.cos(curl) * radius * 0.065);
+    const y = h * (0.245 + 0.065 * Math.sin(flow * 0.91)
+      + lane * 0.065 * Math.sin(flow) + Math.sin(curl) * radius * 0.055);
+    const dx = w * (0.23 * 0.63 * 0.32 * Math.cos(flow * 0.63)
+      - lane * 0.14 * 0.32 * Math.sin(flow) - Math.sin(curl) * radius * 0.065 * 0.38);
+    const dy = h * (0.065 * 0.91 * 0.32 * Math.cos(flow * 0.91)
+      + lane * 0.065 * 0.32 * Math.cos(flow) + Math.cos(curl) * radius * 0.055 * 0.38);
+    const size = u * (0.0021 + depth * 0.0025) * (0.8 + random(i + 1000, seed) * 0.4);
+    const flap = Math.sin(t * (7.5 + random(i + 1200, seed) * 3) + phase * 3);
+    const glide = 0.5 + 0.5 * Math.sin(t * 0.7 + phase);
+    const wing = (flap * (0.25 + 0.75 * glide) - 0.15) * size;
+    ctx.save();
+    ctx.translate(x, y);
+    // Keep wings across the direction of travel, with a gentle banking variation.
+    ctx.rotate(Math.atan2(dy, dx) + Math.PI / 2);
+    ctx.fillStyle = rgba("#242d46", 0.48 + depth * 0.42);
+    ctx.beginPath();
+    ctx.moveTo(-size * 1.5, wing);
+    ctx.quadraticCurveTo(-size * 0.7, -size * 0.45, 0, -size * 0.22);
+    ctx.quadraticCurveTo(size * 0.7, -size * 0.45, size * 1.5, wing);
+    ctx.lineTo(size * 0.55, wing * 0.45 + size * 0.22);
+    ctx.lineTo(0, size * 0.65);
+    ctx.lineTo(-size * 0.55, wing * 0.45 + size * 0.22);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+  ctx.restore();
+}
+
 const sunrise: Painter = (ctx, t, w, h, color, seed) => {
   const u = Math.min(w, h),
     lift = 0.5 + 0.5 * Math.sin(t * 0.1 - 0.6);
   background(ctx, w, h, "#312854", "#e4a77f");
   glow(ctx, w * 0.57, h * (0.52 - lift * 0.16), u * 0.6, color, 0.75);
   oval(ctx, w * 0.57, h * (0.52 - lift * 0.16), u * 0.13, u * 0.13, "#ffe6ae");
+  murmuration(ctx, t, w, h, seed);
   for (let layer = 0; layer < 3; layer++) {
     ctx.fillStyle = ["#64526f", "#423d59", "#242d46"][layer];
     ctx.beginPath();

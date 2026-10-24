@@ -2,7 +2,9 @@
 
 Nox Projection Studio keeps the existing Luma project format and application identity.
 
-## Unreleased
+## 1.26.0
+
+- Add a flowing bird murmuration to Sunrise horizon, with varied wingbeats, depth and swirling flock formations synchronized to the existing playback clock.
 
 - Keep adding rectangle and ellipse cutouts or subtracting existing shapes while a cutout is selected. Each new hole belongs to the same parent, and the inspector lists all its cutouts with the current selection highlighted.
 - Place new preset holes away from existing cutouts where space permits. Multiple holes retain independent editing, Undo, group transforms and version-1 project save/open support.
